@@ -33,13 +33,13 @@ If you close it mid-download, the next launch picks up where it stopped. Already
 
 Fair question. Verify yourself — every claim below links out.
 
-**SHA256:** `e05e149f49ee5fbf4fa4cdf0c48cb5c3f9707fc043d584521173740c81bddd37`
+**SHA256:** `976356b3985c1a58023768bb47234d6ef7ba0d0b21062f3999f1d7f7bdc159d7`
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-6%2F75-yellow?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/e05e149f49ee5fbf4fa4cdf0c48cb5c3f9707fc043d584521173740c81bddd37)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-5%2F75-yellow?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/976356b3985c1a58023768bb47234d6ef7ba0d0b21062f3999f1d7f7bdc159d7)
 
-The clean engines include **Microsoft Defender, Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, TrendMicro, Avira, F-Secure, Webroot, Emsisoft, ClamAV** and 50+ others. The 6 flags are all heuristic / AI scanners (Cylance, Bkav, CrowdStrike Falcon Static AI, SentinelOne Static AI, APEX, Skyhigh) — they're known to flag *any* unsigned binary as "suspicious" by default. That's normal for solo-dev tools that aren't code-signed.
+The clean engines include **Microsoft Defender, Bitdefender, ESET, Sophos, Symantec, Malwarebytes, TrendMicro, Avira, F-Secure, Webroot, Emsisoft, GData, DrWeb** and 50+ others. The 5 flags are all heuristic / AI scanners (Cylance, Bkav, CrowdStrike Falcon Static AI, SentinelOne Static AI, APEX) — they're known to flag *any* unsigned binary as "suspicious" by default. That's normal for solo-dev tools that aren't code-signed.
 
-If you don't trust the badge, click through to the [full VirusTotal report](https://www.virustotal.com/gui/file/e05e149f49ee5fbf4fa4cdf0c48cb5c3f9707fc043d584521173740c81bddd37) or drop the .exe onto [virustotal.com](https://www.virustotal.com) yourself.
+If you don't trust the badge, click through to the [full VirusTotal report](https://www.virustotal.com/gui/file/976356b3985c1a58023768bb47234d6ef7ba0d0b21062f3999f1d7f7bdc159d7) or drop the .exe onto [virustotal.com](https://www.virustotal.com) yourself.
 
 ## Found a bug / want to chat
 
