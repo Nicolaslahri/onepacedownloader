@@ -1,7 +1,7 @@
-# Source code — KEEP PRIVATE
+# Source
 _source/
 
-# PyInstaller build artifacts
+# Build outputs
 build/
 dist/
 *.spec
@@ -9,18 +9,15 @@ __pycache__/
 *.pyc
 *.pyo
 
-# User-local data
+# Local
 config.json
 downloads/
 *.part
 
-# Editor / OS junk
+# Editor / OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 *.log
 *.tmp
-
-# Claude project metadata
-.claude/
