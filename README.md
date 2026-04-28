@@ -40,6 +40,24 @@ If you close it mid-download, the next launch picks up where it stopped. Already
 - First time you run it, SmartScreen will throw a warning. The .exe isn't signed (signing certs are expensive). Click **More info → Run anyway**, or right-click the .exe → Properties → tick **Unblock**.
 - When new arcs drop on onepace.net, hit the **Refresh** button in the app and they show up.
 
+## Downloads not starting?
+
+A few users (mostly on Indian ISPs — Jio, Airtel, BSNL, ACT) have hit a wall where the app opens fine but downloads never start. Almost always this is ISP-level DNS blocking of the CDN the app pulls files from. Two-minute fix:
+
+**Change your Windows DNS to Cloudflare:**
+
+1. Settings → Network & Internet → click your active connection → DNS server assignment → **Edit** → Manual → turn on IPv4
+2. Preferred: `1.1.1.1`  ·  Alternate: `1.0.0.1`
+3. Save, reconnect.
+
+Fixes about 90% of these cases. No VPN, no speed hit.
+
+**Or install [Cloudflare WARP](https://1.1.1.1/)** — free, set-and-forget, routes DNS through Cloudflare without the slowdown of a full VPN.
+
+**Last resort**, any VPN works (Proton VPN free tier, etc.).
+
+If none of those fix it, paste the Log panel contents into [Discord](https://discord.gg/JvaCyYbbSk) — could be a different issue.
+
 ## Is it safe?
 
 Fair question. Verify yourself — every claim below links out.
