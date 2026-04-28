@@ -31,21 +31,15 @@ If you close it mid-download, the next launch picks up where it stopped. Already
 
 ## Is it safe?
 
-Fair question — unsigned .exe from the internet. Verify yourself:
+Fair question. Verify yourself — every claim below links out.
 
 **SHA256:** `e05e149f49ee5fbf4fa4cdf0c48cb5c3f9707fc043d584521173740c81bddd37`
 
-**Microsoft Defender:** clean — *no threats found.*
-```
-> MpCmdRun.exe -Scan -ScanType 3 -File OnePaceDownloader.exe
-Scan starting...
-Scan finished.
-Scanning C:\...\OnePaceDownloader.exe found no threats.
-```
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-6%2F75-yellow?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/e05e149f49ee5fbf4fa4cdf0c48cb5c3f9707fc043d584521173740c81bddd37)
 
-**VirusTotal:** [scan results by hash](https://www.virustotal.com/gui/file/e05e149f49ee5fbf4fa4cdf0c48cb5c3f9707fc043d584521173740c81bddd37) — if the page is empty, drop the .exe onto [virustotal.com](https://www.virustotal.com) and the link will populate in ~30 sec.
+The clean engines include **Microsoft Defender, Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, TrendMicro, Avira, F-Secure, Webroot, Emsisoft, ClamAV** and 50+ others. The 6 flags are all heuristic / AI scanners (Cylance, Bkav, CrowdStrike Falcon Static AI, SentinelOne Static AI, APEX, Skyhigh) — they're known to flag *any* unsigned binary as "suspicious" by default. That's normal for solo-dev tools that aren't code-signed.
 
-Heads up: some heuristic AV engines flag *any* small unsigned tool by default. Microsoft + the broad consensus on VT is what to trust.
+If you don't trust the badge, click through to the [full VirusTotal report](https://www.virustotal.com/gui/file/e05e149f49ee5fbf4fa4cdf0c48cb5c3f9707fc043d584521173740c81bddd37) or drop the .exe onto [virustotal.com](https://www.virustotal.com) yourself.
 
 ## Found a bug / want to chat
 
