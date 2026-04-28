@@ -1,0 +1,69 @@
+name: Bug report
+description: Something broke — let me know
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. The more detail, the faster I can fix it.
+        For quick questions, the [Discord](https://discord.gg/JvaCyYbbSk) is usually the fastest path.
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      description: Shown in the GitHub Release name (e.g. v1.0.0). Check by hovering the .exe → Properties.
+      placeholder: v1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: windows-version
+    attributes:
+      label: Windows version
+      description: Win+R → `winver` → copy the line that says "Version XXXXX (OS Build YYYYY)"
+      placeholder: Windows 11 Pro 24H2
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you click, what did you expect, what actually happened?
+      placeholder: |
+        1. Opened the app
+        2. Clicked Download on Wano (1080p Eng Sub)
+        3. Got error "..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Log output
+      description: Copy/paste the contents of the **Log** panel at the bottom of the app.
+      render: text
+
+  - type: dropdown
+    id: arc
+    attributes:
+      label: Which arc were you downloading?
+      options:
+        - Not arc-specific / general bug
+        - Romance Dawn
+        - Orange Town
+        - Syrup Village
+        - Baratie / Arlong Park
+        - Loguetown / Reverse Mountain
+        - Alabasta
+        - Skypiea / Long Ring Long Land
+        - Water Seven / Enies Lobby
+        - Thriller Bark / Sabaody
+        - Marineford / Impel Down
+        - Fishman Island
+        - Punk Hazard / Dressrosa
+        - Zou / Whole Cake Island
+        - Reverie / Wano
+        - Egghead
+        - Other (mention in description)

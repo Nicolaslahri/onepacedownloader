@@ -1,61 +1,38 @@
 # One Pace Downloader
 
-A one-click Windows app to download full **One Pace** arcs without the 6 GB/day Pixeldrain limit.
+Small Windows app I built for grabbing [One Pace](https://onepace.net) arcs. Click an arc, pick a quality, it dumps everything to a folder.
 
-> One Pace is a fan project that re-cuts One Piece to remove filler. The official downloads at [onepace.net](https://onepace.net/en/watch) are scattered across many Pixeldrain albums and capped at 6 GB per day per IP. This tool lists every arc, lets you pick a quality, and downloads everything to a folder of your choice — no cap, no fuss.
-
----
+![screenshot](assets/screenshot.png)
 
 ## Download
 
-➡ **[OnePaceDownloader.exe](OnePaceDownloader.exe)** — single file, no install, no Python required.
+Latest .exe → **[Releases page](https://github.com/Nicolaslahri/onepace/releases/latest)**
 
-Just download and double-click.
+Double-click and you're in. Nothing to install.
 
----
+## Why I made this
 
-## How to use
+Downloading arcs from onepace.net is a pain. Every arc is split across a pile of separate links, and there's a daily limit that turns long arcs like Wano into a multi-day project. This just gets them in one go.
 
-1. Run **OnePaceDownloader.exe**.
-2. Pick a save folder (or use the default `downloads/` next to the .exe).
-3. Pick **Version** (English Subtitles / English Dub / English Dub with CC) and **Quality** (1080p / 720p / 480p).
-4. Click **Download** on any arc — or **Download all arcs** to grab everything.
+## Using it
 
-That's it.
+1. Open the .exe.
+2. Pick a folder (or use the default `downloads/` next to the .exe).
+3. Pick the version (Sub / Dub / Dub-CC) and quality (1080p / 720p / 480p) at the top.
+4. Hit **Download** on whichever arc you want, or **Download all arcs** to queue everything.
 
----
+If you close it mid-download, the next launch picks up where it stopped. Already-finished episodes are skipped.
 
-## Features
+## Heads up
 
-- **All 36 arcs** from Romance Dawn through Egghead, sourced live from onepace.net.
-- **No 6 GB/day cap** — uses the GameDrive bypass CDN.
-- **Resumable** — kill the app mid-download and the next launch picks up exactly where it left off.
-- **Auto-retry** on flaky connections (5 attempts with exponential backoff).
-- **Auto-fallback** to the best available quality when your pick isn't available for an arc.
-- **Refresh** button re-scrapes onepace.net so new arcs/qualities show up automatically.
-- **Skip already-downloaded** files — re-running the app never re-downloads what's already complete.
+- Windows only for now.
+- First time you run it, SmartScreen will throw a warning. The .exe isn't signed (signing certs are expensive). Click **More info → Run anyway**, or right-click the .exe → Properties → tick **Unblock**.
+- When new arcs drop on onepace.net, hit the **Refresh** button in the app and they show up.
 
----
+## Found a bug / want to chat
 
-## Follow for updates
+Discord is the fastest: **[discord.gg/JvaCyYbbSk](https://discord.gg/JvaCyYbbSk)**
 
-- 💬 **Discord** — [discord.gg/JvaCyYbbSk](https://discord.gg/JvaCyYbbSk)
-- 🟠 **Reddit** — [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/)
+Or open an [issue](https://github.com/Nicolaslahri/onepace/issues) here. Reddit's [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) too.
 
-New tools and One Pace updates get posted there first.
-
----
-
-## FAQ
-
-**Is this safe?** Yes — it's just a downloader. It talks to the same Pixeldrain that onepace.net itself uses, just routed through a public bypass CDN.
-
-**Why does Windows warn me when I run it?** Because the .exe isn't code-signed (signing certs cost $$$ for solo devs). Click **More info → Run anyway** in SmartScreen, or right-click → Properties → Unblock.
-
-**Will downloaded files play in VLC / my TV?** Yes, they're standard `.mp4` files exactly as One Pace publishes them.
-
-**The arc I want isn't in the list / a quality is missing.** Click **Refresh from onepace.net** in the app — that pulls the latest arc list and Pixeldrain links.
-
----
-
-Made by **Nicolas** · Free forever.
+— Nicolas
