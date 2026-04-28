@@ -56,6 +56,18 @@ I've submitted the file to Microsoft as a false positive — they usually whitel
 
 If you don't trust the badge, click through to the [full VirusTotal report](https://www.virustotal.com/gui/file/3fd42c1fe6186f1792e8d70b52f41fff8b6317ddb762bae4e61592bf42afc845) or drop the .exe onto [virustotal.com](https://www.virustotal.com) yourself.
 
+## Built on the work of
+
+This app is just a downloader — none of the actual content is mine. Huge thanks to:
+
+- **The [One Pace team](https://onepace.net)** — for ten-plus years of re-cutting One Piece into the version everyone wishes Toei would air. Every Sub episode you download through this app comes from their releases.
+
+- **Muhny (D Goat)** — for editing Muhn Pace, the dub fillers covering arcs One Pace hasn't dubbed yet (Enies Lobby through Wano). About 184 GB of careful audio work that's quietly saved a lot of dub watchers months of waiting.
+
+- **[u/KPGNL](https://www.reddit.com/user/KPGNL/)** — for maintaining the [dub watch-order guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) the app links to. Without it, knowing which arcs to grab from which source would be guesswork. The original version of that guide was put together by **u/AlternativeAd1098**.
+
+This app exists to make their work easier to grab, not to replace any of it. If you find One Pace or Muhn Pace useful, drop them a thank-you wherever they hang out — that's worth more than anything I could do.
+
 ## Found a bug / want to chat
 
 Discord is the fastest: **[discord.gg/JvaCyYbbSk](https://discord.gg/JvaCyYbbSk)**
