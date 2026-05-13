@@ -74,6 +74,14 @@ I've submitted the file to Microsoft as a false positive — they usually whitel
 
 If you don't trust the badge, click through to the [full VirusTotal report](https://www.virustotal.com/gui/file/3fd42c1fe6186f1792e8d70b52f41fff8b6317ddb762bae4e61592bf42afc845) or drop the .exe onto [virustotal.com](https://www.virustotal.com) yourself.
 
+### What if my AV flags `pixeldrain.eu.cc`?
+
+Different question — that's the .exe, this is the domain. Some AVs (Bitdefender and Norton seen so far) flag `pixeldrain.eu.cc` while the app is downloading. That domain is the bypass mirror — an unofficial copy of pixeldrain.com without the 6 GB/day cap, which is the whole reason this app can grab a full arc in one go. It serves the same files as pixeldrain.com; AVs flag it because it's an unofficial host with no reputation history, not because there's anything malicious on it.
+
+If you don't trust it, either allow the domain in your AV's web protection, or pause web shield during the download. Or skip the app entirely and pull files by hand from onepace.net — slower, same content.
+
+And since "is the code itself shady" is a fair follow-up: as of v1.1.1 the full Python source is in [`_source/`](_source/onepace_downloader.py) under MIT. Read it, build it yourself, audit whatever you want.
+
 ## Built on the work of
 
 This app is just a downloader — none of the actual content is mine. Huge thanks to:
