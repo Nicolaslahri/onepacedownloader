@@ -1,6 +1,6 @@
 # One Pace Downloader
 
-Small Windows app I built for grabbing [One Pace](https://onepace.net) arcs. Click an arc, pick a quality, it dumps everything to a folder. Also handles [Muhn Pace](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) dub fillers, and pulls torrents from [nyaa.si](https://nyaa.si/?q=one+pace) for users who'd rather seed.
+Small Windows app I built for grabbing [One Pace](https://onepace.net) arcs. Pick the episodes you want, hit download — files land in a folder with real episode titles, or straight into your Plex / Jellyfin library if you'd rather. Also handles [Muhn Pace](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) dub fillers and pulls torrents from [nyaa.si](https://nyaa.si/?q=one+pace) for users who'd rather seed.
 
 ![screenshot](assets/screenshot.png)
 
@@ -20,18 +20,22 @@ Three sources, switchable from the dropdown:
 - **Muhn Pace** — fan-made English dub fillers for arcs One Pace hasn't dubbed (Enies Lobby → Wano). Pair with One Pace if you're watching dubbed. Full watch order is in [u/KPGNL's guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) — the app links to it.
 - **Nyaa** — torrents from [nyaa.si](https://nyaa.si/?q=one+pace), grouped by arc. Click **Open magnet** and it hands the link to your default torrent client (qBittorrent / uTorrent / etc.). Useful when pixeldrain is throttled, or when you want to seed back. Needs a torrent client installed — magnets are copied to clipboard if none is registered.
 
-![muhn pace screenshot](assets/screenshot_muhn.png)
-
 The app shows which episodes each Muhn Pace album covers (e.g. *"Eps 11–22 only — pair with One Pace for the full arc"*) so you don't end up with a hole.
 
 ## Using it
 
 1. Open the .exe.
 2. Pick a folder (or use the default `downloads/` next to the .exe).
-3. Pick version (Sub / Dub / Dub-CC) and quality (1080p / 720p / 480p).
-4. Hit **Download** on an arc, or **Download all arcs** to queue everything.
+3. Click an arc on the left, tick the episodes you want in the middle.
+4. Hit **Download selected** — confirm version (Sub / Dub / Dub-CC) and quality (1080p / 720p / 480p) in the dialog, go.
 
-Close it mid-download and the next launch picks up where it stopped. Already-finished episodes are skipped. When new arcs drop on onepace.net, hit **Refresh**.
+![confirm batch download dialog](assets/screenshot_dialog.png)
+
+Total size up front so you know what you're committing to. Once it's going, the right column turns into a live status panel:
+
+![download in progress](assets/screenshot_downloading.png)
+
+Close it mid-download and the next launch picks up where it stopped. Already-finished episodes show a **✓ Saved** chip and arcs show a per-arc progress count (`✓ 12/35`). When new arcs drop on onepace.net, hit **Refresh**.
 
 ## Plex / Jellyfin users
 
@@ -61,6 +65,10 @@ Mostly Indian ISPs (Jio, Airtel, BSNL, ACT) hit this — app opens, downloads ne
 Settings → Network & Internet → your active connection → DNS server assignment → **Edit** → Manual → IPv4 on → Preferred `1.1.1.1`, Alternate `1.0.0.1` → Save, reconnect.
 
 Fixes ~90% of cases. Set-and-forget alternative: [Cloudflare WARP](https://1.1.1.1/). Last resort, any VPN works.
+
+If you'd rather not edit Windows network settings yourself, the app has a one-click DNS switcher built in — top right → **DNS** → pick Cloudflare or Google. UAC prompt, done. Revert from the same panel.
+
+![DNS switcher panel](assets/screenshot_dns.png)
 
 If none of those help, paste the Log panel contents into [Discord](https://discord.gg/JvaCyYbbSk).
 
