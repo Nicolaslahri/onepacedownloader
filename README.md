@@ -1,12 +1,12 @@
 # One Pace Downloader
 
-Small Windows app I built for grabbing [One Pace](https://onepace.net) arcs. Click an arc, pick a quality, it dumps everything to a folder. Also handles [Muhn Pace](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) for arcs One Pace hasn't dubbed yet.
+Small Windows app I built for grabbing [One Pace](https://onepace.net) arcs. Click an arc, pick a quality, it dumps everything to a folder. Also handles [Muhn Pace](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) dub fillers, and pulls torrents from [nyaa.si](https://nyaa.si/?q=one+pace) for users who'd rather seed.
 
 ![screenshot](assets/screenshot.png)
 
 ## Download
 
-Latest .exe → **[Releases page](https://github.com/Nicolaslahri/onepace/releases/latest)**
+Latest .exe → **[Releases page](https://github.com/Nicolaslahri/onepacedownloader/releases/latest)**
 
 Double-click and you're in. Nothing to install. Source is in [`_source/`](_source/onepace_downloader.py) under MIT if you'd rather read or run it yourself.
 
@@ -14,10 +14,11 @@ Double-click and you're in. Nothing to install. Source is in [`_source/`](_sourc
 
 Downloading arcs from onepace.net by hand is a pain — every arc is split across a pile of separate links with a daily limit that turns long arcs like Wano into a multi-day project. This grabs them in one go.
 
-Two sources, switchable from the dropdown:
+Three sources, switchable from the dropdown:
 
 - **One Pace** *(default)* — main fan re-cut. Sub for every arc Romance Dawn → Egghead, Dub for the newer arcs. Most users start here.
 - **Muhn Pace** — fan-made English dub fillers for arcs One Pace hasn't dubbed (Enies Lobby → Wano). Pair with One Pace if you're watching dubbed. Full watch order is in [u/KPGNL's guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) — the app links to it.
+- **Nyaa** — torrents from [nyaa.si](https://nyaa.si/?q=one+pace), grouped by arc. Click **Open magnet** and it hands the link to your default torrent client (qBittorrent / uTorrent / etc.). Useful when pixeldrain is throttled, or when you want to seed back. Needs a torrent client installed — magnets are copied to clipboard if none is registered.
 
 ![muhn pace screenshot](assets/screenshot_muhn.png)
 
@@ -31,6 +32,21 @@ The app shows which episodes each Muhn Pace album covers (e.g. *"Eps 11–22 onl
 4. Hit **Download** on an arc, or **Download all arcs** to queue everything.
 
 Close it mid-download and the next launch picks up where it stopped. Already-finished episodes are skipped. When new arcs drop on onepace.net, hit **Refresh**.
+
+## Plex / Jellyfin users
+
+Open **Settings → Output organization** and tick **Organize for Plex / Jellyfin**. From then on, every download lands in the layout your media server expects:
+
+```
+downloads/
+  One Pace/
+    Season 14/
+      One Pace - s14e01 - Sir Crocodile, the Pirate.mkv
+      One Pace - s14e01 - Sir Crocodile, the Pirate.nfo
+      ...
+```
+
+Each `.nfo` carries the real episode title and plot (sourced from [SpykerNZ/one-pace-for-plex](https://github.com/SpykerNZ/one-pace-for-plex)), so Plex and Jellyfin recognize the show and pull artwork automatically. The arc list shows a per-arc progress badge (`✓ 12/35`) so you can see at a glance what's done.
 
 ## Heads up
 
@@ -52,11 +68,11 @@ If none of those help, paste the Log panel contents into [Discord](https://disco
 
 Fair question. Verify yourself.
 
-**SHA256:** `3fd42c1fe6186f1792e8d70b52f41fff8b6317ddb762bae4e61592bf42afc845`
+**SHA256:** `aba37fed59e3739be784c6f3362cd355f9b409283daa800ecba93b1efdb6170d`
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-6%2F75-yellow?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/3fd42c1fe6186f1792e8d70b52f41fff8b6317ddb762bae4e61592bf42afc845)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-6%2F71-yellow?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/aba37fed59e3739be784c6f3362cd355f9b409283daa800ecba93b1efdb6170d)
 
-69 engines clean — Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, plus 60+ others. The 6 flags are heuristic / AI scanners (Cylance, CrowdStrike Falcon Static AI, SentinelOne Static AI, APEX) plus Microsoft Defender's cloud ML model flagging `Trojan:Win32/Wacatac.B!ml`. The `!ml` suffix means machine-learning guess, not a signature match — common false-positive label for unsigned solo-dev tools. I've submitted it to Microsoft; they usually whitelist within ~3 days. If Defender quarantines in the meantime, **Allow on device** in the notification, or add the .exe to Exclusions.
+65 engines clean — Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender, plus 60+ others. The 6 flags are heuristic / static-analysis scanners: APEX, Bkav, CrowdStrike Falcon, Cylance, SentinelOne Static AI, Yandex. These flag based on packed-binary patterns (typical of PyInstaller `--onefile` builds) rather than actual malicious behavior — common false-positive label for unsigned solo-dev tools. The signature-based scanners that look at what the code does are all green.
 
 Don't trust the badge? Drop the .exe onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) — one file, stdlib only, MIT.
 
@@ -71,11 +87,12 @@ This app is just a downloader — none of the actual content is mine. Huge thank
 - **The [One Pace team](https://onepace.net)** — for ten-plus years of re-cutting One Piece into the version everyone wishes Toei would air. Every Sub episode comes from their releases.
 - **Muhny (D Goat)** — for editing Muhn Pace, the dub fillers covering arcs One Pace hasn't dubbed (Enies Lobby → Wano). About 184 GB of careful audio work that's quietly saved a lot of dub watchers months of waiting.
 - **[u/KPGNL](https://www.reddit.com/user/KPGNL/)** — for maintaining the [dub watch-order guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) the app links to. Original version put together by **u/AlternativeAd1098**.
+- **[SpykerNZ](https://github.com/SpykerNZ/one-pace-for-plex)** — the canonical episode titles, plots, and Plex/Jellyfin season layout the *Organize for media server* option uses come straight from his repo. If you're a Plex/Jellyfin user, also check it out for the artwork.
 
 If you find One Pace or Muhn Pace useful, drop them a thank-you wherever they hang out — that's worth more than anything I could do.
 
 ## Found a bug / want to chat
 
-Discord is fastest: **[discord.gg/JvaCyYbbSk](https://discord.gg/JvaCyYbbSk)**. Or open an [issue](https://github.com/Nicolaslahri/onepace/issues), or ping [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) on Reddit.
+Discord is fastest: **[discord.gg/JvaCyYbbSk](https://discord.gg/JvaCyYbbSk)**. Or open an [issue](https://github.com/Nicolaslahri/onepacedownloader/issues), or ping [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) on Reddit.
 
 — Nicolas
