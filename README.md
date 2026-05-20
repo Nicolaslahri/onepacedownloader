@@ -1,5 +1,8 @@
 # One Pace Downloader
 
+[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/KHn6AbevZ2)
+[![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/user/nicolasenjah/)
+
 Small Windows app I built for grabbing [One Pace](https://onepace.net) arcs. Pick the episodes you want, hit download — files land in a folder with real episode titles, or straight into your Plex / Jellyfin library if you'd rather. Also handles [Muhn Pace](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) dub fillers and pulls torrents from [nyaa.si](https://nyaa.si/?q=one+pace) for users who'd rather seed.
 
 ![screenshot](assets/screenshot.png)
@@ -70,7 +73,7 @@ If you'd rather not edit Windows network settings yourself, the app has a one-cl
 
 ![DNS switcher panel](assets/screenshot_dns.png)
 
-If none of those help, paste the Log panel contents into [Discord](https://discord.gg/JvaCyYbbSk).
+If none of those help, paste the Log panel contents into [Discord](https://discord.gg/KHn6AbevZ2).
 
 ## Is it safe?
 
@@ -101,6 +104,6 @@ If you find One Pace or Muhn Pace useful, drop them a thank-you wherever they ha
 
 ## Found a bug / want to chat
 
-Discord is fastest: **[discord.gg/JvaCyYbbSk](https://discord.gg/JvaCyYbbSk)**. Or open an [issue](https://github.com/Nicolaslahri/onepacedownloader/issues), or ping [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) on Reddit.
+Discord is fastest: **[discord.gg/JvaCyYbbSk](https://discord.gg/KHn6AbevZ2)**. Or open an [issue](https://github.com/Nicolaslahri/onepacedownloader/issues), or ping [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) on Reddit.
 
 — Nicolas

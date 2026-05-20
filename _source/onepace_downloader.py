@@ -25,7 +25,7 @@ import customtkinter as ctk
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dns_switcher
 
-DISCORD_URL = "https://discord.gg/JvaCyYbbSk"
+DISCORD_URL = "https://discord.gg/KHn6AbevZ2"
 REDDIT_URL = "https://www.reddit.com/user/nicolasenjah/"
 
 def _user_dir() -> Path:
