@@ -56,7 +56,7 @@ INDEX_FILE = APP_DIR / "episode_index.json"
 CONFIG_FILE = APP_DIR / "config.json"
 DEFAULT_DOWNLOADS = APP_DIR / "downloads"
 
-APP_VERSION = "2.0"
+APP_VERSION = "2.0.1"
 
 # Sources
 SRC_ONE_PACE = "One Pace"

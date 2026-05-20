@@ -79,11 +79,11 @@ If none of those help, paste the Log panel contents into [Discord](https://disco
 
 Fair question. Verify yourself.
 
-**SHA256:** `aba37fed59e3739be784c6f3362cd355f9b409283daa800ecba93b1efdb6170d`
+**SHA256:** `e6f90aff7226c9ddf98c36419eac1b84fb11bdb614d978677747289e6dd3c9cf`
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-6%2F71-yellow?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/aba37fed59e3739be784c6f3362cd355f9b409283daa800ecba93b1efdb6170d)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-scan-blue?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/e6f90aff7226c9ddf98c36419eac1b84fb11bdb614d978677747289e6dd3c9cf)
 
-65 engines clean — Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender, plus 60+ others. The 6 flags are heuristic / static-analysis scanners: APEX, Bkav, CrowdStrike Falcon, Cylance, SentinelOne Static AI, Yandex. These flag based on packed-binary patterns (typical of PyInstaller `--onefile` builds) rather than actual malicious behavior — common false-positive label for unsigned solo-dev tools. The signature-based scanners that look at what the code does are all green.
+Most engines clean — Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender, and others tend to pass. A handful of heuristic / static-analysis scanners (APEX, Bkav, CrowdStrike Falcon, Cylance, SentinelOne Static AI, Yandex) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior — a common false-positive label for unsigned solo-dev tools. Click the badge to see the current scan.
 
 Don't trust the badge? Drop the .exe onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) — one file, stdlib only, MIT.
 
