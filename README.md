@@ -104,6 +104,6 @@ If you find One Pace or Muhn Pace useful, drop them a thank-you wherever they ha
 
 ## Found a bug / want to chat
 
-Discord is fastest: **[discord.gg/JvaCyYbbSk](https://discord.gg/KHn6AbevZ2)**. Or open an [issue](https://github.com/Nicolaslahri/onepacedownloader/issues), or ping [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) on Reddit.
+Discord is fastest: **[discord.gg/KHn6AbevZ2](https://discord.gg/KHn6AbevZ2)**. Or open an [issue](https://github.com/Nicolaslahri/onepacedownloader/issues), or ping [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) on Reddit.
 
 — Nicolas
