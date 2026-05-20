@@ -79,9 +79,9 @@ If none of those help, paste the Log panel contents into [Discord](https://disco
 
 Fair question. Verify yourself.
 
-**SHA256:** `e6f90aff7226c9ddf98c36419eac1b84fb11bdb614d978677747289e6dd3c9cf`
+**SHA256:** `fc6372a226b4e139455fb3fe3c753080146a44515e485d1714e206c253a8beb6`
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-scan-blue?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/e6f90aff7226c9ddf98c36419eac1b84fb11bdb614d978677747289e6dd3c9cf)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-scan-blue?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/fc6372a226b4e139455fb3fe3c753080146a44515e485d1714e206c253a8beb6)
 
 Most engines clean — Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender, and others tend to pass. A handful of heuristic / static-analysis scanners (APEX, Bkav, CrowdStrike Falcon, Cylance, SentinelOne Static AI, Yandex) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior — a common false-positive label for unsigned solo-dev tools. Click the badge to see the current scan.
 

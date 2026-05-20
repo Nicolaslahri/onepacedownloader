@@ -27,6 +27,7 @@ import dns_switcher
 
 DISCORD_URL = "https://discord.gg/KHn6AbevZ2"
 REDDIT_URL = "https://www.reddit.com/user/nicolasenjah/"
+MUHN_GDRIVE_MIRROR_URL = "https://drive.google.com/drive/folders/1OiT81U_kJulO9ptcBJA0wdZTSQAq83Sl"
 
 def _user_dir() -> Path:
     """Writable folder next to the .exe (or .py during dev)."""
@@ -56,7 +57,7 @@ INDEX_FILE = APP_DIR / "episode_index.json"
 CONFIG_FILE = APP_DIR / "config.json"
 DEFAULT_DOWNLOADS = APP_DIR / "downloads"
 
-APP_VERSION = "2.0.1"
+APP_VERSION = "2.0.2"
 
 # Sources
 SRC_ONE_PACE = "One Pace"
@@ -3098,7 +3099,32 @@ class App(ctk.CTk):
                      corner_radius=0).pack(fill="x", padx=SP_LG)
         for s in sources:
             self._build_source_row(card, s, ep, kind)
+        if kind == "muhn":
+            self._build_muhn_gdrive_fallback(card)
         ctk.CTkLabel(card, text="", height=2).pack()
+
+    def _build_muhn_gdrive_fallback(self, parent: ctk.CTkFrame) -> None:
+        """Emergency fallback row shown under Muhn Pace download options —
+        if pixeldrain is throttled or down, users can grab the same files
+        from a Google Drive mirror."""
+        ctk.CTkFrame(parent, height=1, fg_color=BORDER,
+                     corner_radius=0).pack(fill="x", padx=SP_LG,
+                                            pady=(SP_XS, 0))
+        row = ctk.CTkFrame(parent, fg_color="transparent")
+        row.pack(fill="x", padx=SP_LG, pady=(SP_XS, 0))
+        ctk.CTkLabel(
+            row, text="Pixeldrain down?",
+            font=F_XS, text_color=TEXT_MUTED, anchor="w",
+        ).pack(side="left")
+        ctk.CTkButton(
+            row, text="Open Google Drive mirror",
+            width=180, height=H_SM,
+            fg_color="transparent", border_width=1,
+            border_color=BORDER_STRONG,
+            text_color=LINK, hover_color=SURFACE_HOVER,
+            font=F_SM,
+            command=lambda: webbrowser.open(MUHN_GDRIVE_MIRROR_URL),
+        ).pack(side="right")
 
     def _build_placeholder_card(self, header: str, msg: str) -> None:
         card = ctk.CTkFrame(
