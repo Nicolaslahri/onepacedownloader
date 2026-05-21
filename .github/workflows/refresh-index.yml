@@ -1,0 +1,115 @@
+name: Refresh episode index
+
+# Runs the same scrape every user used to run locally — exactly once a week,
+# on the maintainer's behalf. Result is committed to the `data` branch as
+# episode_index.json so every user's app can fetch it in ~2s instead of
+# spending 60-90s talking to Pixeldrain + SpykerNZ themselves.
+#
+# Usenet is intentionally NOT refreshed here — that needs a private API key.
+# Whatever usenet_arcs.json is currently committed on main gets merged in.
+
+on:
+  schedule:
+    # Sundays at 03:00 UTC — quiet hours globally + GitHub Actions are
+    # less contended on weekend nights.
+    - cron: '0 3 * * 0'
+  # Allow manual trigger from the Actions tab for ad-hoc refreshes
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # The build pipeline is stdlib-only — no requirements file needed.
+      # If that ever changes, add `pip install -r requirements.txt` here.
+
+      - name: Refresh arcs.json from onepace.net
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, '_source')
+          from onepace_downloader import refresh_arcs_from_web
+          arcs = refresh_arcs_from_web()
+          print(f"Refreshed {len(arcs)} arcs from onepace.net")
+          PY
+
+      - name: Refresh nyaa_arcs.json from nyaa.si
+        run: |
+          python - <<'PY'
+          import sys, json
+          sys.path.insert(0, '_source')
+          from onepace_downloader import refresh_nyaa_from_web, load_arcs
+          arc_titles = [a["title"] for a in load_arcs()]
+          out = refresh_nyaa_from_web(arc_titles)
+          total = sum(len(b.get("torrents", [])) for b in out)
+          print(f"Refreshed {len(out)} arc buckets ({total} torrents) from nyaa.si")
+          PY
+
+      - name: Build episode_index.json
+        run: |
+          # `force=True` skips the cache check — we always want a from-scratch
+          # rebuild in CI so users get fresh Pixeldrain + SpykerNZ data.
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, '_source')
+          import build_episode_index
+          build_episode_index.build(force=True)
+          PY
+
+      - name: Stash freshly built data
+        run: |
+          mkdir -p /tmp/refresh-out
+          cp _source/episode_index.json /tmp/refresh-out/
+          cp _source/arcs.json          /tmp/refresh-out/
+          cp _source/nyaa_arcs.json     /tmp/refresh-out/
+          # usenet_arcs.json is unchanged (we don't scrape Usenet in CI) — it
+          # already lives on main and was used by build_episode_index above.
+          cp _source/usenet_arcs.json   /tmp/refresh-out/ || true
+
+      - name: Publish to `data` branch
+        run: |
+          set -e
+          git config user.name  "onepace-bot"
+          git config user.email "onepace-bot@users.noreply.github.com"
+
+          # Switch to the data branch (create as orphan if it doesn't exist)
+          if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
+            git fetch origin data
+            git checkout data
+          else
+            git checkout --orphan data
+            git rm -rf . || true
+            git clean -fdx
+          fi
+
+          # Drop the fresh files in place
+          cp /tmp/refresh-out/episode_index.json .
+          cp /tmp/refresh-out/arcs.json          .
+          cp /tmp/refresh-out/nyaa_arcs.json     .
+          cp /tmp/refresh-out/usenet_arcs.json   . 2>/dev/null || true
+
+          # Skip the commit if nothing actually changed (e.g. no new arcs +
+          # SpykerNZ unchanged + Nyaa torrents shifted only in seeders)
+          git add episode_index.json arcs.json nyaa_arcs.json usenet_arcs.json
+          if git diff --staged --quiet; then
+            echo "No content changes — skipping commit."
+            exit 0
+          fi
+
+          git commit -m "Auto-refresh index: $(date -u +%Y-%m-%d)"
+          git push origin data

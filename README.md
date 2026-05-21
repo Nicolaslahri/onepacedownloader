@@ -17,11 +17,12 @@ Double-click and you're in. Nothing to install. Source is in [`_source/`](_sourc
 
 Downloading arcs from onepace.net by hand is a pain — every arc is split across a pile of separate links with a daily limit that turns long arcs like Wano into a multi-day project. This grabs them in one go.
 
-Three sources, switchable from the dropdown:
+Four sources, switchable from the dropdown:
 
 - **One Pace** *(default)* — main fan re-cut. Sub for every arc Romance Dawn → Egghead, Dub for the newer arcs. Most users start here.
 - **Muhn Pace** — fan-made English dub fillers for arcs One Pace hasn't dubbed (Enies Lobby → Wano). Pair with One Pace if you're watching dubbed. Full watch order is in [u/KPGNL's guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) — the app links to it.
 - **Nyaa** — torrents from [nyaa.si](https://nyaa.si/?q=one+pace), grouped by arc. Click **Open magnet** and it hands the link to your default torrent client (qBittorrent / uTorrent / etc.). Useful when pixeldrain is throttled, or when you want to seed back. Needs a torrent client installed — magnets are copied to clipboard if none is registered.
+- **Usenet** — NZB files for One Pace releases. Needs your own Usenet subscription + indexer API key (see [Usenet setup](#usenet-setup) below). Best for users who already have SABnzbd / NZBGet set up.
 
 The app shows which episodes each Muhn Pace album covers (e.g. *"Eps 11–22 only — pair with One Pace for the full arc"*) so you don't end up with a hole.
 
@@ -55,6 +56,31 @@ downloads/
 
 Each `.nfo` carries the real episode title and plot (sourced from [SpykerNZ/one-pace-for-plex](https://github.com/SpykerNZ/one-pace-for-plex)), so Plex and Jellyfin recognize the show and pull artwork automatically. The arc list shows a per-arc progress badge (`✓ 12/35`) so you can see at a glance what's done.
 
+## Usenet setup
+
+The **Usenet** tab is for users who already have a Usenet subscription. Skip this section if you don't — pixeldrain (One Pace) and Nyaa (torrents) work for everyone with no setup.
+
+**What you need:**
+
+1. A **Usenet provider** subscription (~$10/mo). The common ones are [Newshosting](https://www.newshosting.com/), [Eweka](https://www.eweka.nl/), [UsenetServer](https://www.usenetserver.com/). Any of them works.
+2. **SABnzbd** (free, [sabnzbd.org](https://sabnzbd.org/)) or NZBGet installed and configured with your provider above. This is what actually downloads the files.
+3. An **[NZBGeek](https://nzbgeek.info/)** account + API key. The bundled release IDs in this app are NZBGeek-specific — other indexers (DOGnzb, NZB.su, etc.) won't resolve them.
+
+**In the app:**
+
+1. Open **Settings** → scroll to the **USENET** card.
+2. Paste `https://api.nzbgeek.info` into "Indexer URL" (it's the default).
+3. Paste your NZBGeek API key into "API key". You can find it at [nzbgeek.info/dashboard.php?myaccount](https://nzbgeek.info/dashboard.php?myaccount).
+4. Save & close.
+
+**Then:** switch the source dropdown to **Usenet**, pick an arc, tick episodes, hit **Download selected** (or **Get NZB** on a single episode). The app pulls the `.nzb` file using your API key and hands it to SABnzbd / NZBGet, which does the actual download from your Usenet provider.
+
+**Heads up:**
+
+- We never see or upload your API key — it lives in `config.json` next to the .exe.
+- Coverage isn't complete. Some arcs (Alabasta, Thriller Bark, Gaimon) aren't on NZBGeek at all. Others (Wano, Dressrosa) are missing individual episodes — the app shows what's available.
+- Older releases (pre-2021) may have rotated off your provider's retention. If SABnzbd reports "article missing" or fails to assemble, try a different quality / release for the same episode.
+
 ## Heads up
 
 - Windows only.
@@ -79,9 +105,9 @@ If none of those help, paste the Log panel contents into [Discord](https://disco
 
 Fair question. Verify yourself.
 
-**SHA256:** `fc6372a226b4e139455fb3fe3c753080146a44515e485d1714e206c253a8beb6`
+**SHA256:** `4605666d1b2d7071f969d9411ebbc7e34512a462a38d03b1c3ce841d146eccc0`
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-scan-blue?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/fc6372a226b4e139455fb3fe3c753080146a44515e485d1714e206c253a8beb6)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-scan-blue?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/4605666d1b2d7071f969d9411ebbc7e34512a462a38d03b1c3ce841d146eccc0)
 
 Most engines clean — Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender, and others tend to pass. A handful of heuristic / static-analysis scanners (APEX, Bkav, CrowdStrike Falcon, Cylance, SentinelOne Static AI, Yandex) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior — a common false-positive label for unsigned solo-dev tools. Click the badge to see the current scan.
 

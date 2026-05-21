@@ -27,7 +27,33 @@ import dns_switcher
 
 DISCORD_URL = "https://discord.gg/KHn6AbevZ2"
 REDDIT_URL = "https://www.reddit.com/user/nicolasenjah/"
+GITHUB_URL = "https://github.com/Nicolaslahri/onepacedownloader"
 MUHN_GDRIVE_MIRROR_URL = "https://drive.google.com/drive/folders/1OiT81U_kJulO9ptcBJA0wdZTSQAq83Sl"
+
+# Social brand colors — (fill, hover) for the Discord / Reddit / GitHub
+# buttons so they're recognizable at a glance instead of generic outlines.
+BRAND_BUTTONS = {
+    "Discord": (DISCORD_URL, "#5865F2", "#4752C4"),
+    "Reddit":  (REDDIT_URL,  "#FF4500", "#D93A00"),
+    "GitHub":  (GITHUB_URL,  "#33383F", "#23272D"),
+}
+
+# Default Usenet indexer (Newznab-compatible). End users may swap it for any
+# other Newznab indexer in Settings; their own API key is required either way.
+USENET_DEFAULT_INDEXER_URL = "https://api.nzbgeek.info"
+USENET_DEFAULT_INDEXER_NAME = "NZBGeek"
+USENET_SETUP_GUIDE_URL = (
+    "https://github.com/Nicolaslahri/onepacedownloader#usenet-setup")
+
+# Central index hosted on a `data` branch in the repo. A GitHub Actions cron
+# rebuilds this weekly so every user gets fresh data without each having to
+# hammer Pixeldrain / SpykerNZ / nyaa.si themselves. See
+# .github/workflows/refresh-index.yml.
+REMOTE_INDEX_BASE = (
+    "https://raw.githubusercontent.com/Nicolaslahri/onepacedownloader/data")
+REMOTE_INDEX_URL = f"{REMOTE_INDEX_BASE}/episode_index.json"
+REMOTE_ARCS_URL = f"{REMOTE_INDEX_BASE}/arcs.json"
+REMOTE_NYAA_URL = f"{REMOTE_INDEX_BASE}/nyaa_arcs.json"
 
 def _user_dir() -> Path:
     """Writable folder next to the .exe (or .py during dev)."""
@@ -47,26 +73,34 @@ APP_DIR = _user_dir()
 BUNDLED_ARCS_FILE = _bundle_dir() / "arcs.json"
 BUNDLED_MUHN_FILE = _bundle_dir() / "muhn_arcs.json"
 BUNDLED_NYAA_FILE = _bundle_dir() / "nyaa_arcs.json"
+BUNDLED_USENET_FILE = _bundle_dir() / "usenet_arcs.json"
 BUNDLED_INDEX_FILE = _bundle_dir() / "episode_index.json"
 BUNDLED_ICON_ICO = _bundle_dir() / "icon.ico"
+if not BUNDLED_ICON_ICO.exists():
+    BUNDLED_ICON_ICO = Path(__file__).resolve().parent.parent / "assets" / "icon.ico"
 BUNDLED_ICON_PNG = _bundle_dir() / "icon.png"
+if not BUNDLED_ICON_PNG.exists():
+    BUNDLED_ICON_PNG = Path(__file__).resolve().parent.parent / "assets" / "icon.png"
 ARCS_FILE = APP_DIR / "arcs.json"
 MUHN_FILE = APP_DIR / "muhn_arcs.json"
 NYAA_FILE = APP_DIR / "nyaa_arcs.json"
+USENET_FILE = APP_DIR / "usenet_arcs.json"
 INDEX_FILE = APP_DIR / "episode_index.json"
 CONFIG_FILE = APP_DIR / "config.json"
 DEFAULT_DOWNLOADS = APP_DIR / "downloads"
 
-APP_VERSION = "2.0.2"
+APP_VERSION = "2.0.3"
 
 # Sources
 SRC_ONE_PACE = "One Pace"
 SRC_MUHN_PACE = "Muhn Pace"
 SRC_NYAA = "Nyaa"
+SRC_USENET = "Usenet"
 SOURCE_LABELS = {
     SRC_ONE_PACE:  "One Pace  (Sub for every arc, Dub for newer arcs)",
     SRC_MUHN_PACE: "Muhn Pace  (English Dub fillers for arcs One Pace hasn't dubbed)",
     SRC_NYAA:      "Nyaa  (Torrents — needs your own torrent client like qBittorrent)",
+    SRC_USENET:    "Usenet  (NZB files — needs your own Usenet provider + indexer like NZBGeek)",
 }
 SOURCE_INFO = {
     SRC_ONE_PACE:
@@ -80,6 +114,10 @@ SOURCE_INFO = {
         "Torrents from nyaa.si, grouped by arc.  Clicking Download opens the "
         "magnet link in your default torrent client (qBittorrent, uTorrent, "
         "etc.).  Handy when pixeldrain is throttled or blocked by your ISP.",
+    SRC_USENET:
+        "Usenet NZB files indexed from NZBGeek. Needs a Usenet provider "
+        "(~$10/mo) + indexer API key — configure once in Settings. Clicking "
+        "Get NZB downloads the file and opens it in your SABnzbd / NZBGet.",
 }
 DUB_GUIDE_URL = "https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/"
 
@@ -540,6 +578,22 @@ def load_nyaa_arcs() -> list[dict]:
     return []
 
 
+def load_usenet_arcs() -> list[dict]:
+    """Load cached Usenet arc buckets — user-writable copy first, bundled
+    fallback. Bare-list shape: [{arc, episodes, packs}, ...]."""
+    for p in (USENET_FILE, BUNDLED_USENET_FILE):
+        if p.exists():
+            try:
+                data = json.loads(p.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                return []
+            if isinstance(data, list):
+                return data
+            if isinstance(data, dict) and "arcs" in data:
+                return data["arcs"]
+    return []
+
+
 def load_episode_index() -> dict:
     """Load the unified per-episode index (v2). Returns the envelope with
     'arcs' (each containing 'episodes' and 'arc_packs') and 'specials'.
@@ -729,6 +783,60 @@ def _fmt_size(bytes_: int) -> str:
     return f"{mb / 1024:.2f} GB" if mb >= 1024 else f"{mb:.0f} MB"
 
 
+# Windows reserved filenames (case-insensitive, with or without extension)
+_WIN_RESERVED = {"con", "prn", "aux", "nul",
+                  "com1", "com2", "com3", "com4", "com5",
+                  "com6", "com7", "com8", "com9",
+                  "lpt1", "lpt2", "lpt3", "lpt4", "lpt5",
+                  "lpt6", "lpt7", "lpt8", "lpt9"}
+
+
+def _make_brand_button(parent, label: str, *, width: int = 96,
+                       height: int | None = None):
+    """Create a brand-colored social button (Discord blue / Reddit orange /
+    GitHub charcoal) that opens the matching URL. Falls back to a neutral
+    button for unknown labels."""
+    entry = BRAND_BUTTONS.get(label)
+    if entry:
+        url, fg, hover = entry
+    else:
+        url, fg, hover = "", SECONDARY, SECONDARY_HOVER
+    return ctk.CTkButton(
+        parent, text=label, width=width,
+        height=height if height is not None else H_SM,
+        fg_color=fg, hover_color=hover, text_color="#FFFFFF",
+        font=F_BOLD_XS,
+        command=lambda u=url: webbrowser.open(u) if u else None)
+
+
+def _safe_nzb_filename(title: str, guid: str) -> str:
+    """Produce a Windows-safe `<title>.nzb` filename for the given release.
+
+    Strips: <>:"/\\|?* + ASCII control chars, trailing dots/spaces (which
+    Windows silently drops, causing later lookup mismatches), and avoids
+    reserved device names (CON, NUL, COM1, ...). Truncates the stem to 120
+    chars. Falls back to `<guid>.nzb` if sanitization leaves nothing.
+
+    The caller is responsible for the final MAX_PATH check (the full path
+    including the save folder may still exceed 260 on legacy Windows)."""
+    # 1. Strip illegal chars + ASCII control bytes
+    s = re.sub(r'[<>:"/\\|?*\x00-\x1f]+', "_", title or "")
+    # 2. Collapse runs of underscores produced by step 1
+    s = re.sub(r"_{2,}", "_", s)
+    # 3. Strip trailing dots/spaces (Windows quirk — silently dropped)
+    s = s.rstrip(". ")
+    # 4. Length-cap the stem
+    s = s[:120].rstrip(". ") or guid
+    # 5. Avoid reserved device names
+    stem_no_ext = re.sub(r"\.nzb$", "", s, flags=re.IGNORECASE)
+    if stem_no_ext.lower() in _WIN_RESERVED:
+        s = f"_{s}"
+    # 6. Ensure .nzb extension
+    if not s.lower().endswith(".nzb"):
+        s += ".nzb"
+    return s
+
+
 class Tooltip:
     """Lightweight tooltip — shows a Toplevel with the given text after a
     short hover delay. Use `attach(widget, text)` to install on any widget
@@ -794,12 +902,14 @@ class Tooltip:
 
 # Source page identity — drives which arcs/episodes are shown and how the
 # detail pane is built. Keys are internal; labels feed the tab strip.
-_SRC_LABEL = {"onepace": "One Pace", "muhn": "Muhn Pace", "nyaa": "Nyaa"}
+_SRC_LABEL = {"onepace": "One Pace", "muhn": "Muhn Pace",
+              "nyaa": "Nyaa", "usenet": "Usenet"}
 _LABEL_SRC = {v: k for k, v in _SRC_LABEL.items()}
 _SRC_BLURB = {
-    "onepace": "Fan re-cut. Sub for every arc, Dub for the newer ones. Direct download via the bypass CDN.",
+    "onepace": "Fan re-cut. Sub for every arc, Dub for the newer ones.",
     "muhn":    "Fan-made English Dub filling arcs One Pace hasn't dubbed yet (Enies Lobby → Wano).",
     "nyaa":    "Torrents from nyaa.si — official One Pace uploads are tagged with a green Official badge.",
+    "usenet":  "NZB files from NZBGeek — needs your own Usenet provider + indexer API key (configure in Settings).",
 }
 
 
@@ -813,11 +923,29 @@ class App(ctk.CTk):
         ctk.set_appearance_mode("system")
         ctk.set_default_color_theme("blue")
         self.title(f"One Pace Downloader v{APP_VERSION}")
-        self.geometry("1180x780")
+        
+        self.config_data = load_config()
+        
+        # Load saved window position/geometry
+        geom = self.config_data.get("geometry")
+        if geom:
+            try:
+                self.geometry(geom)
+            except Exception:
+                self.geometry("1180x780")
+        else:
+            self.geometry("1180x780")
         self.minsize(960, 560)
+        
+        maximized = self.config_data.get("maximized", False)
+        if maximized:
+            try:
+                self.state("zoomed")
+            except Exception:
+                pass
+                
         self._apply_icon()
 
-        self.config_data = load_config()
         # If the user previously saved an Appearance preference, honor it
         appearance = self.config_data.get("appearance")
         if appearance in ("System", "Light", "Dark"):
@@ -826,6 +954,7 @@ class App(ctk.CTk):
         self.arcs = load_arcs()
         self.muhn_arcs = load_muhn_arcs()
         self.nyaa_arcs = load_nyaa_arcs()
+        self.usenet_arcs = load_usenet_arcs()
         self.index = load_episode_index()
 
         self.save_dir = ctk.StringVar(
@@ -885,6 +1014,11 @@ class App(ctk.CTk):
         self._dl_started_at: float | None = None
         self._download_panel_widgets: dict = {}
 
+        self._updating_checks = False
+        self._settings_panel_ref = None
+        self._last_clicked_ep_num = None
+        self.protocol("WM_DELETE_WINDOW", self._on_close)
+
         self._build_ui()
         self._refresh_nyaa_view_toggle()
         # Initial scan of the save folder so the first arc click already
@@ -894,6 +1028,11 @@ class App(ctk.CTk):
         self._render_episode_list()
         self._render_source_panel()
         self.after(80, self._drain_ui_queue)
+        # Stage 3 of smart refresh: silently check onepace.net in the
+        # background a couple of seconds after the UI is responsive. If
+        # something changed since our cached arcs hash, surface a tiny
+        # "↻ updates" badge on the Refresh button so users notice.
+        self.after(2500, self._check_for_updates_async)
 
         if not self.index.get("arcs"):
             self._log(
@@ -1665,18 +1804,34 @@ class App(ctk.CTk):
         btn_box.pack(side="right", padx=SP_XL, pady=SP_MD)
         # Header buttons read as nav controls — transparent with subtle hover,
         # not solid slabs.
-        for txt, cmd, w in (
-            ("DNS", self._open_dns_panel, 80),
-            ("Refresh", self._refresh_all, 100),
-            ("Settings", self._open_settings_panel, 110),
-        ):
-            ctk.CTkButton(btn_box, text=txt, width=w, height=H_SM + 4,
-                          fg_color="transparent",
-                          border_width=1, border_color="#2C3D5C",
-                          hover_color="#1F2A44",
-                          text_color=HEADER_FG,
-                          font=F_SM,
-                          command=cmd).pack(side="left", padx=SP_XS)
+        ctk.CTkButton(
+            btn_box, text="DNS", width=80, height=H_SM + 4,
+            fg_color="transparent",
+            border_width=1, border_color="#2C3D5C",
+            hover_color="#1F2A44",
+            text_color=HEADER_FG, font=F_SM,
+            command=self._open_dns_panel,
+        ).pack(side="left", padx=SP_XS)
+        # The Refresh button is held by reference so the background
+        # update-check can re-style it when new content is detected
+        # (see _check_for_updates_async).
+        self._refresh_btn = ctk.CTkButton(
+            btn_box, text="Refresh", width=110, height=H_SM + 4,
+            fg_color="transparent",
+            border_width=1, border_color="#2C3D5C",
+            hover_color="#1F2A44",
+            text_color=HEADER_FG, font=F_SM,
+            command=self._refresh_all,
+        )
+        self._refresh_btn.pack(side="left", padx=SP_XS)
+        ctk.CTkButton(
+            btn_box, text="Settings", width=110, height=H_SM + 4,
+            fg_color="transparent",
+            border_width=1, border_color="#2C3D5C",
+            hover_color="#1F2A44",
+            text_color=HEADER_FG, font=F_SM,
+            command=self._open_settings_panel,
+        ).pack(side="left", padx=SP_XS)
 
         # ---- SOURCE TAB STRIP ----
         # Pill-style segmented control sitting in a soft container — the
@@ -1803,6 +1958,10 @@ class App(ctk.CTk):
             fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
             command=self._download_selected_episodes)
         self.download_selected_btn.pack(side="right")
+        self.selection_size_lbl = ctk.CTkLabel(
+            ep_tools, text="", font=F_XS, text_color=TEXT_MUTED
+        )
+        self.selection_size_lbl.pack(side="right", padx=(0, 12))
         self.episode_scroll = ctk.CTkScrollableFrame(
             col2, label_text="", fg_color="transparent")
         self.episode_scroll.grid(row=2, column=0, sticky="nsew",
@@ -1825,6 +1984,10 @@ class App(ctk.CTk):
             col3, label_text="", fg_color="transparent")
         self.source_scroll.grid(row=1, column=0, sticky="nsew",
                                 padx=0, pady=(0, SP_SM))
+
+        # Speed up scrolling in columns
+        for sf in (self.arc_scroll, self.episode_scroll, self.source_scroll):
+            sf._on_mousewheel = lambda event, f=sf: f._canvas.yview_scroll(int(-3 * (event.delta / 120)), "units")
 
         # ---- FOOTER: save folder + progress + status ----
         footer = ctk.CTkFrame(self, corner_radius=0,
@@ -1963,8 +2126,13 @@ class App(ctk.CTk):
             for s in ep.get("sources", []):
                 if s.get("kind") == source:
                     return True
-        if source == "nyaa" and arc.get("arc_packs"):
-            return True
+        # Nyaa's arc_packs predate the kind field — treat them all as nyaa.
+        # Usenet packs are tagged kind="usenet" by the merger.
+        for p in arc.get("arc_packs", []):
+            if source == "nyaa" and not p.get("kind"):
+                return True
+            if p.get("kind") == source:
+                return True
         return False
 
     def _arc_source_counts(self, arc: dict, source: str) -> tuple[int, int]:
@@ -1973,14 +2141,22 @@ class App(ctk.CTk):
             1 for ep in arc.get("episodes", [])
             if any(s.get("kind") == source for s in ep.get("sources", []))
         )
-        pack_count = (len(arc.get("arc_packs", [])) if source == "nyaa" else 0)
+        # Nyaa packs predate the kind field — treat un-tagged packs as nyaa.
+        # Usenet packs carry kind="usenet" from the merger.
+        if source == "nyaa":
+            pack_count = sum(1 for p in arc.get("arc_packs", [])
+                              if not p.get("kind"))
+        else:
+            pack_count = sum(1 for p in arc.get("arc_packs", [])
+                              if p.get("kind") == source)
         return ep_count, pack_count
 
     def _arc_saved_count(self, arc: dict) -> tuple[int, int]:
         """(saved_episodes, total_episodes_with_active_source). Used to show
-        per-arc download progress badges. Nyaa doesn't track saves locally
-        (magnets go to the torrent client) so this always returns (0, 0) there."""
-        if self.current_source == "nyaa":
+        per-arc download progress badges. Nyaa and Usenet don't track saves
+        locally (magnets / NZBs are handled by the user's torrent / Usenet
+        client) so both always return (0, 0)."""
+        if self.current_source in ("nyaa", "usenet"):
             return 0, 0
         eps = [ep for ep in arc.get("episodes", [])
                if any(s.get("kind") == self.current_source
@@ -2205,15 +2381,16 @@ class App(ctk.CTk):
 
     # ----------------------------------------------------- arc list pane ----
 
-    def _render_arc_list(self) -> None:
-        for w in self.arc_scroll.winfo_children():
-            w.destroy()
-        self._arc_row_widgets.clear()
-        # Update the contextual blurb under the tabs — include real coverage
-        # stats so users can see exactly what each source provides.
-        # The per-arc meta on the left list and the coverage banner above
-        # the episode list already surface the numbers — keep this blurb
-        # short and let it be the source's character/intent, not stats.
+    def _render_arc_list(self, rebuild: bool = False) -> None:
+        if not hasattr(self, "_last_arc_list_source") or self._last_arc_list_source != self.current_source:
+            rebuild = True
+            self._last_arc_list_source = self.current_source
+
+        if rebuild or not self._arc_row_widgets:
+            for w in self.arc_scroll.winfo_children():
+                w.destroy()
+            self._arc_row_widgets.clear()
+
         self.source_info.configure(text=_SRC_BLURB.get(self.current_source, ""))
 
         query = self.search_var.get().strip().lower()
@@ -2225,21 +2402,51 @@ class App(ctk.CTk):
                 font=("Segoe UI", 9),
                 text_color=("gray40", "gray70")).pack(padx=12, pady=12)
             return
-        # Only show arcs that have content for the active source page
+
         filtered = [a for a in arcs if self._arc_has_source(a, self.current_source)]
-        if query:
-            filtered = [a for a in filtered if query in a["title"].lower()]
-        if not filtered:
-            ctk.CTkLabel(
+
+        if rebuild or not self._arc_row_widgets:
+            for arc in filtered:
+                self._build_arc_button(arc)
+
+        any_visible = False
+        for arc in filtered:
+            title = arc["title"]
+            widget_dict = self._arc_row_widgets.get(title)
+            if not widget_dict:
+                continue
+            row = widget_dict["row"]
+            
+            matches = not query or query in title.lower()
+            if matches:
+                if not row.winfo_ismapped():
+                    row.pack(fill="x", padx=SP_XS, pady=1)
+                any_visible = True
+            else:
+                if row.winfo_ismapped():
+                    row.pack_forget()
+
+        if not hasattr(self, "_no_arcs_label") or not self._no_arcs_label.winfo_exists():
+            self._no_arcs_label = ctk.CTkLabel(
                 self.arc_scroll,
-                text=("(no arcs match)" if query
-                      else f"(no arcs available from {_SRC_LABEL[self.current_source]})"),
+                text="",
                 font=("Segoe UI", 9),
                 text_color=("gray40", "gray70"),
-            ).pack(padx=10, pady=10)
-            return
-        for arc in filtered:
-            self._build_arc_button(arc)
+            )
+        
+        if not any_visible:
+            self._no_arcs_label.configure(
+                text=("(no arcs match)" if query
+                      else f"(no arcs available from {_SRC_LABEL[self.current_source]})")
+            )
+            if not self._no_arcs_label.winfo_ismapped():
+                self._no_arcs_label.pack(padx=10, pady=10)
+        else:
+            try:
+                if self._no_arcs_label.winfo_ismapped():
+                    self._no_arcs_label.pack_forget()
+            except Exception:
+                pass
 
     def _build_arc_button(self, arc: dict) -> None:
         title = arc["title"]
@@ -2294,10 +2501,15 @@ class App(ctk.CTk):
             self._on_arc_selected(a)
 
         def _enter(_e=None) -> None:
-            row.configure(fg_color=hover_color)
+            is_sel = (self.selected_arc is not None
+                      and self.selected_arc.get("title") == title)
+            if not is_sel:
+                row.configure(fg_color=SURFACE_HOVER)
 
         def _leave(_e=None) -> None:
-            row.configure(fg_color=base_color)
+            is_sel = (self.selected_arc is not None
+                      and self.selected_arc.get("title") == title)
+            row.configure(fg_color=PRIMARY if is_sel else "transparent")
 
         for w in (row, title_lbl) + ((meta_lbl,) if meta_lbl else ()):
             w.bind("<Button-1>", _click)
@@ -2477,9 +2689,15 @@ class App(ctk.CTk):
         row.pack(fill="x", padx=SP_XS, pady=1)
         row.pack_propagate(False)
         var = ctk.BooleanVar(value=False)
-        var.trace_add("write", lambda *_: self._refresh_selection_buttons())
-        ctk.CTkCheckBox(row, text="", variable=var, width=20).pack(
-            side="left", padx=(SP_SM, SP_SM))
+        var.trace_add("write", lambda *_: not getattr(self, "_updating_checks", False) and self._refresh_selection_buttons())
+        cb = ctk.CTkCheckBox(
+            row, text="", variable=var, width=20,
+            fg_color=PRIMARY,
+            hover_color=PRIMARY_HOVER,
+            border_color=BORDER_STRONG,
+        )
+        cb.pack(side="left", padx=(SP_SM, SP_SM))
+        cb._canvas.bind("<Button-1>", lambda event, num=ep["num"]: self._on_checkbox_clicked(event, num), add="+")
         self.ep_check_vars[ep["num"]] = var
 
         # Only count sources from the active page
@@ -2516,7 +2734,7 @@ class App(ctk.CTk):
                           f"{_fmt_size(best.get('size_bytes', 0))}")
             else:
                 detail = "(no source)"
-        else:  # nyaa
+        elif self.current_source == "nyaa":
             # Prefer Galaxy9000 (official One Pace uploader); fall back to most-seeded.
             official = [s for s in sources
                         if s.get("uploader") == NYAA_OFFICIAL_UPLOADER]
@@ -2531,6 +2749,20 @@ class App(ctk.CTk):
                           f"{'s' if len(sources) != 1 else ''})")
             else:
                 detail = "(no torrents)"
+        else:  # usenet
+            # No seeders / uploader concept — just pick the highest-quality
+            # release as the headline and surface the alternatives count.
+            best = max(sources,
+                       key=lambda s: _quality_rank(s.get("quality", "")),
+                       default=None)
+            if best is not None:
+                qual = best.get("quality", "?")
+                extras_count = len(sources) - 1
+                tail = (f"  (+{extras_count} more)" if extras_count > 0 else "")
+                detail = (f"{qual}  •  "
+                          f"{_fmt_size(best.get('size_bytes', 0))}{tail}")
+            else:
+                detail = "(no NZB)"
 
         # Title left, detail muted right. Compact rows — no extra pady on
         # the labels (the row's height=32 + checkbox pack already breathes).
@@ -2582,16 +2814,22 @@ class App(ctk.CTk):
         def _click(_e=None, e=ep) -> None:
             self._on_episode_clicked(e)
 
+        def _double_click(_e=None, e=ep) -> None:
+            self._toggle_checkbox(e["num"])
+
         def _enter(_e=None) -> None:
-            if not is_active:
+            active_ep = self.selected_ep_for_detail
+            if active_ep != ep["num"]:
                 click_row.configure(fg_color=SURFACE_HOVER)
 
         def _leave(_e=None) -> None:
-            if not is_active:
-                click_row.configure(fg_color="transparent")
+            active_ep = self.selected_ep_for_detail
+            active_bg = ("#FFF6E0", "#2A2010")
+            click_row.configure(fg_color=active_bg if active_ep == ep["num"] else "transparent")
 
         for w in (click_row, title_lbl, detail_lbl):
             w.bind("<Button-1>", _click)
+            w.bind("<Double-Button-1>", _double_click)
             w.bind("<Enter>", _enter)
             w.bind("<Leave>", _leave)
             w.configure(cursor="hand2")
@@ -2662,6 +2900,7 @@ class App(ctk.CTk):
         prev_num = self.selected_ep_for_detail
         new_num = ep["num"]
         self.selected_ep_for_detail = new_num
+        self._last_clicked_ep_num = new_num
         # Update only the prev + new episode rows (background + font); skip
         # the full middle-column re-render so clicking feels instant.
         self._update_episode_selection(prev_num, new_num)
@@ -2686,8 +2925,13 @@ class App(ctk.CTk):
             return
         any_checked = any(var.get() for var in self.ep_check_vars.values())
         new = not any_checked
-        for var in self.ep_check_vars.values():
-            var.set(new)
+        self._updating_checks = True
+        try:
+            for var in self.ep_check_vars.values():
+                var.set(new)
+        finally:
+            self._updating_checks = False
+        self._refresh_selection_buttons()
 
     def _refresh_selection_buttons(self) -> None:
         """Update the Select all + Download selected labels based on how many
@@ -2696,6 +2940,27 @@ class App(ctk.CTk):
             return
         total = len(self.ep_check_vars)
         ticked = sum(1 for v in self.ep_check_vars.values() if v.get())
+        
+        # Calculate selected size
+        total_bytes = 0
+        version_pref = self.config_data.get("default_version", "English Subtitles")
+        quality_pref = self.config_data.get("default_quality", "1080p")
+        src = self.current_source
+
+        ticked_ep_nums = {num for num, v in self.ep_check_vars.items() if v.get()}
+        if ticked_ep_nums and self.selected_arc:
+            for ep in self.selected_arc.get("episodes", []):
+                if ep["num"] in ticked_ep_nums:
+                    best = self._best_source_for(ep, src, version_pref, quality_pref)
+                    if best:
+                        total_bytes += int(best.get("size_bytes", 0))
+
+        if ticked > 0:
+            size_str = _fmt_size(total_bytes) if total_bytes > 0 else "0 MB"
+            self.selection_size_lbl.configure(text=f"{ticked} selected ({size_str})")
+        else:
+            self.selection_size_lbl.configure(text="")
+
         if total == 0:
             self.select_all_btn.configure(text="Select all")
             self.download_selected_btn.configure(text="Download selected")
@@ -2745,6 +3010,7 @@ class App(ctk.CTk):
             "onepace": "ONE PACE",
             "muhn":    "MUHN PACE  (English Dub)",
             "nyaa":    "NYAA  (Torrents)",
+            "usenet":  "USENET  (NZB)",
         }[src]
         if sources:
             self._build_source_card(card_header, sources, ep, src)
@@ -2989,7 +3255,7 @@ class App(ctk.CTk):
             anchor="w",
         ).pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
         steps = [
-            ("1", "Pick a source above (One Pace, Muhn Pace, or Nyaa)."),
+            ("1", "Pick a source above (One Pace, Muhn Pace, Nyaa, or Usenet)."),
             ("2", "Pick an arc from the list on the left."),
             ("3", "Tick the episodes you want in the middle column."),
             ("4", "Hit Download selected, choose quality, go."),
@@ -3067,19 +3333,9 @@ class App(ctk.CTk):
         ).pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_XS))
         link_row = ctk.CTkFrame(help_card, fg_color="transparent")
         link_row.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
-        for label, url in (("Discord", DISCORD_URL),
-                           ("Reddit", REDDIT_URL),
-                           ("GitHub",
-                            "https://github.com/Nicolaslahri/onepacedownloader")):
-            ctk.CTkButton(
-                link_row, text=label, height=H_SM, width=72,
-                fg_color="transparent", border_width=1,
-                border_color=BORDER_STRONG,
-                text_color=LINK,
-                hover_color=SURFACE_HOVER,
-                font=F_SM,
-                command=lambda u=url: webbrowser.open(u),
-            ).pack(side="left", padx=(0, SP_XS))
+        for label in ("Discord", "Reddit", "GitHub"):
+            _make_brand_button(link_row, label, width=84).pack(
+                side="left", padx=(0, SP_XS))
 
     def _build_source_card(self, header: str, sources: list[dict],
                            ep: dict, kind: str) -> None:
@@ -3179,6 +3435,26 @@ class App(ctk.CTk):
                 fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
                 command=lambda src=s, e=ep:
                     self._download_single_episode_source(e, src),
+            ).pack(side="right", padx=(SP_SM, 0))
+            ctk.CTkLabel(row, text=size_str, font=F_SM,
+                         text_color=TEXT_MUTED, anchor="e").pack(
+                side="right", padx=(0, SP_SM))
+
+        elif kind == "usenet":
+            self._chip(row, s.get("quality", "—")).pack(side="left")
+            release_title = s.get("release_title", "")
+            # Truncated release-name hint so users can tell duplicates apart
+            short = release_title.split("]")[-1].strip()[:36] if release_title else ""
+            ctk.CTkLabel(
+                row, text=short or "NZB", font=F_BOLD_BASE,
+                text_color=TEXT, anchor="w",
+            ).pack(side="left", padx=(SP_SM, 0))
+            ctk.CTkButton(
+                row, text="Get NZB", width=110, height=H_SM,
+                font=F_BOLD_XS,
+                fg_color=INFO, hover_color=INFO_HOVER,
+                command=lambda src=s, e=ep:
+                    self._download_usenet_nzb(src, e),
             ).pack(side="right", padx=(SP_SM, 0))
             ctk.CTkLabel(row, text=size_str, font=F_SM,
                          text_color=TEXT_MUTED, anchor="e").pack(
@@ -3307,6 +3583,13 @@ class App(ctk.CTk):
         # Nyaa: confirm + hand magnets to torrent client
         if self.current_source == "nyaa":
             self._send_selected_nyaa_magnets(chosen)
+            return
+
+        # Usenet: confirm + fetch one .nzb per episode and let SABnzbd / NZBGet
+        # pick them up. No version/quality dialog (Usenet GUIDs are per-release
+        # already); just pick the user's preferred quality if available.
+        if self.current_source == "usenet":
+            self._send_selected_usenet_nzbs(chosen)
             return
 
         # One Pace / Muhn: let the user pick version + quality for the batch
@@ -3515,6 +3798,72 @@ class App(ctk.CTk):
 
         step(0)
 
+    def _send_selected_usenet_nzbs(self, chosen_ep_nums: list[int]) -> None:
+        """Fetch one .nzb per selected episode from the configured indexer
+        and hand each to the OS default Usenet client. Picks the user's
+        preferred quality where available; falls back to the highest tier."""
+        cfg = self.config_data
+        if not (cfg.get("usenet_indexer_url") and cfg.get("usenet_api_key")):
+            self._show_usenet_setup_prompt()
+            return
+
+        quality_pref = cfg.get("default_quality", "1080p")
+        plan: list[tuple[str, dict]] = []  # (display_title, usenet_source)
+        skipped: list[str] = []
+        for ep in self.selected_arc["episodes"]:
+            if ep["num"] not in chosen_ep_nums:
+                continue
+            usources = [s for s in ep.get("sources", [])
+                         if s.get("kind") == "usenet"]
+            if not usources:
+                skipped.append(episode_title(ep))
+                continue
+            # Prefer the user's quality, else fall back to highest tier.
+            preferred = next(
+                (s for s in usources if s.get("quality") == quality_pref),
+                None)
+            if preferred is None:
+                preferred = max(
+                    usources,
+                    key=lambda s: _quality_rank(s.get("quality", "")))
+            plan.append((episode_title(ep), preferred))
+
+        if not plan:
+            messagebox.showinfo(
+                "No NZBs",
+                "None of the selected episodes have a Usenet source.")
+            return
+        if not messagebox.askyesno(
+            "Fetch NZBs",
+            f"Download {len(plan)} .nzb file(s) and hand them to your "
+            "Usenet client (SABnzbd / NZBGet)?\n\n"
+            "Each NZB is queued one after the other with a short delay "
+            "so your indexer doesn't rate-limit you.",
+        ):
+            return
+        if skipped:
+            self._log(
+                f"Skipped {len(skipped)} episode(s) without a Usenet source: "
+                f"{', '.join(skipped[:5])}"
+                f"{'…' if len(skipped) > 5 else ''}")
+        self._log(f"Queuing {len(plan)} NZB fetch(es)…")
+
+        # Sequential with a small gap — keeps the indexer happy and avoids
+        # piling Toplevel popups if SABnzbd isn't registered yet.
+        def step(i: int) -> None:
+            if i >= len(plan):
+                self._set_status(f"Queued {len(plan)} NZB(s).")
+                self._log("All NZB fetches dispatched.")
+                return
+            title, src = plan[i]
+            self._download_usenet_nzb(src, ep=None)
+            self._set_status(f"NZB {i + 1}/{len(plan)}: {title}")
+            # 800ms keeps us under most indexer rate limits (NZBGeek is
+            # typically 30 req/min — we'd never hit that here).
+            self.after(800, lambda: step(i + 1))
+
+        step(0)
+
     # --------------------------------------------------------- magnets ---
 
     def _open_magnet(self, magnet: str, title: str = "",
@@ -3570,30 +3919,229 @@ class App(ctk.CTk):
             command=dlg.destroy,
         ).pack(side="left", padx=6)
 
+    # ----------------------------------------------- Usenet NZB fetch -----
+
+    def _download_usenet_nzb(self, source: dict, ep: dict | None = None) -> None:
+        """Fetch the .nzb file from the user's configured Newznab indexer
+        using *their* API key, save it under the user's downloads folder,
+        then hand it to the OS default handler (SABnzbd / NZBGet).
+
+        We never ship NZB content or API keys — the indexer URL + key live
+        in the user's config.json only.
+
+        Per-GUID in-flight guard prevents double-clicks from spawning two
+        concurrent fetches against the same release (which would burn
+        indexer quota and race on the dest path)."""
+        cfg = self.config_data
+        url_base = (cfg.get("usenet_indexer_url") or "").rstrip("/")
+        api_key = cfg.get("usenet_api_key") or ""
+        if not url_base or not api_key:
+            self._show_usenet_setup_prompt()
+            return
+
+        guid = source.get("guid")
+        if not guid:
+            messagebox.showerror(
+                "Usenet",
+                "This release has no GUID — can't fetch the NZB.")
+            return
+
+        if not hasattr(self, "_usenet_inflight"):
+            self._usenet_inflight: set[str] = set()
+        if guid in self._usenet_inflight:
+            self._set_status("That NZB is already being fetched…")
+            return
+        self._usenet_inflight.add(guid)
+
+        release_title = source.get("release_title") or "release"
+        safe = _safe_nzb_filename(release_title, guid)
+        dest_dir = Path(self.save_dir.get() or DEFAULT_DOWNLOADS)
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        dest = dest_dir / safe
+        # Path-length sanity check (MAX_PATH = 260 on legacy Windows). Truncate
+        # the filename further if the full path would overflow.
+        if len(str(dest)) > 240:
+            stem_budget = 240 - len(str(dest_dir)) - len("__") - len(".nzb")
+            if stem_budget > 20:
+                stem = re.sub(r'\.nzb$', "", safe, flags=re.IGNORECASE)
+                safe = stem[:stem_budget] + "_" + guid[:8] + ".nzb"
+            else:
+                # Last-resort: just use the GUID as the filename.
+                safe = f"{guid}.nzb"
+            dest = dest_dir / safe
+
+        api_url = (f"{url_base}/api?"
+                   + urllib.parse.urlencode({
+                       "t": "get", "id": guid, "apikey": api_key}))
+        self._set_status(f"Fetching NZB: {release_title[:60]}…")
+        self._log(f"Usenet GET: {release_title}")
+
+        def task() -> None:
+            try:
+                req = urllib.request.Request(
+                    api_url,
+                    headers={"User-Agent": f"OnePaceDownloader/{APP_VERSION}"})
+                with urllib.request.urlopen(req, timeout=60) as r:
+                    blob = r.read()
+                if len(blob) < 200 or b"<nzb" not in blob[:2000]:
+                    # Likely an error response, not an NZB
+                    raise ValueError(
+                        "Indexer didn't return an NZB. "
+                        "Check your API key and that the indexer is up.")
+                dest.write_bytes(blob)
+                self.ui_queue.put(("usenet_nzb_ready", str(dest)))
+            except Exception as e:  # noqa: BLE001
+                self.ui_queue.put(("usenet_nzb_error", str(e)))
+            finally:
+                # Always drop the in-flight marker so a retry is possible
+                self._usenet_inflight.discard(guid)
+
+        threading.Thread(target=task, daemon=True).start()
+
+    def _on_usenet_nzb_ready(self, path: str) -> None:
+        """Open the saved .nzb with the OS default handler (SABnzbd etc.).
+        If nothing is registered for .nzb, fall back to showing the file in
+        Explorer so the user can sort it themselves."""
+        try:
+            os.startfile(path)  # type: ignore[attr-defined]
+            self._log(f"NZB handed to Usenet client: {Path(path).name}")
+            self._set_status("NZB saved and opened in your Usenet client.")
+        except (OSError, AttributeError):
+            # No registered handler for .nzb — open the folder instead
+            try:
+                os.startfile(str(Path(path).parent))  # type: ignore[attr-defined]
+            except Exception:
+                pass
+            self._log("No .nzb handler registered — opened folder instead.")
+            self._set_status("NZB saved. Open it in SABnzbd / NZBGet manually.")
+
+    def _on_usenet_nzb_error(self, msg: str) -> None:
+        self._log(f"Usenet NZB fetch failed: {msg}")
+        self._set_status("Usenet NZB fetch failed.")
+        messagebox.showerror("Usenet", f"Couldn't fetch NZB:\n\n{msg}")
+
+    def _show_usenet_setup_prompt(self) -> None:
+        """Friendly nudge when the user clicks Get NZB without configuring
+        the indexer. Uses the shared ModalOverlay so it matches the look of
+        the Settings / DNS panels."""
+        overlay = ModalOverlay(self, "Set up Usenet", width=480, height=320)
+        card = overlay.card
+
+        ctk.CTkLabel(card, text="Add your Usenet indexer",
+                     font=F_BOLD_XL, text_color=TEXT, anchor="w").pack(
+            fill="x", padx=SP_XL, pady=(SP_XL, SP_SM))
+        ctk.CTkLabel(
+            card, anchor="w", justify="left", wraplength=400,
+            font=F_SM, text_color=TEXT_MUTED,
+            text=("Usenet downloads need your own indexer URL + API key. "
+                  "Configure them once in Settings and the Get NZB buttons "
+                  "will start working.\n\n"
+                  "Don't have a Usenet provider yet? You'll need one "
+                  "(e.g. Newshosting, Eweka) plus an indexer like NZBGeek "
+                  "to use this feature."),
+        ).pack(fill="x", padx=SP_XL, pady=(0, SP_LG))
+
+        btn_row = ctk.CTkFrame(card, fg_color="transparent")
+        btn_row.pack(side="bottom", pady=(SP_SM, SP_XL))
+        ctk.CTkButton(
+            btn_row, text="Open Settings", width=140, height=H_MD,
+            font=F_BOLD_SM,
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+            command=lambda: (overlay.destroy(),
+                             self._open_settings_panel()),
+        ).pack(side="left", padx=SP_XS)
+        ctk.CTkButton(
+            btn_row, text="Setup guide", width=120, height=H_MD,
+            font=F_SM,
+            fg_color="transparent", border_width=1,
+            border_color=BORDER_STRONG, text_color=LINK,
+            hover_color=SURFACE_HOVER,
+            command=lambda: webbrowser.open(USENET_SETUP_GUIDE_URL),
+        ).pack(side="left", padx=SP_XS)
+        ctk.CTkButton(
+            btn_row, text="Close", width=90, height=H_MD,
+            font=F_SM,
+            fg_color="transparent", border_width=1,
+            border_color=BORDER_STRONG, text_color=TEXT_MUTED,
+            hover_color=SURFACE_HOVER,
+            command=overlay.destroy,
+        ).pack(side="left", padx=SP_XS)
+
     # ----------------------------------------------- DNS / settings ------
 
     def _open_dns_panel(self) -> None:
-        DnsPanel(self)
+        self._dns_panel_ref = DnsPanel(self)
 
     def _open_settings_panel(self) -> None:
-        SettingsPanel(self)
+        self._settings_panel_ref = SettingsPanel(self)
+
+    # --------------------------------------------- updates-available badge
+
+    def _set_refresh_badge(self, available: bool) -> None:
+        """Update the header Refresh button to advertise pending updates.
+        Yellow-tinted + arrow when something new is on onepace.net since
+        our last full refresh; plain when in sync."""
+        btn = getattr(self, "_refresh_btn", None)
+        if btn is None:
+            return
+        try:
+            if available:
+                btn.configure(
+                    text="↻  Refresh", text_color=HEADER_ACCENT,
+                    border_color=HEADER_ACCENT)
+            else:
+                btn.configure(
+                    text="Refresh", text_color=HEADER_FG,
+                    border_color="#2C3D5C")
+        except Exception:
+            pass
+
+    def _check_for_updates_async(self) -> None:
+        """Fire-and-forget: HEAD request against the central data branch on
+        GitHub and compare ETag with the cached one. If newer, flip the
+        Refresh button to its "↻ updates available" badge state.
+
+        Runs in a daemon thread so a slow / blocked CDN never freezes the
+        UI. All failures are silent — at worst the user just doesn't see
+        the badge."""
+        cached = (self.config_data.get("refresh_cache") or {}).get(
+            "remote_etag")
+
+        def task() -> None:
+            try:
+                # HEAD is cheap (~200ms). raw.githubusercontent serves ETag.
+                req = urllib.request.Request(
+                    REMOTE_INDEX_URL, method="HEAD",
+                    headers={"User-Agent":
+                             f"OnePaceDownloader/{APP_VERSION}"})
+                with urllib.request.urlopen(req, timeout=15) as r:
+                    etag = r.headers.get("ETag") or ""
+                if etag and etag != cached:
+                    self.ui_queue.put(("updates_available", True))
+            except Exception:
+                # GitHub unreachable, data branch missing, etc. — fail silent.
+                # On the next user-initiated Refresh we'll log the failure
+                # and fall back to the local scrape.
+                pass
+
+        threading.Thread(target=task, daemon=True).start()
 
     def _refresh_all(self) -> None:
         if self.worker and self.worker.is_alive():
             messagebox.showinfo("Busy",
                 "A download is in progress. Cancel it first.")
             return
-        if not messagebox.askyesno(
-            "Refresh everything",
-            "Pull the latest arc list from onepace.net, the latest torrent "
-            "list from nyaa.si, and rebuild the per-episode index used by "
-            "this app.\n\n"
-            "This usually takes 60-90 seconds (mostly Pixeldrain API calls "
-            "for file sizes). The window stays usable but downloads are "
-            "paused until it finishes."):
+        force = bool(getattr(self, "_force_full_refresh", False))
+        if not force and not messagebox.askyesno(
+            "Check for updates",
+            "Pull the latest episode index. Normally this is a quick "
+            "download (~2 seconds) of a pre-built catalog that's "
+            "regenerated weekly on GitHub.\n\n"
+            "Continue?"):
             return
 
-        self._set_status("Refreshing — this takes ~60-90 seconds…")
+        self._set_status(
+            "Checking for updates…")
         # Switch progress bar into indeterminate mode for the duration so
         # users see the app is actually working.
         try:
@@ -3603,34 +4151,112 @@ class App(ctk.CTk):
             pass
         self.refresh_in_progress = True
 
+        # Clear the "updates available" badge once a real refresh starts —
+        # whether it finds anything new or not, we're about to be in sync.
+        self._set_refresh_badge(False)
+
+        if force:
+            # One-shot — clear the flag so the next refresh is remote-first.
+            self._force_full_refresh = False
+            self.ui_queue.put(("log", "Force-full local rebuild requested — "
+                                "skipping the central catalog."))
+
         def task():
             try:
-                self.ui_queue.put(("log", "Refreshing onepace.net…"))
-                refresh_arcs_from_web()
-                self.ui_queue.put(("log", "Refreshing nyaa.si…"))
-                arc_titles = [a["title"] for a in load_arcs()]
-                if arc_titles:
-                    refresh_nyaa_from_web(arc_titles)
-                self.ui_queue.put((
-                    "log",
-                    "Rebuilding episode index (this is the slow part)…"))
-                # Deferred import — build_episode_index imports from this
-                # module, so a top-level import would be circular.
-                import build_episode_index
-                build_episode_index.build(
-                    log=lambda m: self.ui_queue.put(("log", m)),
-                    cancel_evt=self.cancel_evt,
-                )
-                # Reload the live index so the UI re-renders against fresh data
-                self.ui_queue.put(("reload_index", None))
-                self.ui_queue.put(("status", "Sources refreshed."))
-                self.ui_queue.put(("log", "All sources up to date."))
+                if not force and self._try_remote_refresh():
+                    # Happy path: GitHub data branch served the catalog.
+                    self.ui_queue.put(("status", "Sources refreshed."))
+                    return
+                # Either user asked for force, or GitHub is unreachable /
+                # missing the data branch. Fall back to the per-user scrape.
+                self._do_local_refresh(force=force)
             except Exception as e:
                 self.ui_queue.put(("error", f"Refresh failed: {e}"))
             finally:
                 self.ui_queue.put(("refresh_done", None))
 
         threading.Thread(target=task, daemon=True).start()
+
+    def _try_remote_refresh(self) -> bool:
+        """Fetch the pre-built index from the repo's `data` branch.
+        Returns True on success (and reloads the index), False if anything
+        goes wrong so the caller can fall back to the local scrape.
+
+        The catalog is small (~500 KB) so a full GET is fast and we don't
+        bother with HEAD + ETag — the request itself is the check."""
+        self.ui_queue.put(("log",
+            f"Fetching latest index from GitHub (data branch)…"))
+        try:
+            req = urllib.request.Request(
+                REMOTE_INDEX_URL,
+                headers={"User-Agent": f"OnePaceDownloader/{APP_VERSION}"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                etag = r.headers.get("ETag") or ""
+                blob = r.read()
+        except Exception as e:
+            self.ui_queue.put(("log",
+                f"Central refresh unavailable ({e}) — falling back to "
+                "local scrape."))
+            return False
+
+        # Skip the disk write + reload if nothing actually changed.
+        cached_etag = (self.config_data.get("refresh_cache") or {}).get(
+            "remote_etag")
+        if etag and etag == cached_etag and INDEX_FILE.exists():
+            self.ui_queue.put(("log", "Already up to date."))
+            self.ui_queue.put(("reload_index", None))
+            return True
+
+        # Quick sanity-check it's valid JSON with the shape we expect before
+        # overwriting the user's working copy.
+        try:
+            data = json.loads(blob)
+            if not isinstance(data.get("arcs"), list):
+                raise ValueError("Remote payload missing 'arcs' list")
+        except Exception as e:
+            self.ui_queue.put(("log",
+                f"Remote payload looks malformed ({e}) — falling back."))
+            return False
+
+        INDEX_FILE.write_bytes(blob)
+        rc = dict(self.config_data.get("refresh_cache", {}))
+        if etag:
+            rc["remote_etag"] = etag
+        rc["last_refresh"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+        self.config_data["refresh_cache"] = rc
+        save_config(self.config_data)
+
+        scraped = data.get("scraped_at", "?")
+        self.ui_queue.put(("log",
+            f"Pulled fresh index (scraped {scraped}, "
+            f"{len(data['arcs'])} arcs)."))
+        self.ui_queue.put(("reload_index", None))
+        return True
+
+    def _do_local_refresh(self, force: bool = False) -> None:
+        """Per-user fallback scrape — the original behavior. Used when the
+        central catalog is unreachable, or when the user explicitly asks for
+        a full rebuild via Settings."""
+        refresh_cache = dict(self.config_data.get("refresh_cache", {}))
+        self.ui_queue.put(("log", "Refreshing onepace.net…"))
+        refresh_arcs_from_web()
+        self.ui_queue.put(("log", "Refreshing nyaa.si…"))
+        arc_titles = [a["title"] for a in load_arcs()]
+        if arc_titles:
+            refresh_nyaa_from_web(arc_titles)
+        self.ui_queue.put(("log", "Rebuilding episode index…"))
+        import build_episode_index
+        build_episode_index.build(
+            log=lambda m: self.ui_queue.put(("log", m)),
+            cancel_evt=self.cancel_evt,
+            cache=refresh_cache,
+            force=force,
+        )
+        self.config_data["refresh_cache"] = refresh_cache
+        save_config(self.config_data)
+        self.ui_queue.put(("reload_index", None))
+        self.ui_queue.put(("status", "Sources refreshed."))
+        self.ui_queue.put(("log", "All sources up to date."))
 
     # ----------------------------------------------- folder & settings ---
 
@@ -3841,14 +4467,17 @@ class App(ctk.CTk):
                     self._render_arc_list()
                     self._render_episode_list()
                     self._render_source_panel()
-                elif kind == "refresh_done":
-                    self.refresh_in_progress = False
-                    try:
-                        self.progress.stop()
-                        self.progress.configure(mode="determinate")
-                        self.progress.set(0)
-                    except Exception:
-                        pass
+                elif kind == "usenet_nzb_ready":
+                    self._on_usenet_nzb_ready(payload)
+                elif kind == "usenet_nzb_error":
+                    self._on_usenet_nzb_error(payload)
+                elif kind == "updates_available":
+                    self._set_refresh_badge(bool(payload))
+                elif kind == "usenet_test_result":
+                    success, msg = payload
+                    if hasattr(self, "_settings_panel_ref") and self._settings_panel_ref and self._settings_panel_ref.winfo_exists():
+                        color = OK if success else DANGER
+                        self._settings_panel_ref.test_status_lbl.configure(text=msg, text_color=color)
         except queue.Empty:
             pass
         # Slow the polling cadence when idle to be friendlier on battery.
@@ -3856,35 +4485,123 @@ class App(ctk.CTk):
                and not getattr(self, "refresh_in_progress", False)
         self.after(200 if idle else 80, self._drain_ui_queue)
 
+    def _toggle_checkbox(self, num: int) -> None:
+        if num in self.ep_check_vars:
+            var = self.ep_check_vars[num]
+            var.set(not var.get())
+
+    def _on_checkbox_clicked(self, event, num: int) -> None:
+        is_shift = (event.state & 0x0001) != 0
+        target_state = not self.ep_check_vars[num].get()
+        
+        prev_last = getattr(self, "_last_clicked_ep_num", None)
+        self._last_clicked_ep_num = num
+        
+        if is_shift and prev_last is not None and prev_last != num:
+            arc = self.selected_arc
+            if not arc:
+                return
+            src = self.current_source
+            visible_eps = [
+                e["num"] for e in arc.get("episodes", [])
+                if any(s.get("kind") == src for s in e.get("sources", []))
+            ]
+            if num in visible_eps and prev_last in visible_eps:
+                idx1 = visible_eps.index(prev_last)
+                idx2 = visible_eps.index(num)
+                start_idx, end_idx = min(idx1, idx2), max(idx1, idx2)
+                
+                self._updating_checks = True
+                try:
+                    for idx in range(start_idx, end_idx + 1):
+                        ep_num = visible_eps[idx]
+                        self.ep_check_vars[ep_num].set(target_state)
+                finally:
+                    self._updating_checks = False
+                self._refresh_selection_buttons()
+
+    def _on_close(self) -> None:
+        if self.worker and self.worker.is_alive():
+            if not messagebox.askyesno("Exit", "A download is currently in progress. Exit anyway?"):
+                return
+            self.cancel_evt.set()
+        
+        is_zoomed = (self.state() == "zoomed")
+        self.config_data["maximized"] = is_zoomed
+        if not is_zoomed:
+            self.config_data["geometry"] = self.geometry()
+            
+        self.config_data.update({
+            "save_folder": self.save_dir.get(),
+            "source": self.current_source,
+        })
+        save_config(self.config_data)
+        self.destroy()
+
+
+# ======================================================== Modal Overlay ===
+
+class ModalOverlay(ctk.CTkFrame):
+    """An elegant in-app overlay modal container. Dims the main app window
+    and centers a card containing the modal panel's content."""
+    
+    def __init__(self, parent, title_text: str, width: int = 560, height: int = 480) -> None:
+        overlay_color = ("#D0D4DC", "#0A101D")
+        super().__init__(parent, fg_color=overlay_color)
+        
+        self.parent_app = parent
+        self.place(relx=0, rely=0, relwidth=1, relheight=1)
+        
+        self.card = ctk.CTkFrame(
+            self,
+            width=width,
+            height=height,
+            fg_color=SURFACE_PANEL,
+            corner_radius=RADIUS_LG,
+            border_width=1,
+            border_color=BORDER,
+        )
+        self.card.place(relx=0.5, rely=0.5, anchor="center")
+        self.card.grid_propagate(False)
+        self.card.pack_propagate(False)
+
+        self.bind("<Button-1>", lambda _: "break")
+        # Esc closes the modal — bound on the toplevel so it fires regardless
+        # of which inner widget has focus.
+        self._esc_bind = parent.winfo_toplevel().bind(
+            "<Escape>", lambda _e: self.destroy(), add="+")
+        self.focus_set()
+        
+    def destroy(self) -> None:
+        # Release the Esc binding so it doesn't pile up across modal opens.
+        try:
+            self.parent_app.winfo_toplevel().unbind("<Escape>", self._esc_bind)
+        except Exception:
+            pass
+        super().destroy()
+        try:
+            self.parent_app.focus_set()
+        except Exception:
+            pass
+
 
 # ======================================================== Batch Download =
 
-class BatchDownloadDialog(ctk.CTkToplevel):
+class BatchDownloadDialog(ModalOverlay):
     """Confirmation modal for 'Download selected' on One Pace / Muhn tabs.
     Shows the count, a per-batch version+quality picker, and a live total-size
     estimate computed from the episode index."""
 
     def __init__(self, parent, *, source: str, episodes: list[dict],
                  default_version: str, default_quality: str) -> None:
-        super().__init__(parent)
-        self.parent_app = parent
+        super().__init__(parent, "Confirm batch download", width=560, height=480)
         self.source = source
         self.episodes = episodes
         self.confirmed = False
         self.chosen_version = default_version
         self.chosen_quality = default_quality
-        self.title("Confirm batch download")
-        self.geometry("560x480")
-        self.minsize(520, 440)
-        self.transient(parent)
-        self.after(150, lambda: self._safe_grab())
-        self.configure(fg_color=SURFACE_PANEL)
 
-        # Action row — packed FIRST with side="bottom" so the Cancel /
-        # Start download buttons stay anchored to the bottom of the window
-        # and never get clipped by HiDPI scaling pushing content overflow
-        # off-screen. The content above flows top-down in the remaining space.
-        btn_row = ctk.CTkFrame(self, fg_color="transparent")
+        btn_row = ctk.CTkFrame(self.card, fg_color="transparent")
         btn_row.pack(side="bottom", pady=(SP_LG, SP_MD))
         ctk.CTkButton(
             btn_row, text="Cancel", width=120, height=H_MD,
@@ -3903,19 +4620,18 @@ class BatchDownloadDialog(ctk.CTkToplevel):
         ).pack(side="left", padx=SP_XS)
 
         ctk.CTkLabel(
-            self,
+            self.card,
             text=f"Download {len(episodes)} episode"
                  f"{'s' if len(episodes) != 1 else ''}",
             font=F_BOLD_XL, text_color=TEXT, anchor="w",
         ).pack(fill="x", padx=SP_XL, pady=(SP_XL, SP_XS))
         ctk.CTkLabel(
-            self, text=f"From {_SRC_LABEL[source]}",
+            self.card, text=f"From {_SRC_LABEL[source]}",
             font=F_SM, text_color=TEXT_MUTED, anchor="w",
         ).pack(fill="x", padx=SP_XL, pady=(0, SP_MD))
 
-        # Form card
         opt = ctk.CTkFrame(
-            self, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
+            self.card, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
             border_width=1, border_color=BORDER,
         )
         opt.pack(fill="x", padx=SP_XL, pady=SP_SM)
@@ -3929,6 +4645,13 @@ class BatchDownloadDialog(ctk.CTkToplevel):
             ctk.CTkComboBox(
                 opt, variable=self.version_var, values=VERSIONS,
                 state="readonly", height=H_SM, font=F_SM,
+                border_color=BORDER,
+                button_color=SECONDARY,
+                button_hover_color=SECONDARY_HOVER,
+                dropdown_fg_color=SURFACE_INNER,
+                dropdown_hover_color=SURFACE_HOVER,
+                dropdown_text_color=TEXT,
+                fg_color=SURFACE_INNER,
                 command=lambda _v: self._update_size_preview(),
             ).pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
         else:
@@ -3942,12 +4665,18 @@ class BatchDownloadDialog(ctk.CTkToplevel):
         ctk.CTkComboBox(
             opt, variable=self.quality_var, values=QUALITIES,
             state="readonly", height=H_SM, font=F_SM,
+            border_color=BORDER,
+            button_color=SECONDARY,
+            button_hover_color=SECONDARY_HOVER,
+            dropdown_fg_color=SURFACE_INNER,
+            dropdown_hover_color=SURFACE_HOVER,
+            dropdown_text_color=TEXT,
+            fg_color=SURFACE_INNER,
             command=lambda _v: self._update_size_preview(),
         ).pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
 
-        # Size preview card
         size_card = ctk.CTkFrame(
-            self, fg_color=("#FBF6E8", "#1F2A18"),
+            self.card, fg_color=("#FBF6E8", "#1F2A18"),
             corner_radius=RADIUS_LG,
             border_width=1, border_color=BORDER,
         )
@@ -3968,14 +4697,7 @@ class BatchDownloadDialog(ctk.CTkToplevel):
         )
         self.skipped_lbl.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
 
-        self.protocol("WM_DELETE_WINDOW", self._cancel)
         self._update_size_preview()
-
-    def _safe_grab(self) -> None:
-        try:
-            self.grab_set()
-        except tk.TclError:
-            pass
 
     def _update_size_preview(self) -> None:
         ver = self.version_var.get()
@@ -4007,33 +4729,24 @@ class BatchDownloadDialog(ctk.CTkToplevel):
 
 # ============================================================= DNS panel ==
 
-class DnsPanel(ctk.CTkToplevel):
+class DnsPanel(ModalOverlay):
     """One-click DNS switcher — status card on top, action buttons next,
     collapsible explainer at the bottom. Uses the shared modal token set."""
 
     def __init__(self, parent: App) -> None:
-        super().__init__(parent)
-        self.parent_app = parent
-        self.title("DNS Switcher")
-        self.geometry("560x460")
-        self.resizable(False, False)
-        self.transient(parent)
-        self.after(150, self._safe_grab)
-        self.configure(fg_color=SURFACE_PANEL)
+        super().__init__(parent, "DNS Switcher", width=560, height=460)
 
-        # ---- Title ----
         ctk.CTkLabel(
-            self, text="DNS Switcher",
+            self.card, text="DNS Switcher",
             font=F_BOLD_XL, text_color=TEXT, anchor="w",
         ).pack(fill="x", padx=SP_XL, pady=(SP_XL, SP_XS))
         ctk.CTkLabel(
-            self, text="Bypass ISP-level DNS blocks of the download CDN.",
+            self.card, text="Bypass ISP-level DNS blocks of the download CDN.",
             font=F_SM, text_color=TEXT_MUTED, anchor="w",
         ).pack(fill="x", padx=SP_XL, pady=(0, SP_MD))
 
-        # ---- 1. Status card ----
         card = ctk.CTkFrame(
-            self, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
+            self.card, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
             border_width=1, border_color=BORDER,
         )
         card.pack(fill="x", padx=SP_XL, pady=SP_SM)
@@ -4051,8 +4764,7 @@ class DnsPanel(ctk.CTkToplevel):
             text_color=TEXT_MUTED)
         self.dns_lbl.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
 
-        # ---- 2. Action buttons ----
-        btn_row1 = ctk.CTkFrame(self, fg_color="transparent")
+        btn_row1 = ctk.CTkFrame(self.card, fg_color="transparent")
         btn_row1.pack(fill="x", padx=SP_XL, pady=(SP_MD, SP_XS))
         self.cloudflare_btn = ctk.CTkButton(
             btn_row1, text="Switch to Cloudflare (1.1.1.1)",
@@ -4061,7 +4773,7 @@ class DnsPanel(ctk.CTkToplevel):
             command=self._switch_cloudflare)
         self.cloudflare_btn.pack(fill="x")
 
-        btn_row2 = ctk.CTkFrame(self, fg_color="transparent")
+        btn_row2 = ctk.CTkFrame(self.card, fg_color="transparent")
         btn_row2.pack(fill="x", padx=SP_XL, pady=SP_XS)
         self.google_btn = ctk.CTkButton(
             btn_row2, text="Try Google DNS (8.8.8.8) instead",
@@ -4082,21 +4794,20 @@ class DnsPanel(ctk.CTkToplevel):
                               padx=(SP_XS, 0))
 
         self.status_lbl = ctk.CTkLabel(
-            self, text="", font=F_XS,
+            self.card, text="", font=F_XS,
             text_color=TEXT_MUTED)
         self.status_lbl.pack(pady=(SP_SM, 0))
 
-        # ---- 3. Collapsible explainer ----
         self._explainer_visible = False
         self.explainer_toggle = ctk.CTkButton(
-            self, text="Why might I need this? ▾",
+            self.card, text="Why might I need this? ▾",
             fg_color="transparent",
             hover_color=SURFACE_HOVER,
             text_color=LINK,
             font=F_XS,
             command=self._toggle_explainer)
         self.explainer_toggle.pack(pady=(SP_MD, 0))
-        self.explainer_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.explainer_frame = ctk.CTkFrame(self.card, fg_color="transparent")
         ctk.CTkLabel(
             self.explainer_frame, justify="left",
             text="Some Indian ISPs (Jio, Airtel, BSNL, ACT) block the "
@@ -4116,13 +4827,17 @@ class DnsPanel(ctk.CTkToplevel):
                 "https://github.com/Nicolaslahri/onepacedownloader#downloads-not-starting")
         ).pack(pady=(0, SP_SM))
 
-        self._refresh_state()
+        ctk.CTkButton(
+            self.card, text="Close panel",
+            height=H_MD, font=F_SM,
+            fg_color="transparent", border_width=1,
+            border_color=BORDER_STRONG,
+            text_color=LINK,
+            hover_color=SURFACE_HOVER,
+            command=self.destroy
+        ).pack(side="bottom", pady=(0, SP_MD))
 
-    def _safe_grab(self) -> None:
-        try:
-            self.grab_set()
-        except tk.TclError:
-            pass
+        self._refresh_state()
 
     def _refresh_state(self) -> None:
         iface = dns_switcher.detect_active_interface()
@@ -4158,8 +4873,6 @@ class DnsPanel(ctk.CTkToplevel):
         else:
             ips_str = ", ".join(ips) if ips else "none configured"
         self.dns_lbl.configure(text=f"DNS: {ips_str}")
-        # Keep buttons enabled even when already on Cloudflare/Google — the
-        # user might be retrying after a failed handoff.
 
     def _switch_cloudflare(self) -> None:
         self._do_switch(dns_switcher.switch_to_cloudflare,
@@ -4227,132 +4940,292 @@ class DnsPanel(ctk.CTkToplevel):
 
 # ========================================================= Settings panel ==
 
-class SettingsPanel(ctk.CTkToplevel):
-    """Modal for default version/quality, appearance, and quick links."""
+class SettingsPanel(ModalOverlay):
+    """Modal overlay for default version/quality, appearance, and quick links."""
 
     DEFAULT_VERSION = "English Subtitles"
     DEFAULT_QUALITY = "1080p"
     DEFAULT_APPEARANCE = "System"
     DEFAULT_ORGANIZE = False
+    DEFAULT_USENET_URL = USENET_DEFAULT_INDEXER_URL
+
+    # Sidebar navigation — name → builder method.
+    _SECTION_ORDER = ("General", "Output", "Usenet", "Updates", "About")
 
     def __init__(self, parent: App) -> None:
-        super().__init__(parent)
-        self.parent_app = parent
-        self.title("Settings")
-        self.geometry("520x680")
-        self.minsize(480, 560)
-        self.transient(parent)
-        self.after(150, self._safe_grab)
-        self.configure(fg_color=SURFACE_PANEL)
-
-        self._original_appearance = parent.config_data.get(
+        super().__init__(parent, "Settings", width=720, height=520)
+        cfg = parent.config_data
+        self._original_appearance = cfg.get(
             "appearance", self.DEFAULT_APPEARANCE)
 
-        ctk.CTkLabel(self, text="Settings",
-                     font=F_BOLD_XL, text_color=TEXT,
-                     anchor="w").pack(fill="x",
-                                       padx=SP_XL, pady=(SP_XL, SP_MD))
-
-        # ---- Card 1: Defaults ----
-        defaults_card = ctk.CTkFrame(
-            self, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
-            border_width=1, border_color=BORDER,
-        )
-        defaults_card.pack(fill="x", padx=SP_XL, pady=SP_SM)
-        ctk.CTkLabel(
-            defaults_card, text="DEFAULTS FOR DOWNLOAD SELECTED",
-            font=F_BOLD_SM, text_color=TEXT_MUTED, anchor="w",
-        ).pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
-
-        ctk.CTkLabel(defaults_card,
-            text="Version", font=F_SM, text_color=TEXT,
-            anchor="w").pack(fill="x", padx=SP_LG, pady=(0, 2))
+        # Shared state vars (read by _save / _restore_defaults regardless of
+        # which sections the user actually opened).
         self.version_var = ctk.StringVar(
-            value=parent.config_data.get("default_version",
-                                         self.DEFAULT_VERSION))
-        ctk.CTkComboBox(defaults_card, variable=self.version_var,
-                        values=VERSIONS, state="readonly",
-                        height=H_SM, font=F_SM).pack(
-            fill="x", padx=SP_LG, pady=(0, SP_MD))
-
-        ctk.CTkLabel(defaults_card,
-            text="Quality", font=F_SM, text_color=TEXT,
-            anchor="w").pack(fill="x", padx=SP_LG, pady=(0, 2))
+            value=cfg.get("default_version", self.DEFAULT_VERSION))
         self.quality_var = ctk.StringVar(
-            value=parent.config_data.get("default_quality",
-                                          self.DEFAULT_QUALITY))
-        ctk.CTkComboBox(defaults_card, variable=self.quality_var,
-                        values=QUALITIES, state="readonly",
-                        height=H_SM, font=F_SM).pack(
-            fill="x", padx=SP_LG, pady=(0, SP_MD))
-
-        # ---- Card 2: Output organization (Plex / Jellyfin) ----
-        organize_card = ctk.CTkFrame(
-            self, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
-            border_width=1, border_color=BORDER,
-        )
-        organize_card.pack(fill="x", padx=SP_XL, pady=SP_SM)
-        ctk.CTkLabel(
-            organize_card, text="OUTPUT ORGANIZATION",
-            font=F_BOLD_SM, text_color=TEXT_MUTED, anchor="w",
-        ).pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
-        self.organize_var = ctk.BooleanVar(value=parent.config_data.get(
-            "organize_for_media_server", self.DEFAULT_ORGANIZE))
-        ctk.CTkCheckBox(
-            organize_card, text="Organize for Plex / Jellyfin",
-            variable=self.organize_var, font=F_SM,
-        ).pack(fill="x", padx=SP_LG, pady=(0, 2), anchor="w")
-        ctk.CTkLabel(
-            organize_card, justify="left",
-            text=("After each download, rename files into "
-                  "One Pace/Season N/One Pace - sNNeMM - Title.mkv "
-                  "and write episode metadata (.nfo) alongside, so Plex "
-                  "and Jellyfin pick them up automatically. Titles come "
-                  "from the SpykerNZ/one-pace-for-plex schema."),
-            font=F_XS, wraplength=440,
-            text_color=TEXT_MUTED,
-        ).pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
-
-        # ---- Card 3: Appearance ----
-        appear_card = ctk.CTkFrame(
-            self, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
-            border_width=1, border_color=BORDER,
-        )
-        appear_card.pack(fill="x", padx=SP_XL, pady=SP_SM)
-        ctk.CTkLabel(
-            appear_card, text="APPEARANCE",
-            font=F_BOLD_SM, text_color=TEXT_MUTED, anchor="w",
-        ).pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
+            value=cfg.get("default_quality", self.DEFAULT_QUALITY))
         self.appearance_var = ctk.StringVar(value=self._original_appearance)
-        ctk.CTkComboBox(
-            appear_card, variable=self.appearance_var,
-            values=["System", "Light", "Dark"], state="readonly",
-            height=H_SM, font=F_SM,
-            command=lambda v: ctk.set_appearance_mode(v.lower())
-        ).pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
+        self.organize_var = ctk.BooleanVar(
+            value=cfg.get("organize_for_media_server", self.DEFAULT_ORGANIZE))
+        self.usenet_url_var = ctk.StringVar(
+            value=cfg.get("usenet_indexer_url", self.DEFAULT_USENET_URL))
+        self.usenet_key_var = ctk.StringVar(
+            value=cfg.get("usenet_api_key", ""))
 
-        # ---- Footer band: about + links + action buttons ----
-        ctk.CTkLabel(self,
-            text=f"One Pace Downloader v{APP_VERSION}  ·  Made by Nicolas  ·  MIT",
-            font=F_XS, text_color=TEXT_DIM,
-            justify="center").pack(pady=(SP_MD, SP_XS))
-        link_row = ctk.CTkFrame(self, fg_color="transparent")
-        link_row.pack()
-        for label, url in (("Discord", DISCORD_URL),
-                           ("Reddit", REDDIT_URL),
-                           ("GitHub",
-                            "https://github.com/Nicolaslahri/onepacedownloader")):
-            ctk.CTkButton(
-                link_row, text=label, width=80, height=H_SM,
-                fg_color="transparent",
+        # ---- Title bar (title + close X) ----
+        titlebar = ctk.CTkFrame(self.card, fg_color="transparent", height=44)
+        titlebar.pack(fill="x", padx=SP_XL, pady=(SP_LG, SP_SM))
+        titlebar.pack_propagate(False)
+        ctk.CTkLabel(titlebar, text="Settings", font=F_BOLD_XL,
+                     text_color=TEXT, anchor="w").pack(side="left")
+        ctk.CTkButton(
+            titlebar, text="✕", width=32, height=32, font=F_BOLD_BASE,
+            fg_color="transparent", hover_color=SURFACE_HOVER,
+            text_color=TEXT_MUTED, command=self._rollback_and_close,
+        ).pack(side="right")
+
+        # ---- Footer (Restore / Save) pinned to the bottom ----
+        self._build_footer_band()
+
+        # ---- Body: left sidebar nav + right content pane ----
+        body = ctk.CTkFrame(self.card, fg_color="transparent")
+        body.pack(fill="both", expand=True, padx=SP_XL, pady=(0, SP_MD))
+
+        self._sidebar = ctk.CTkFrame(
+            body, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
+            width=148, border_width=1, border_color=BORDER)
+        self._sidebar.pack(side="left", fill="y")
+        self._sidebar.pack_propagate(False)
+
+        self._content = ctk.CTkFrame(
+            body, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
+            border_width=1, border_color=BORDER)
+        self._content.pack(side="left", fill="both", expand=True,
+                           padx=(SP_MD, 0))
+
+        self._section_frames: dict[str, ctk.CTkFrame] = {}
+        self._nav_buttons: dict[str, ctk.CTkButton] = {}
+        self._active_section: str | None = None
+        for i, name in enumerate(self._SECTION_ORDER):
+            btn = ctk.CTkButton(
+                self._sidebar, text=name, anchor="w",
+                font=F_SM, height=H_MD, corner_radius=RADIUS_SM,
+                fg_color="transparent", text_color=TEXT,
                 hover_color=SURFACE_HOVER,
-                text_color=LINK,
-                font=F_SM,
-                command=lambda u=url: webbrowser.open(u)
-            ).pack(side="left", padx=SP_XS)
+                command=lambda n=name: self._show_section(n))
+            btn.pack(fill="x", padx=SP_XS,
+                     pady=(SP_SM if i == 0 else 2, 2))
+            self._nav_buttons[name] = btn
 
-        action_row = ctk.CTkFrame(self, fg_color="transparent")
-        action_row.pack(pady=(SP_LG, SP_MD))
+        self._show_section("General")
+
+    # ----------------------------------------------- section plumbing ----
+
+    def _show_section(self, name: str) -> None:
+        if name == self._active_section:
+            return
+        if (self._active_section
+                and self._active_section in self._section_frames):
+            self._section_frames[self._active_section].pack_forget()
+        # Build the section's widgets lazily the first time it's opened.
+        if name not in self._section_frames:
+            frame = ctk.CTkFrame(self._content, fg_color="transparent")
+            builder = {
+                "General": self._build_general_section,
+                "Output":  self._build_output_section,
+                "Usenet":  self._build_usenet_section,
+                "Updates": self._build_updates_section,
+                "About":   self._build_about_section,
+            }[name]
+            builder(frame)
+            self._section_frames[name] = frame
+        self._section_frames[name].pack(fill="both", expand=True,
+                                        padx=SP_LG, pady=SP_LG)
+        for n, btn in self._nav_buttons.items():
+            if n == name:
+                btn.configure(fg_color=PRIMARY, text_color="#FFFFFF")
+            else:
+                btn.configure(fg_color="transparent", text_color=TEXT)
+        self._active_section = name
+
+    @staticmethod
+    def _section_title(parent, text: str) -> None:
+        ctk.CTkLabel(parent, text=text, font=F_BOLD_LG, text_color=TEXT,
+                     anchor="w").pack(fill="x", pady=(0, SP_MD))
+
+    @staticmethod
+    def _field_label(parent, text: str, *, first: bool = False) -> None:
+        ctk.CTkLabel(parent, text=text, font=F_BOLD_SM, text_color=TEXT,
+                     anchor="w").pack(
+            fill="x", pady=((0 if first else SP_MD), 2))
+
+    @staticmethod
+    def _help_text(parent, text: str) -> None:
+        ctk.CTkLabel(parent, text=text, font=F_XS, text_color=TEXT_MUTED,
+                     anchor="w", justify="left", wraplength=460).pack(
+            fill="x", pady=(2, 0))
+
+    def _combo(self, parent, variable, values, command=None):
+        return ctk.CTkComboBox(
+            parent, variable=variable, values=values, state="readonly",
+            height=H_MD, font=F_SM,
+            border_color=BORDER,
+            button_color=SECONDARY, button_hover_color=SECONDARY_HOVER,
+            dropdown_fg_color=SURFACE_INNER,
+            dropdown_hover_color=SURFACE_HOVER,
+            dropdown_text_color=TEXT, fg_color=SURFACE_INNER,
+            command=command)
+
+    # --------------------------------------------------- section builders -
+
+    def _build_general_section(self, parent) -> None:
+        self._section_title(parent, "General")
+        self._field_label(parent, "Default version", first=True)
+        self._help_text(parent,
+            "Used when you click Download selected without picking "
+            "per-batch.")
+        self._combo(parent, self.version_var, VERSIONS).pack(
+            fill="x", pady=(SP_XS, 0))
+        self._field_label(parent, "Default quality")
+        self._combo(parent, self.quality_var, QUALITIES).pack(
+            fill="x", pady=(SP_XS, 0))
+        self._field_label(parent, "Appearance")
+        self._combo(parent, self.appearance_var,
+                    ["System", "Light", "Dark"],
+                    command=lambda v: ctk.set_appearance_mode(
+                        v.lower())).pack(fill="x", pady=(SP_XS, 0))
+
+    def _build_output_section(self, parent) -> None:
+        self._section_title(parent, "Output organization")
+        ctk.CTkCheckBox(
+            parent, text="Organize for Plex / Jellyfin",
+            variable=self.organize_var, font=F_SM,
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+            border_color=BORDER_STRONG,
+        ).pack(fill="x", anchor="w", pady=(0, SP_SM))
+        self._help_text(parent,
+            "After each download, files are renamed into\n"
+            "One Pace / Season N / One Pace - sNNeMM - Title.mkv\n"
+            "with episode metadata (.nfo) written alongside, so Plex and "
+            "Jellyfin pick the show up automatically. Canonical titles come "
+            "from the SpykerNZ/one-pace-for-plex schema.")
+
+    def _build_usenet_section(self, parent) -> None:
+        self._section_title(parent, "Usenet")
+        self._help_text(parent,
+            "Optional — only needed for the Usenet source. The bundled "
+            "release IDs are NZBGeek-specific, so you'll need an NZBGeek "
+            "account + API key. Stored locally in config.json, never "
+            "uploaded.")
+        self._field_label(parent, "Indexer URL")
+        ctk.CTkEntry(
+            parent, textvariable=self.usenet_url_var, height=H_MD,
+            font=F_SM, fg_color=SURFACE_INNER, border_color=BORDER,
+            placeholder_text="https://api.nzbgeek.info",
+        ).pack(fill="x", pady=(SP_XS, 0))
+        self._field_label(parent, "API key")
+        ctk.CTkEntry(
+            parent, textvariable=self.usenet_key_var, height=H_MD,
+            font=F_SM, show="•", fg_color=SURFACE_INNER,
+            border_color=BORDER,
+            placeholder_text="(paste your indexer API key)",
+        ).pack(fill="x", pady=(SP_XS, 0))
+        row = ctk.CTkFrame(parent, fg_color="transparent")
+        row.pack(fill="x", pady=(SP_MD, SP_XS))
+        for txt, cmd, w in (
+            ("Get my API key",
+             lambda: webbrowser.open(
+                 "https://nzbgeek.info/dashboard.php?myaccount"), 130),
+            ("Setup guide",
+             lambda: webbrowser.open(USENET_SETUP_GUIDE_URL), 96),
+            ("Test connection", self._test_usenet_connection, 124),
+        ):
+            ctk.CTkButton(
+                row, text=txt, height=H_SM, width=w,
+                fg_color="transparent", border_width=1,
+                border_color=BORDER_STRONG, text_color=LINK,
+                hover_color=SURFACE_HOVER, font=F_SM, command=cmd,
+            ).pack(side="left", padx=(0, SP_XS))
+        self.test_status_lbl = ctk.CTkLabel(
+            parent, text="", font=F_XS, anchor="w")
+        self.test_status_lbl.pack(fill="x", pady=(SP_XS, 0))
+
+    def _build_updates_section(self, parent) -> None:
+        self._section_title(parent, "Updates")
+        rc = self.parent_app.config_data.get("refresh_cache", {})
+        last = rc.get("last_refresh", "—") or "—"
+        self._help_text(parent,
+            f"Last refresh: {last}\n\n"
+            "The Refresh button pulls a pre-built catalog that's "
+            "regenerated weekly on GitHub — usually about 2 seconds. "
+            "Force a full local rebuild only if the index looks broken or "
+            "you've edited the bundled JSON files (60-90 seconds).")
+        ctk.CTkButton(
+            parent, text="Force full rebuild", height=H_MD, width=200,
+            fg_color="transparent", border_width=1,
+            border_color=BORDER_STRONG, text_color=LINK,
+            hover_color=SURFACE_HOVER, font=F_SM,
+            command=self._force_full_rebuild,
+        ).pack(anchor="w", pady=(SP_MD, 0))
+
+    def _build_about_section(self, parent) -> None:
+        self._section_title(parent, "About")
+        ctk.CTkLabel(
+            parent, text=f"One Pace Downloader  ·  v{APP_VERSION}",
+            font=F_BOLD_BASE, text_color=TEXT, anchor="w",
+        ).pack(fill="x")
+        ctk.CTkLabel(
+            parent, text="Made by Nicolas  ·  MIT licensed",
+            font=F_SM, text_color=TEXT_MUTED, anchor="w",
+        ).pack(fill="x", pady=(2, SP_MD))
+        self._help_text(parent,
+            "A downloader for the One Pace fan re-cut of One Piece. "
+            "Not affiliated with One Pace, Toei, or Shueisha.")
+        row = ctk.CTkFrame(parent, fg_color="transparent")
+        row.pack(fill="x", pady=(SP_LG, 0))
+        for label in ("Discord", "Reddit", "GitHub"):
+            _make_brand_button(row, label, width=100, height=H_MD).pack(
+                side="left", padx=(0, SP_XS))
+
+    def _test_usenet_connection(self) -> None:
+        url = self.usenet_url_var.get().strip()
+        key = self.usenet_key_var.get().strip()
+        if not key:
+            self.test_status_lbl.configure(text="❌ API key is empty", text_color=DANGER)
+            return
+            
+        self.test_status_lbl.configure(text="⏳ Testing connection...", text_color=TEXT_MUTED)
+        
+        def task():
+            test_url = f"{url}/api?t=search&apikey={key}&limit=1"
+            try:
+                req = urllib.request.Request(
+                    test_url,
+                    headers={"User-Agent": f"OnePaceDownloader/{APP_VERSION}"}
+                )
+                with urllib.request.urlopen(req, timeout=10) as r:
+                    content = r.read()
+                content_str = content.decode("utf-8", errors="replace")
+                if 'error code="100"' in content_str or "Incorrect credentials" in content_str:
+                    self.parent_app.ui_queue.put(("usenet_test_result", (False, "❌ Invalid API key")))
+                else:
+                    self.parent_app.ui_queue.put(("usenet_test_result", (True, "✅ Connection successful!")))
+            except urllib.error.HTTPError as e:
+                if e.code in (401, 403):
+                    self.parent_app.ui_queue.put(("usenet_test_result", (False, "❌ Invalid API key (403 Forbidden)")))
+                else:
+                    self.parent_app.ui_queue.put(("usenet_test_result", (False, f"❌ HTTP Error {e.code}")))
+            except Exception as e:
+                self.parent_app.ui_queue.put(("usenet_test_result", (False, f"❌ Connection failed: {type(e).__name__}")))
+                
+        threading.Thread(target=task, daemon=True).start()
+
+    def _build_footer_band(self) -> None:
+        """Action row pinned to the bottom of the card. Pinned first (and
+        with side=bottom) so the body above can never push it off-screen."""
+        action_row = ctk.CTkFrame(self.card, fg_color="transparent")
+        action_row.pack(side="bottom", anchor="e", padx=SP_XL,
+                        pady=(SP_SM, SP_LG))
         ctk.CTkButton(
             action_row, text="Restore defaults", width=140, height=H_MD,
             font=F_SM,
@@ -4366,16 +5239,9 @@ class SettingsPanel(ctk.CTkToplevel):
             font=F_BOLD_SM,
             fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
             command=self._save).pack(side="left", padx=SP_XS)
-
-        # If the user closes the window without clicking Save, roll back any
-        # live appearance preview to the originally-saved value.
-        self.protocol("WM_DELETE_WINDOW", self._rollback_and_close)
-
-    def _safe_grab(self) -> None:
-        try:
-            self.grab_set()
-        except tk.TclError:
-            pass
+        # Thin divider above the action row so it reads as a distinct band.
+        ctk.CTkFrame(self.card, height=1, fg_color=BORDER).pack(
+            side="bottom", fill="x", padx=SP_XL)
 
     def _restore_defaults(self) -> None:
         self.version_var.set(self.DEFAULT_VERSION)
@@ -4390,10 +5256,9 @@ class SettingsPanel(ctk.CTkToplevel):
         cfg["default_quality"] = self.quality_var.get()
         cfg["appearance"] = self.appearance_var.get()
         cfg["organize_for_media_server"] = bool(self.organize_var.get())
+        cfg["usenet_indexer_url"] = self.usenet_url_var.get().strip()
+        cfg["usenet_api_key"] = self.usenet_key_var.get().strip()
         save_config(cfg)
-        # Re-render the currently visible columns so anything that depends on
-        # default_version / default_quality (e.g. the One Pace episode size
-        # meta) picks up the new values.
         try:
             self.parent_app._render_episode_list()
             self.parent_app._render_source_panel()
@@ -4402,10 +5267,25 @@ class SettingsPanel(ctk.CTkToplevel):
         self.destroy()
 
     def _rollback_and_close(self) -> None:
-        # Undo any live appearance preview.
         if self.appearance_var.get() != self._original_appearance:
             ctk.set_appearance_mode(self._original_appearance.lower())
         self.destroy()
+
+    def _force_full_rebuild(self) -> None:
+        if not messagebox.askyesno(
+            "Force full rebuild",
+            "This will re-fetch every Pixeldrain album and every SpykerNZ "
+            ".nfo file from scratch (60-90 seconds). Do it when the index "
+            "looks broken or you've edited the bundled JSON files.\n\n"
+            "Continue?",
+        ):
+            return
+        self._save()
+        self.parent_app._force_full_refresh = True
+        cfg = self.parent_app.config_data
+        cfg["refresh_cache"] = {}
+        save_config(cfg)
+        self.parent_app._refresh_all()
 
 
 def main() -> None:

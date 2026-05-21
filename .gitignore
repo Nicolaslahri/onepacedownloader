@@ -10,6 +10,8 @@ __pycache__/
 config.json
 downloads/
 *.part
+.env
+_source/_scratch_*.py
 
 # Editor / OS
 .vscode/
