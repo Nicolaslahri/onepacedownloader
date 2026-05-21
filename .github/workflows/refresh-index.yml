@@ -1,19 +1,22 @@
 name: Refresh episode index
 
-# Runs the same scrape every user used to run locally — exactly once a week,
-# on the maintainer's behalf. Result is committed to the `data` branch as
-# episode_index.json so every user's app can fetch it in ~2s instead of
+# Runs the same scrape every user used to run locally — once a week, on the
+# maintainer's behalf. The result is committed to the `data` branch as
+# episode_index.json so every user's app fetches it in ~2s instead of each
 # spending 60-90s talking to Pixeldrain + SpykerNZ themselves.
 #
 # Usenet is intentionally NOT refreshed here — that needs a private API key.
-# Whatever usenet_arcs.json is currently committed on main gets merged in.
+# Whatever usenet_arcs.json is committed on `main` gets merged in as-is.
+#
+# Runs on Windows so the tkinter / customtkinter import path matches the
+# real app environment exactly (a headless Linux runner makes that import
+# fragile).
 
 on:
   schedule:
-    # Sundays at 03:00 UTC — quiet hours globally + GitHub Actions are
-    # less contended on weekend nights.
+    # Sundays at 03:00 UTC — quiet hours globally.
     - cron: '0 3 * * 0'
-  # Allow manual trigger from the Actions tab for ad-hoc refreshes
+  # Manual trigger from the Actions tab for ad-hoc refreshes.
   workflow_dispatch:
 
 permissions:
@@ -21,7 +24,7 @@ permissions:
 
 jobs:
   refresh:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 30
 
     steps:
@@ -35,81 +38,63 @@ jobs:
         with:
           python-version: '3.12'
 
-      # The build pipeline is stdlib-only — no requirements file needed.
-      # If that ever changes, add `pip install -r requirements.txt` here.
+      - name: Install dependencies
+        # onepace_downloader imports customtkinter at module level, and the
+        # build pipeline imports onepace_downloader. tkinter ships with the
+        # Windows Python from setup-python.
+        run: pip install customtkinter
 
-      - name: Refresh arcs.json from onepace.net
-        run: |
-          python - <<'PY'
-          import sys
-          sys.path.insert(0, '_source')
-          from onepace_downloader import refresh_arcs_from_web
-          arcs = refresh_arcs_from_web()
-          print(f"Refreshed {len(arcs)} arcs from onepace.net")
-          PY
-
-      - name: Refresh nyaa_arcs.json from nyaa.si
-        run: |
-          python - <<'PY'
-          import sys, json
-          sys.path.insert(0, '_source')
-          from onepace_downloader import refresh_nyaa_from_web, load_arcs
-          arc_titles = [a["title"] for a in load_arcs()]
-          out = refresh_nyaa_from_web(arc_titles)
-          total = sum(len(b.get("torrents", [])) for b in out)
-          print(f"Refreshed {len(out)} arc buckets ({total} torrents) from nyaa.si")
-          PY
-
-      - name: Build episode_index.json
-        run: |
-          # `force=True` skips the cache check — we always want a from-scratch
-          # rebuild in CI so users get fresh Pixeldrain + SpykerNZ data.
-          python - <<'PY'
-          import sys
-          sys.path.insert(0, '_source')
-          import build_episode_index
-          build_episode_index.build(force=True)
-          PY
+      - name: Refresh catalogs + rebuild episode index
+        run: python _source/ci_refresh.py
 
       - name: Stash freshly built data
+        shell: bash
         run: |
-          mkdir -p /tmp/refresh-out
-          cp _source/episode_index.json /tmp/refresh-out/
-          cp _source/arcs.json          /tmp/refresh-out/
-          cp _source/nyaa_arcs.json     /tmp/refresh-out/
-          # usenet_arcs.json is unchanged (we don't scrape Usenet in CI) — it
-          # already lives on main and was used by build_episode_index above.
-          cp _source/usenet_arcs.json   /tmp/refresh-out/ || true
+          mkdir -p "$RUNNER_TEMP/out"
+          cp _source/episode_index.json "$RUNNER_TEMP/out/"
+          cp _source/arcs.json          "$RUNNER_TEMP/out/"
+          cp _source/nyaa_arcs.json     "$RUNNER_TEMP/out/"
+          cp _source/usenet_arcs.json   "$RUNNER_TEMP/out/" || true
 
-      - name: Publish to `data` branch
+      - name: Publish to the data branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
+          # Publish from a throwaway clone in a temp dir so the build
+          # checkout above is never disturbed by branch switching.
+          cd "$RUNNER_TEMP"
+          git clone --quiet \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            pub
+          cd pub
           git config user.name  "onepace-bot"
           git config user.email "onepace-bot@users.noreply.github.com"
 
-          # Switch to the data branch (create as orphan if it doesn't exist)
+          # Switch to (or create) the data branch.
           if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
-            git fetch origin data
-            git checkout data
+            git fetch --quiet origin data
+            git checkout --quiet data
           else
-            git checkout --orphan data
-            git rm -rf . || true
-            git clean -fdx
+            git checkout --quiet --orphan data
+            git rm -rqf . 2>/dev/null || true
+            echo "# Auto-managed data branch" > README.md
+            echo "" >> README.md
+            echo "Rebuilt weekly by .github/workflows/refresh-index.yml on \`main\`. Do not edit by hand." >> README.md
           fi
 
-          # Drop the fresh files in place
-          cp /tmp/refresh-out/episode_index.json .
-          cp /tmp/refresh-out/arcs.json          .
-          cp /tmp/refresh-out/nyaa_arcs.json     .
-          cp /tmp/refresh-out/usenet_arcs.json   . 2>/dev/null || true
+          # Drop the freshly built files in place.
+          cp "$RUNNER_TEMP/out/episode_index.json" .
+          cp "$RUNNER_TEMP/out/arcs.json"          .
+          cp "$RUNNER_TEMP/out/nyaa_arcs.json"     .
+          cp "$RUNNER_TEMP/out/usenet_arcs.json"   . 2>/dev/null || true
 
-          # Skip the commit if nothing actually changed (e.g. no new arcs +
-          # SpykerNZ unchanged + Nyaa torrents shifted only in seeders)
-          git add episode_index.json arcs.json nyaa_arcs.json usenet_arcs.json
+          git add -A
           if git diff --staged --quiet; then
-            echo "No content changes — skipping commit."
+            echo "No content changes — nothing to publish."
             exit 0
           fi
-
-          git commit -m "Auto-refresh index: $(date -u +%Y-%m-%d)"
-          git push origin data
+          git commit --quiet -m "Auto-refresh index: $(date -u +%Y-%m-%d)"
+          git push --quiet origin data
+          echo "Published refreshed index to the data branch."
