@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Pace Downloader</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="/static/logo.png" type="image/png" />
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="header">
+    <div class="header-left">
+      <img src="/static/logo.png" alt="One Pace" class="header-logo" />
+      <div class="header-text">
+        <h1>One Pace <span class="accent">Downloader</span></h1>
+        <p class="header-sub">Pick an arc, tick the episodes you want, hit Download.</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-outline btn-sm" onclick="refreshIndex()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+        Refresh
+      </button>
+      <button class="btn btn-outline btn-sm" onclick="openSettings()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ Source tabs ═══ -->
+  <nav class="source-tabs">
+    <div class="source-tabs-inner">
+      <button class="source-tab active" data-source="onepace" onclick="switchSource('onepace')">
+        One Pace · <span id="countOnepace">–</span>
+      </button>
+      <button class="source-tab" data-source="muhn" onclick="switchSource('muhn')">
+        Muhn Pace · <span id="countMuhn">–</span>
+      </button>
+      <button class="source-tab" data-source="nyaa" onclick="switchSource('nyaa')">
+        Nyaa · <span id="countNyaa">–</span>
+      </button>
+      <button class="source-tab" data-source="usenet" onclick="switchSource('usenet')">
+        Usenet · <span id="countUsenet">–</span>
+      </button>
+      <span class="source-desc" id="sourceDesc">Fan re-cut. Sub for every arc, Dub for newer ones. Direct download via the bypass CDN.</span>
+    </div>
+  </nav>
+
+  <!-- ═══ 3-column main grid ═══ -->
+  <div class="main">
+    <div class="three-col">
+
+      <!-- Column 1: Arcs -->
+      <section class="col-arcs">
+        <div class="col-heading">ARCS</div>
+        <div class="arc-search">
+          <input type="text" id="arcSearch" placeholder="Search arcs..." oninput="filterArcs()" />
+        </div>
+        <div class="arc-list" id="arcList">
+          <div class="empty-state">
+            <div class="empty-icon">&#x23F3;</div>
+            <p>Loading...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Column 2: Episodes / Torrents -->
+      <section class="col-episodes">
+        <div class="col-heading" id="episodeHeading">Episodes</div>
+        <div class="ep-toolbar" id="episodeToolbar" style="display:none">
+          <button class="btn btn-outline btn-sm" id="selectAllBtn" onclick="toggleSelectAll()">Select all</button>
+          <div style="flex:1"></div>
+          <button class="btn btn-primary btn-sm" id="downloadBtn" onclick="primaryAction()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span id="downloadBtnLabel">Download selected</span>
+          </button>
+        </div>
+        <div class="episode-list" id="episodeList">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <p>Select an arc to browse episodes</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Column 3: Right panel (Guide / Downloads) -->
+      <section class="col-right" id="rightPanel">
+        <div id="guidePanel">
+          <div class="right-card">
+            <div class="right-card-title">HOW TO DOWNLOAD</div>
+            <div class="guide-steps">
+              <div class="guide-step"><span class="step-num">1</span> Pick a source tab above.</div>
+              <div class="guide-step"><span class="step-num">2</span> Pick an arc from the list on the left.</div>
+              <div class="guide-step"><span class="step-num">3</span> Tick the episodes (or torrents) you want.</div>
+              <div class="guide-step"><span class="step-num">4</span> Hit the action button — download, or send to your client.</div>
+            </div>
+          </div>
+          <div class="right-card">
+            <div class="right-card-title">LIBRARY</div>
+            <div class="stats-row">
+              <div class="stat-item">
+                <span class="stat-value" id="statDownloaded">0</span>
+                <span class="stat-label">Downloaded</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statTotal">0</span>
+                <span class="stat-label">Episodes</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statArcs">0</span>
+                <span class="stat-label">Arcs</span>
+              </div>
+            </div>
+          </div>
+          <div class="right-card">
+            <div class="right-card-title">NEED HELP?</div>
+            <div class="help-links">
+              <a href="https://discord.gg/KHn6AbevZ2" target="_blank" class="btn btn-outline btn-sm">Discord</a>
+              <a href="https://www.reddit.com/user/nicolasenjah/" target="_blank" class="btn btn-outline btn-sm">Reddit</a>
+              <a href="https://github.com/Nicolaslahri/onepacedownloader" target="_blank" class="btn btn-outline btn-sm">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div id="downloadPanel" style="display:none">
+          <div class="right-card download-active-card">
+            <div class="right-card-title">DOWNLOADING</div>
+            <div id="downloadStatus"></div>
+          </div>
+          <div class="right-card" id="downloadHistoryCard" style="display:none">
+            <div class="right-card-title">COMPLETED</div>
+            <div id="downloadHistory"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ═══ Bottom status bar ═══ -->
+  <footer class="status-bar">
+    <span class="status-text" id="statusText">Pick an arc on the left to get started →</span>
+    <span class="status-right">
+      <span class="live-dot"></span>
+      <span id="footerStats" class="font-mono"></span>
+    </span>
+  </footer>
+
+  <!-- ═══ Settings modal ═══ -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3>Settings</h3>
+        <button class="modal-close" onclick="closeSettings()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Download defaults -->
+        <div class="settings-section">
+          <div class="settings-section-head">
+            <span class="settings-section-title">Download Defaults</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Version</label>
+              <select id="settingsVersion"></select>
+            </div>
+            <div class="form-group">
+              <label>Quality</label>
+              <select id="settingsQuality"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SABnzbd -->
+        <div class="settings-section">
+          <div class="settings-section-head">
+            <span class="settings-section-title">SABnzbd</span>
+            <span class="settings-section-tag">Usenet downloads</span>
+          </div>
+          <div class="form-group">
+            <label>Server URL</label>
+            <input type="text" id="sabUrl" placeholder="http://192.168.1.10:8080" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>API Key</label>
+              <input type="text" id="sabKey" placeholder="SABnzbd API key" />
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <input type="text" id="sabCat" placeholder="optional" />
+            </div>
+          </div>
+          <div class="test-row">
+            <button class="btn btn-outline btn-sm" onclick="testIntegration('sabnzbd')">Test connection</button>
+            <span class="test-status" id="sabStatus"></span>
+          </div>
+        </div>
+
+        <!-- NZBGeek -->
+        <div class="settings-section">
+          <div class="settings-section-head">
+            <span class="settings-section-title">NZBGeek</span>
+            <span class="settings-section-tag">Usenet indexer</span>
+          </div>
+          <div class="form-group">
+            <label>Indexer URL</label>
+            <input type="text" id="geekUrl" placeholder="https://api.nzbgeek.info" />
+          </div>
+          <div class="form-group">
+            <label>API Key</label>
+            <input type="text" id="geekKey" placeholder="NZBGeek API key" />
+          </div>
+          <div class="test-row">
+            <button class="btn btn-outline btn-sm" onclick="testIntegration('nzbgeek')">Test connection</button>
+            <span class="test-status" id="geekStatus"></span>
+          </div>
+        </div>
+
+        <!-- qBittorrent -->
+        <div class="settings-section">
+          <div class="settings-section-head">
+            <span class="settings-section-title">qBittorrent</span>
+            <span class="settings-section-tag">Torrent downloads</span>
+          </div>
+          <div class="form-group">
+            <label>Web UI URL</label>
+            <input type="text" id="qbUrl" placeholder="http://192.168.1.10:8081" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="qbUser" placeholder="admin" />
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="qbPass" placeholder="Web UI password" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <input type="text" id="qbCat" placeholder="optional" />
+          </div>
+          <div class="test-row">
+            <button class="btn btn-outline btn-sm" onclick="testIntegration('qbittorrent')">Test connection</button>
+            <span class="test-status" id="qbStatus"></span>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm" onclick="closeSettings()">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="saveSettings()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Toasts ═══ -->
+  <div class="toast-container" id="toasts"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  onepace:
+    # Pre-built image from GitHub Container Registry — nothing to compile.
+    image: ghcr.io/nicolaslahri/onepacedownloader:latest
+    # To build from source instead, comment the line above and uncomment:
+    # build: .
+    container_name: onepace-downloader
+    restart: unless-stopped
+    # Optional: run as your own user so downloaded files aren't owned by
+    # root. Use the output of `id -u`:`id -g` on the host.
+    # user: "1000:1000"
+    ports:
+      - "8080:8080"
+    volumes:
+      # Persistent config (API settings, index cache)
+      - ./config:/config
+      # Mount your Plex / Jellyfin media library
+      # Change the left side to your actual media path
+      - /path/to/your/media:/media
+    environment:
+      - PORT=8080
+      - DEFAULT_VERSION=English Subtitles
+      - DEFAULT_QUALITY=1080p
+      - AUTO_REFRESH=true
+      #
+      # ── Optional integrations ──────────────────────────────────────
+      # You can pre-seed these here, or just fill them in via the
+      # Settings panel in the web UI (they persist to /config).
+      #
+      # SABnzbd — Usenet downloads are queued straight into your server
+      # - SABNZBD_URL=http://192.168.1.10:8080
+      # - SABNZBD_API_KEY=your-sabnzbd-api-key
+      # - SABNZBD_CATEGORY=onepace
+      #
+      # NZBGeek — the Usenet indexer the NZBs come from
+      # - NZBGEEK_URL=https://api.nzbgeek.info
+      # - NZBGEEK_API_KEY=your-nzbgeek-api-key
+      #
+      # qBittorrent — Nyaa magnets are pushed to its Web API
+      # - QBITTORRENT_URL=http://192.168.1.10:8081
+      # - QBITTORRENT_USER=admin
+      # - QBITTORRENT_PASS=your-qbittorrent-password
+      # - QBITTORRENT_CATEGORY=onepace
