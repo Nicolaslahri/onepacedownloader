@@ -12,7 +12,9 @@ services:
     # root. Use the output of `id -u`:`id -g` on the host.
     # user: "1000:1000"
     ports:
-      - "8080:8080"
+      # host:container — change only the LEFT number to use a different
+      # port on your machine, e.g. "9999:7654"
+      - "7654:7654"
     volumes:
       # Persistent config (API settings, index cache)
       - ./config:/config
@@ -20,7 +22,6 @@ services:
       # Change the left side to your actual media path
       - /path/to/your/media:/media
     environment:
-      - PORT=8080
       - DEFAULT_VERSION=English Subtitles
       - DEFAULT_QUALITY=1080p
       - AUTO_REFRESH=true

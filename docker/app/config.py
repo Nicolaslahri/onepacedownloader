@@ -38,7 +38,7 @@ VERSIONS = ["English Subtitles", "English Dub", "English Dub with Closed Caption
 QUALITIES = ["1080p", "720p", "480p"]
 
 # ── Environment tunables ──────────────────────────────────────────────
-PORT = int(os.environ.get("PORT", "8080"))
+PORT = int(os.environ.get("PORT", "7654"))
 DEFAULT_VERSION = os.environ.get("DEFAULT_VERSION", "English Subtitles")
 DEFAULT_QUALITY = os.environ.get("DEFAULT_QUALITY", "1080p")
 AUTO_REFRESH = os.environ.get("AUTO_REFRESH", "true").lower() in ("1", "true", "yes")
