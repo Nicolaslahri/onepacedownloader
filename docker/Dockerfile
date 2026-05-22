@@ -8,12 +8,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PORT=7654 \
     GIT_SHA=$GIT_SHA \
+    PUID=1000 \
+    PGID=1000 \
     CONFIG_DIR=/config \
     MEDIA_DIR=/media
 
 # ── System deps ──────────────────────────────────────────────────────
+# tini = init / zombie reaper · gosu = drop privileges to PUID:PGID
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends tini && \
+    apt-get install -y --no-install-recommends tini gosu && \
     rm -rf /var/lib/apt/lists/*
 
 # ── Python deps ──────────────────────────────────────────────────────
@@ -24,13 +27,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # ── Application ──────────────────────────────────────────────────────
 COPY app/ app/
 COPY data/ data/
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # ── Volumes & port ───────────────────────────────────────────────────
 VOLUME ["/config", "/media"]
 EXPOSE 7654
 
 # ── Run ──────────────────────────────────────────────────────────────
-# Shell form so the PORT env var is honoured; `exec` keeps uvicorn as
-# PID 1's direct child for clean signal handling under tini.
-ENTRYPOINT ["tini", "--"]
-CMD ["sh", "-c", "exec python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-7654}"]
+# The entrypoint makes /config writable by PUID:PGID, then runs the app
+# as that user — so downloads and config aren't owned by root.
+ENTRYPOINT ["tini", "--", "/entrypoint.sh"]

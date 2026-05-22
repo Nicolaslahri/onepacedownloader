@@ -16,6 +16,7 @@ You need [Docker](https://docs.docker.com/get-docker/). Then:
 docker run -d \
   --name onepace-downloader \
   -p 7654:7654 \
+  -e PUID=1000 -e PGID=1000 \
   -v /path/to/your/media:/media \
   -v onepace-config:/config \
   ghcr.io/nicolaslahri/onepacedownloader:latest
@@ -23,6 +24,9 @@ docker run -d \
 
 Change `/path/to/your/media` to your Plex / Jellyfin library folder, then
 open **http://localhost:7654** (or `http://YOUR-SERVER-IP:7654`).
+
+`PUID` / `PGID` should match the owner of your media folder — run `id` on
+the host to find yours. Files end up owned by that user instead of root.
 
 That's it — the image is pre-built, nothing to compile.
 
@@ -60,6 +64,9 @@ If you manage Docker through [Portainer](https://www.portainer.io/):
        image: ghcr.io/nicolaslahri/onepacedownloader:latest
        container_name: onepace-downloader
        restart: unless-stopped
+       environment:
+         - PUID=1000
+         - PGID=1000
        ports:
          - "7654:7654"
        volumes:
@@ -71,7 +78,8 @@ If you manage Docker through [Portainer](https://www.portainer.io/):
    ```
 
 4. Change `/path/to/your/media` to your Plex / Jellyfin library path.
-5. Click **Deploy the stack**.
+5. Set `PUID` / `PGID` to the owner of that folder (run `id` on the host).
+6. Click **Deploy the stack**.
 
 Open `http://YOUR-SERVER-IP:7654` when it's up. To update later, open the
 stack and hit **Pull and redeploy**.
@@ -85,8 +93,8 @@ stack and hit **Pull and redeploy**.
 
 | Path | What it holds |
 |------|---------------|
-| `/media` | Your Plex / Jellyfin library. One Pace / Muhn Pace downloads land here, auto-organized into `One Pace/Season N/`. |
-| `/config` | Persistent settings + the cached episode index. Keep this so your config survives updates. |
+| `/media` | Your Plex / Jellyfin library. One Pace / Muhn Pace downloads land here, auto-organized into `One Pace/Season N/`. Must be writable by your `PUID`/`PGID`. |
+| `/config` | Persistent settings + the cached episode index. Keep this so your config survives updates. The container makes it writable on startup. |
 
 ## Changing the port
 
@@ -116,7 +124,8 @@ If you'd rather build it yourself instead of pulling the image:
 ```bash
 cd docker
 docker build -t onepace-downloader .
-docker run -d -p 7654:7654 -v /path/to/media:/media -v onepace-config:/config onepace-downloader
+docker run -d -p 7654:7654 -e PUID=1000 -e PGID=1000 \
+  -v /path/to/media:/media -v onepace-config:/config onepace-downloader
 ```
 
 ---

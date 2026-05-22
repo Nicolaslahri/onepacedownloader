@@ -61,7 +61,14 @@ def try_remote_refresh(config: dict, log=None) -> bool:
         _log(f"Remote payload looks malformed ({e}) -- using local data.")
         return False
 
-    INDEX_FILE.write_bytes(blob)
+    try:
+        INDEX_FILE.write_bytes(blob)
+    except OSError as e:
+        # /config not writable (bad volume permissions) — don't crash,
+        # just fall back to the index bundled in the image.
+        _log(f"Couldn't cache the index ({e}) -- using bundled copy.")
+        return False
+
     rc = dict(config.get("refresh_cache", {}))
     if etag:
         rc["remote_etag"] = etag

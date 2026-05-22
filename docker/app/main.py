@@ -17,12 +17,17 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup: refresh index from GitHub if AUTO_REFRESH is on."""
+    """Startup: refresh the index from GitHub if AUTO_REFRESH is on.
+
+    Any failure here is non-fatal — the app falls back to the index
+    bundled in the image rather than refusing to start."""
     if AUTO_REFRESH:
-        cfg = load_config()
-        ok = try_remote_refresh(cfg, log=print)
-        if ok:
-            save_config(cfg)
+        try:
+            cfg = load_config()
+            if try_remote_refresh(cfg, log=print):
+                save_config(cfg)
+        except Exception as e:
+            print(f"[startup] index refresh skipped: {e}")
     yield
 
 
