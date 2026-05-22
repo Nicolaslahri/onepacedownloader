@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest something new
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For quick suggestions or chat, the [Discord](https://discord.gg/JvaCyYbbSk) is usually faster.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What would you like the app to do?
+      placeholder: e.g. "Add a 'Download only new episodes' option"
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why? What problem does it solve?
+      placeholder: e.g. "When One Pace adds an episode to an arc I've already downloaded, I have to re-pick the arc and let it skip everything — would be nicer to just sync."

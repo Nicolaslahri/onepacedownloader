@@ -1,0 +1,23 @@
+# Source
+_source/
+
+# Build outputs
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+*.pyo
+
+# Local
+config.json
+downloads/
+*.part
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
