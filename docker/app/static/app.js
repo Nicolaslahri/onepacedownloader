@@ -523,6 +523,17 @@ async function loadStats() {
   } catch (e) {}
 }
 
+/* ── Update check ────────────────────────────────────────────────────── */
+
+async function checkUpdate() {
+  try {
+    const u = await api("/api/update");
+    if (u && u.update_available) {
+      document.getElementById("updatePill").style.display = "";
+    }
+  } catch (e) {}
+}
+
 /* ── Refresh ─────────────────────────────────────────────────────────── */
 
 async function refreshIndex() {
@@ -650,6 +661,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSettings();
   loadArcs();
   connectSSE();
+  checkUpdate();
 
   document.getElementById("settingsModal").addEventListener("click", (e) => {
     if (e.target === e.currentTarget) closeSettings();

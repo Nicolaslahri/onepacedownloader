@@ -34,6 +34,13 @@ UA = (
 
 APP_VERSION = "2.0.3"
 
+# Git commit the image was built from — baked in by the Dockerfile via a
+# build arg. Empty / "dev" for local builds. Used for the update check.
+GIT_SHA = os.environ.get("GIT_SHA", "dev")
+
+# Repo the update check queries.
+GITHUB_REPO = "Nicolaslahri/onepacedownloader"
+
 VERSIONS = ["English Subtitles", "English Dub", "English Dub with Closed Captions"]
 QUALITIES = ["1080p", "720p", "480p"]
 

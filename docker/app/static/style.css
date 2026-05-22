@@ -166,6 +166,30 @@ body::before {
 
 .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; min-height: 34px; }
 
+/* Update-available pill in the header */
+.update-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  min-height: 34px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, var(--burnt), var(--orange));
+  color: #fff;
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: var(--glow-btn);
+  transition: all 0.2s ease;
+}
+.update-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--glow-btn-hov);
+}
+
 /* ══════════════════════════════════════════════════════════════════════
    SOURCE TABS
    ══════════════════════════════════════════════════════════════════════ */

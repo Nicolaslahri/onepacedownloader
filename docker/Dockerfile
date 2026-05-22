@@ -1,9 +1,13 @@
 FROM python:3.12-slim
 
 # ── Environment ──────────────────────────────────────────────────────
+# GIT_SHA is supplied by the publish workflow (--build-arg) and stamped
+# into the image so the running app can detect when it's out of date.
+ARG GIT_SHA=dev
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PORT=7654 \
+    GIT_SHA=$GIT_SHA \
     CONFIG_DIR=/config \
     MEDIA_DIR=/media
 

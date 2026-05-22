@@ -2,14 +2,28 @@
 
 from __future__ import annotations
 
+import json
 import os
+import time
+import urllib.request
 
 from fastapi import APIRouter
 
-from ..config import APP_VERSION, MEDIA_DIR, load_config, save_config
+from ..config import (
+    APP_VERSION,
+    GIT_SHA,
+    GITHUB_REPO,
+    MEDIA_DIR,
+    load_config,
+    save_config,
+)
 from ..core.episode_index import load_episode_index, try_remote_refresh
 
 router = APIRouter(prefix="/api", tags=["system"])
+
+# Cached update-check result — GitHub's API is only hit once an hour.
+_update_cache: dict = {"checked_at": 0.0, "result": None}
+_UPDATE_TTL = 3600
 
 
 @router.get("/health")
@@ -58,3 +72,47 @@ def stats():
         "total_episodes": total_eps,
         "downloaded_episodes": downloaded,
     }
+
+
+@router.get("/update")
+def update_check():
+    """Report whether a newer build of the Docker app is available.
+
+    Compares the git commit this image was built from (GIT_SHA, baked in
+    at build time) against the latest commit that touched `docker/` on
+    GitHub. The result is cached for an hour so we barely touch the API.
+    """
+    now = time.time()
+    cached = _update_cache["result"]
+    if cached is not None and now - _update_cache["checked_at"] < _UPDATE_TTL:
+        return cached
+
+    result = {
+        "current": GIT_SHA[:12] if GIT_SHA else "",
+        "latest": None,
+        "update_available": False,
+    }
+
+    # No meaningful check for local/dev builds — GIT_SHA isn't a real commit.
+    if GIT_SHA and GIT_SHA != "dev":
+        try:
+            url = (f"https://api.github.com/repos/{GITHUB_REPO}"
+                   f"/commits?path=docker&per_page=1")
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "OnePaceDownloader",
+                "Accept": "application/vnd.github+json",
+            })
+            with urllib.request.urlopen(req, timeout=10) as r:
+                commits = json.loads(r.read())
+            if commits:
+                latest = commits[0].get("sha", "")
+                result["latest"] = latest[:12]
+                result["update_available"] = bool(
+                    latest and latest != GIT_SHA)
+        except Exception:
+            # Offline / rate-limited — just report "no update known".
+            pass
+
+    _update_cache["result"] = result
+    _update_cache["checked_at"] = now
+    return result
