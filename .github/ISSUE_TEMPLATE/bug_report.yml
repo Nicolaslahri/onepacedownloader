@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Thanks for taking the time to report this. The more detail, the faster I can fix it.
-        For quick questions, the [Discord](https://discord.gg/JvaCyYbbSk) is usually the fastest path.
+        For quick questions, the [Discord](https://discord.gg/KHn6AbevZ2) is usually the fastest path.
 
   - type: input
     id: app-version
