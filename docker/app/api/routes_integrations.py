@@ -139,6 +139,34 @@ def torrents_send(req: TorrentSendRequest):
     return result
 
 
+# ── Live transfer status ──────────────────────────────────────────────
+
+@router.get("/clients/status")
+def clients_status():
+    """Live progress of hand-off downloads — the SABnzbd queue and the
+    active qBittorrent torrents. Polled by the web UI. Best-effort: an
+    unconfigured or unreachable client simply contributes nothing."""
+    cfg = load_config()
+    transfers = []
+
+    sab = SABnzbdClient(
+        get_setting(cfg, "sabnzbd_url"),
+        get_setting(cfg, "sabnzbd_api_key"),
+        get_setting(cfg, "sabnzbd_category"),
+    )
+    transfers += sab.queue()
+
+    qb = QBittorrentClient(
+        get_setting(cfg, "qbittorrent_url"),
+        get_setting(cfg, "qbittorrent_user"),
+        get_setting(cfg, "qbittorrent_pass"),
+        get_setting(cfg, "qbittorrent_category"),
+    )
+    transfers += qb.torrents()
+
+    return {"transfers": transfers}
+
+
 # ── Connection tests ──────────────────────────────────────────────────
 
 @router.post("/integrations/test/sabnzbd")

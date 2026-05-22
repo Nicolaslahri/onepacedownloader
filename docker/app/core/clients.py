@@ -15,6 +15,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+from .downloader import fmt_bytes
+
 _TIMEOUT = 20
 
 
@@ -74,6 +76,41 @@ class SABnzbdClient:
         if not ids:
             raise ClientError("SABnzbd accepted the request but queued nothing.")
         return ids[0]
+
+    def queue(self) -> list[dict]:
+        """Active SABnzbd downloads (filtered to our category if one is set).
+        Best-effort — returns [] when SABnzbd isn't configured or reachable,
+        so a polling caller never breaks."""
+        if not self.url or not self.api_key:
+            return []
+        try:
+            data = self._call({"mode": "queue"})
+        except ClientError:
+            return []
+        q = data.get("queue") or {}
+        try:
+            kbps = float(q.get("kbpersec") or 0)
+        except (TypeError, ValueError):
+            kbps = 0.0
+        speed = fmt_bytes(kbps * 1024) + "/s" if kbps > 0 else ""
+        out: list[dict] = []
+        for s in q.get("slots", []):
+            if self.category and s.get("cat") != self.category:
+                continue
+            try:
+                pct = float(s.get("percentage") or 0) / 100.0
+            except (TypeError, ValueError):
+                pct = 0.0
+            downloading = (s.get("status") or "").lower() == "downloading"
+            out.append({
+                "source": "usenet",
+                "name": s.get("filename") or "NZB",
+                "progress": max(0.0, min(pct, 1.0)),
+                "speed": speed if downloading else "",
+                "status": "downloading" if downloading else "queued",
+                "eta": s.get("timeleft") or "",
+            })
+        return out
 
 
 # ── qBittorrent ────────────────────────────────────────────────────────
@@ -168,3 +205,31 @@ class QBittorrentClient:
         result = self._post("/api/v2/torrents/add", fields)
         if result.lower() not in ("ok.", ""):
             raise ClientError(f"qBittorrent rejected the magnet: {result}")
+
+    def torrents(self) -> list[dict]:
+        """Currently-downloading torrents (filtered to our category if set).
+        Best-effort — returns [] when qBittorrent isn't configured or
+        reachable, so a polling caller never breaks."""
+        if not self.url:
+            return []
+        try:
+            if self._opener is None:
+                self._login()
+            path = "/api/v2/torrents/info?filter=downloading"
+            if self.category:
+                path += "&category=" + urllib.parse.quote(self.category)
+            items = json.loads(self._get(path))
+        except (ClientError, json.JSONDecodeError, ValueError):
+            return []
+        out: list[dict] = []
+        for t in items:
+            dl = t.get("dlspeed") or 0
+            out.append({
+                "source": "nyaa",
+                "name": t.get("name") or "torrent",
+                "progress": float(t.get("progress") or 0),
+                "speed": fmt_bytes(dl) + "/s" if dl > 0 else "",
+                "status": "downloading",
+                "eta": "",
+            })
+        return out

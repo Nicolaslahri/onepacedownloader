@@ -10,6 +10,7 @@ let activeArc = null;
 let activeSource = "onepace";
 let settings = {};
 let downloads = {};
+let clientTransfers = [];
 
 const SOURCE_DESCS = {
   onepace: "Fan re-cut. Sub for every arc, Dub for newer ones. Direct download via the bypass CDN.",
@@ -356,54 +357,85 @@ function reportSend(result, target) {
 
 /* ── Right panel: downloads ──────────────────────────────────────────── */
 
-function showDownloadPanel() {
-  document.getElementById("guidePanel").style.display = "none";
-  document.getElementById("downloadPanel").style.display = "";
+const SOURCE_TAGS = {
+  pixeldrain: "Direct",
+  usenet: "SABnzbd",
+  nyaa: "qBittorrent",
+};
+
+/* One unified card for any transfer — Pixeldrain, SABnzbd or qBittorrent. */
+function transferCard(t) {
+  const pct = Math.round((t.progress || 0) * 100);
+  const tag = SOURCE_TAGS[t.source] || t.source;
+  return `
+    <div class="dl-job">
+      <div class="dl-job-head">
+        <span class="dl-job-title">${esc(t.title)}</span>
+        <span class="src-tag src-${t.source}">${tag}</span>
+      </div>
+      ${t.sub ? `<div class="dl-job-sub">${esc(t.sub)}</div>` : ""}
+      <div class="dl-job-progress">
+        <span class="dl-pct-big">${pct}%</span>
+        <span class="dl-speed-big">${esc(t.speed || "")}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="dl-job-meta">
+        <span>${esc(t.meta || "")}</span>
+        <span class="dl-status-pill ${t.status}">${esc(t.status)}</span>
+      </div>
+    </div>`;
 }
 
 function renderDownloads() {
-  const jobs = Object.values(downloads);
-  if (!jobs.length) return;
-  showDownloadPanel();
+  // Pixeldrain jobs come from our own download manager (SSE).
+  const pix = Object.values(downloads);
+  const pixActive = pix
+    .filter((d) => d.status === "downloading" || d.status === "queued")
+    .map((d) => ({
+      source: "pixeldrain",
+      title: d.arc_title,
+      sub: d.current_file || "Preparing...",
+      progress: d.progress,
+      speed: d.speed,
+      status: d.status,
+      meta: `${d.current_idx || 0} of ${d.total_files || 0} files`,
+    }));
+  const pixDone = pix.filter((d) =>
+    ["done", "error", "cancelled"].includes(d.status)
+  );
 
-  const active = jobs.filter(
-    (j) => j.status === "downloading" || j.status === "queued"
-  );
-  const done = jobs.filter(
-    (j) => ["done", "error", "cancelled"].includes(j.status)
-  );
+  // SABnzbd / qBittorrent transfers come from polling (clientTransfers).
+  const clientActive = clientTransfers.map((t) => ({
+    source: t.source,
+    title: t.name,
+    sub: "",
+    progress: t.progress,
+    speed: t.speed,
+    status: t.status,
+    meta: t.eta ? "ETA " + t.eta : "",
+  }));
+
+  const active = [...pixActive, ...clientActive];
+
+  // Downloads panel when anything's happening; otherwise the guide.
+  if (!active.length && !pixDone.length) {
+    document.getElementById("guidePanel").style.display = "";
+    document.getElementById("downloadPanel").style.display = "none";
+    return;
+  }
+  document.getElementById("guidePanel").style.display = "none";
+  document.getElementById("downloadPanel").style.display = "";
 
   const statusEl = document.getElementById("downloadStatus");
-  if (active.length) {
-    statusEl.innerHTML = active
-      .map((d) => {
-        const pct = Math.round(d.progress * 100);
-        return `
-        <div class="dl-job">
-          <div class="dl-job-title">${esc(d.arc_title)}</div>
-          <div class="dl-job-sub">${d.current_file ? esc(d.current_file) : "Preparing..."}</div>
-          <div class="dl-job-progress">
-            <span class="dl-pct-big">${pct}%</span>
-            <span class="dl-speed-big">${d.speed || ""}</span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-          <div class="dl-job-meta">
-            <span>${d.current_idx || 0} of ${d.total_files || 0} files</span>
-            <span class="dl-status-pill ${d.status}">${d.status}</span>
-          </div>
-        </div>`;
-      })
-      .join("");
-  } else {
-    statusEl.innerHTML =
-      `<p style="font-size:0.82rem;color:var(--dim)">No active downloads.</p>`;
-  }
+  statusEl.innerHTML = active.length
+    ? active.map(transferCard).join("")
+    : `<p style="font-size:0.82rem;color:var(--dim)">No active downloads.</p>`;
 
   const histCard = document.getElementById("downloadHistoryCard");
   const histEl = document.getElementById("downloadHistory");
-  if (done.length) {
+  if (pixDone.length) {
     histCard.style.display = "";
-    histEl.innerHTML = done
+    histEl.innerHTML = pixDone
       .map(
         (d) => `
         <div class="dl-hist-row">
@@ -419,7 +451,36 @@ function renderDownloads() {
   const a = active[0];
   if (a) {
     document.getElementById("statusText").textContent =
-      `[${a.current_idx || 0}/${a.total_files || 0}] ${a.speed || ""} — ${a.arc_title}`;
+      `${Math.round((a.progress || 0) * 100)}%  ${a.speed || ""} — ${a.title}`;
+  }
+}
+
+/* ── Client polling — SABnzbd / qBittorrent progress ─────────────────── */
+
+let clientPollTimer = null;
+
+async function pollClients() {
+  try {
+    const r = await api("/api/clients/status");
+    clientTransfers = r.transfers || [];
+  } catch (e) {
+    clientTransfers = [];
+  }
+  renderDownloads();
+}
+
+/* Poll only when a hand-off client is actually configured. */
+function startClientPolling() {
+  if (clientPollTimer) {
+    clearInterval(clientPollTimer);
+    clientPollTimer = null;
+  }
+  if (settings.sabnzbd_url || settings.qbittorrent_url) {
+    pollClients();
+    clientPollTimer = setInterval(pollClients, 5000);
+  } else {
+    clientTransfers = [];
+    renderDownloads();
   }
 }
 
@@ -510,6 +571,7 @@ async function loadSettings() {
       const el = document.getElementById(elId);
       if (el) el.value = settings[key] || "";
     }
+    startClientPolling();
   } catch (e) {}
 }
 
@@ -541,6 +603,7 @@ async function saveSettings() {
     settings = { ...settings, ...settingsPayload() };
     toast("Settings saved");
     closeSettings();
+    startClientPolling();
   } catch (e) {
     toast("Failed to save: " + e.message, "error");
   }

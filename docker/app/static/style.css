@@ -568,6 +568,36 @@ body::before {
 .dl-status-pill.error       { background: rgba(239,68,68,0.12);  color: var(--red-soft); }
 .dl-status-pill.cancelled   { background: rgba(255,255,255,0.04); color: var(--dim); }
 
+/* Transfer card header — title + source tag on one row */
+.dl-job-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+.dl-job-head .dl-job-title {
+  margin-bottom: 0;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.src-tag {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+.src-pixeldrain { background: rgba(247,147,26,0.12); color: var(--orange);  border-color: rgba(247,147,26,0.25); }
+.src-usenet     { background: rgba(96,165,250,0.12); color: #7cb0f5;        border-color: rgba(96,165,250,0.25); }
+.src-nyaa       { background: rgba(34,197,94,0.12);  color: var(--green);   border-color: rgba(34,197,94,0.25); }
+
 /* ══════════════════════════════════════════════════════════════════════
    STATUS BAR
    ══════════════════════════════════════════════════════════════════════ */
