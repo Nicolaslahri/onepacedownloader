@@ -1,48 +1,89 @@
+<div align="center">
+
+<img src="assets/icon.png" width="96" />
+
 # One Pace Downloader
+
+**Grab every One Pace arc in one click — Sub, Dub, torrents, or Usenet.**
 
 [![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/KHn6AbevZ2)
 [![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/user/nicolasenjah/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-Small Windows app I built for grabbing [One Pace](https://onepace.net) arcs. Pick the episodes you want, hit download — files land in a folder with real episode titles, or straight into your Plex / Jellyfin library if you'd rather. Also handles [Muhn Pace](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) dub fillers and pulls torrents from [nyaa.si](https://nyaa.si/?q=one+pace) for users who'd rather seed.
+<br />
 
-![screenshot](assets/screenshot.png)
+<a href="https://github.com/Nicolaslahri/onepacedownloader/releases/latest">
+  <img src="https://img.shields.io/badge/Download_Latest-.exe-E44D26?style=for-the-badge&logo=windows&logoColor=white" alt="Download" />
+</a>
 
-## Download
+<br /><br />
 
-Latest .exe → **[Releases page](https://github.com/Nicolaslahri/onepacedownloader/releases/latest)**
+<img src="assets/screenshot.png" width="750" alt="App screenshot" />
 
-Double-click and you're in. Nothing to install. Source is in [`_source/`](_source/onepace_downloader.py) under MIT if you'd rather read or run it yourself.
+</div>
 
-## What it does
+---
 
-Downloading arcs from onepace.net by hand is a pain — every arc is split across a pile of separate links with a daily limit that turns long arcs like Wano into a multi-day project. This grabs them in one go.
+## Why?
 
-Three sources, switchable from the dropdown:
+Downloading arcs from onepace.net by hand is a pain — every arc is split across separate links with a daily limit that turns long arcs like Wano into a multi-day project. This grabs them in one go.
 
-- **One Pace** *(default)* — main fan re-cut. Sub for every arc Romance Dawn → Egghead, Dub for the newer arcs. Most users start here.
-- **Muhn Pace** — fan-made English dub fillers for arcs One Pace hasn't dubbed (Enies Lobby → Wano). Pair with One Pace if you're watching dubbed. Full watch order is in [u/KPGNL's guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) — the app links to it.
-- **Nyaa** — torrents from [nyaa.si](https://nyaa.si/?q=one+pace), grouped by arc. Click **Open magnet** and it hands the link to your default torrent client (qBittorrent / uTorrent / etc.). Useful when pixeldrain is throttled, or when you want to seed back. Needs a torrent client installed — magnets are copied to clipboard if none is registered.
+> Double-click the `.exe` and you're in. Nothing to install.
+> Source is in [`_source/`](_source/onepace_downloader.py) under MIT if you'd rather read or run it yourself.
 
-The app shows which episodes each Muhn Pace album covers (e.g. *"Eps 11–22 only — pair with One Pace for the full arc"*) so you don't end up with a hole.
+---
 
-## Using it
+## Features
 
-1. Open the .exe.
-2. Pick a folder (or use the default `downloads/` next to the .exe).
-3. Click an arc on the left, tick the episodes you want in the middle.
-4. Hit **Download selected** — confirm version (Sub / Dub / Dub-CC) and quality (1080p / 720p / 480p) in the dialog, go.
+| | Source | What it is |
+|---|---|---|
+| **One Pace** *(default)* | Pixeldrain | Main fan re-cut. Sub for every arc Romance Dawn &rarr; Egghead, Dub for newer arcs. Most users start here. |
+| **Muhn Pace** | Pixeldrain | Fan-made English dub fillers for arcs One Pace hasn't dubbed (Enies Lobby &rarr; Wano). Pair with One Pace for a full dub watch. [Watch order guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/). |
+| **Nyaa** | Torrents | Torrents from [nyaa.si](https://nyaa.si/?q=one+pace), grouped by arc. Hands the magnet to your torrent client. Great when pixeldrain is throttled or you want to seed back. |
+| **Usenet** | NZB | NZB files for One Pace releases via NZBGeek. For users with an existing SABnzbd / NZBGet setup. |
 
-![confirm batch download dialog](assets/screenshot_dialog.png)
+**Plus:**
 
-Total size up front so you know what you're committing to. Once it's going, the right column turns into a live status panel:
+- **Plex / Jellyfin auto-organize** &mdash; files renamed into `One Pace/Season N/One Pace - sNNeNN - Title.ext` with `.nfo` metadata, ready for your media server
+- **Resume downloads** &mdash; close mid-download, next launch picks up where it stopped
+- **Saved tracking** &mdash; green **Saved** chips per episode, per-arc progress counts (`12/35`)
+- **Built-in DNS fix** &mdash; one-click Cloudflare/Google DNS switcher for ISPs that block the CDN
 
-![download in progress](assets/screenshot_downloading.png)
+---
 
-Close it mid-download and the next launch picks up where it stopped. Already-finished episodes show a **✓ Saved** chip and arcs show a per-arc progress count (`✓ 12/35`). When new arcs drop on onepace.net, hit **Refresh**.
+## Quick Start
 
-## Plex / Jellyfin users
+<table>
+<tr>
+<td width="50%">
 
-Open **Settings → Output organization** and tick **Organize for Plex / Jellyfin**. From then on, every download lands in the layout your media server expects:
+**1.** Open the `.exe`
+**2.** Pick a save folder (or keep the default)
+**3.** Click an arc &rarr; tick episodes &rarr; **Download selected**
+**4.** Confirm version (Sub / Dub / Dub-CC) and quality (1080p / 720p / 480p)
+
+</td>
+<td width="50%">
+
+<img src="assets/screenshot_dialog.png" width="360" alt="Batch download dialog" />
+
+</td>
+</tr>
+</table>
+
+Total size shown up front so you know what you're committing to. The right column turns into a live status panel while downloading:
+
+<div align="center">
+<img src="assets/screenshot_downloading.png" width="750" alt="Download in progress" />
+</div>
+
+---
+
+## Plex / Jellyfin Setup
+
+Open **Settings &rarr; Output organization** and tick **Organize for Plex / Jellyfin**.
+
+Every download is automatically renamed and sorted:
 
 ```
 downloads/
@@ -53,57 +94,130 @@ downloads/
       ...
 ```
 
-Each `.nfo` carries the real episode title and plot (sourced from [SpykerNZ/one-pace-for-plex](https://github.com/SpykerNZ/one-pace-for-plex)), so Plex and Jellyfin recognize the show and pull artwork automatically. The arc list shows a per-arc progress badge (`✓ 12/35`) so you can see at a glance what's done.
+Each `.nfo` carries the real episode title and plot from [SpykerNZ/one-pace-for-plex](https://github.com/SpykerNZ/one-pace-for-plex), so Plex and Jellyfin recognize the show and pull artwork automatically.
 
-## Heads up
+> **Tip:** Already downloaded files before enabling the toggle? No problem &mdash; saving the setting retroactively organizes everything in your save folder.
 
-- Windows only.
-- First launch, SmartScreen will warn — the .exe isn't signed (certs are expensive). Click **More info → Run anyway**, or right-click → Properties → tick **Unblock**.
+---
 
-## Downloads not starting?
+## Usenet Setup
 
-Mostly Indian ISPs (Jio, Airtel, BSNL, ACT) hit this — app opens, downloads never start. Almost always ISP-level DNS blocking of the CDN.
+<details>
+<summary><b>Click to expand</b> &mdash; only needed if you have a Usenet subscription</summary>
 
-**Two-minute fix — switch Windows DNS to Cloudflare:**
-Settings → Network & Internet → your active connection → DNS server assignment → **Edit** → Manual → IPv4 on → Preferred `1.1.1.1`, Alternate `1.0.0.1` → Save, reconnect.
+<br />
 
-Fixes ~90% of cases. Set-and-forget alternative: [Cloudflare WARP](https://1.1.1.1/). Last resort, any VPN works.
+Skip this if you don't use Usenet &mdash; Pixeldrain (One Pace) and Nyaa (torrents) work for everyone.
 
-If you'd rather not edit Windows network settings yourself, the app has a one-click DNS switcher built in — top right → **DNS** → pick Cloudflare or Google. UAC prompt, done. Revert from the same panel.
+### What you need
 
-![DNS switcher panel](assets/screenshot_dns.png)
+1. A **Usenet provider** subscription (~$10/mo) &mdash; [Newshosting](https://www.newshosting.com/), [Eweka](https://www.eweka.nl/), or [UsenetServer](https://www.usenetserver.com/)
+2. **[SABnzbd](https://sabnzbd.org/)** (free) or NZBGet installed and configured with your provider
+3. An **[NZBGeek](https://nzbgeek.info/)** account + API key &mdash; the bundled release IDs are NZBGeek-specific
+
+### In the app
+
+1. **Settings** &rarr; scroll to the **Usenet** card
+2. Paste `https://api.nzbgeek.info` into *Indexer URL* (it's the default)
+3. Paste your NZBGeek API key (*[find it here](https://nzbgeek.info/dashboard.php?myaccount)*)
+4. **Save & close**
+
+Then switch the source dropdown to **Usenet**, pick an arc, tick episodes, and hit **Download selected**.
+
+### Good to know
+
+- Your API key never leaves your machine &mdash; it lives in `config.json` next to the `.exe`
+- Coverage isn't complete &mdash; some arcs (Alabasta, Thriller Bark, Gaimon) aren't on NZBGeek. The app shows what's available
+- Older releases (pre-2021) may have rotated off your provider's retention
+
+</details>
+
+---
+
+## Downloads Not Starting?
+
+Some ISPs block the CDN &mdash; the app opens but downloads never begin.
+
+<details>
+<summary><b>Two-minute fix &mdash; switch Windows DNS to Cloudflare</b></summary>
+
+<br />
+
+**Manual:** Settings &rarr; Network & Internet &rarr; your connection &rarr; DNS server assignment &rarr; **Edit** &rarr; Manual &rarr; IPv4 on &rarr; Preferred `1.1.1.1`, Alternate `1.0.0.1` &rarr; Save.
+
+**Or use the built-in DNS switcher:** top-right corner &rarr; **DNS** &rarr; pick Cloudflare or Google. UAC prompt, done. Revert from the same panel.
+
+<div align="center">
+<img src="assets/screenshot_dns.png" width="500" alt="DNS switcher" />
+</div>
+
+Set-and-forget alternative: [Cloudflare WARP](https://1.1.1.1/). Last resort, any VPN works.
 
 If none of those help, paste the Log panel contents into [Discord](https://discord.gg/KHn6AbevZ2).
 
-## Is it safe?
+</details>
+
+---
+
+## Is It Safe?
 
 Fair question. Verify yourself.
 
-**SHA256:** `fc6372a226b4e139455fb3fe3c753080146a44515e485d1714e206c253a8beb6`
+<div align="center">
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-scan-blue?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/fc6372a226b4e139455fb3fe3c753080146a44515e485d1714e206c253a8beb6)
+**SHA256:** `f3ac31a905a7a01caafb3c42119f64453e0da49c42a80e2add8e91d7fe5c0853`
 
-Most engines clean — Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender, and others tend to pass. A handful of heuristic / static-analysis scanners (APEX, Bkav, CrowdStrike Falcon, Cylance, SentinelOne Static AI, Yandex) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior — a common false-positive label for unsigned solo-dev tools. Click the badge to see the current scan.
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-Scan_Report-394EFF?style=for-the-badge&logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/f3ac31a905a7a01caafb3c42119f64453e0da49c42a80e2add8e91d7fe5c0853)
 
-Don't trust the badge? Drop the .exe onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) — one file, stdlib only, MIT.
+</div>
 
-### What if my AV flags `cdn.pixeldrain.eu.cc` while the app is downloading?
+Most engines clean &mdash; Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender all pass. A handful of heuristic scanners (APEX, Bkav, CrowdStrike, Cylance, SentinelOne) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior &mdash; a common false-positive for unsigned solo-dev tools.
 
-Different question — that's the CDN, not the .exe. `pixeldrain.eu.cc` is the no-cap mirror of pixeldrain.com (same files, unofficial host), which is the only way to grab a full arc without hitting the 6 GB/day limit. Some AVs (Bitdefender, Norton seen so far) flag the domain on reputation because it has no track record, not because there's a payload on it. Allow the domain in your AV's web protection, or pause web shield during the download.
+> Don't trust the badge? Drop the `.exe` onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) &mdash; one file, stdlib only, MIT.
 
-## Built on the work of
+<details>
+<summary><b>What if my AV flags <code>cdn.pixeldrain.eu.cc</code> while downloading?</b></summary>
 
-This app is just a downloader — none of the actual content is mine. Huge thanks to:
+<br />
 
-- **The [One Pace team](https://onepace.net)** — for ten-plus years of re-cutting One Piece into the version everyone wishes Toei would air. Every Sub episode comes from their releases.
-- **Muhny (D Goat)** — for editing Muhn Pace, the dub fillers covering arcs One Pace hasn't dubbed (Enies Lobby → Wano). About 184 GB of careful audio work that's quietly saved a lot of dub watchers months of waiting.
-- **[u/KPGNL](https://www.reddit.com/user/KPGNL/)** — for maintaining the [dub watch-order guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) the app links to. Original version put together by **u/AlternativeAd1098**.
-- **[SpykerNZ](https://github.com/SpykerNZ/one-pace-for-plex)** — the canonical episode titles, plots, and Plex/Jellyfin season layout the *Organize for media server* option uses come straight from his repo. If you're a Plex/Jellyfin user, also check it out for the artwork.
+That's the CDN, not the `.exe`. `pixeldrain.eu.cc` is the no-cap mirror of pixeldrain.com (same files, unofficial host) &mdash; the only way to grab a full arc without hitting the 6 GB/day limit. Some AVs (Bitdefender, Norton) flag the domain on reputation because it has no track record, not because of a payload. Allow the domain in your AV's web protection, or pause web shield during the download.
 
-If you find One Pace or Muhn Pace useful, drop them a thank-you wherever they hang out — that's worth more than anything I could do.
+</details>
 
-## Found a bug / want to chat
+---
 
-Discord is fastest: **[discord.gg/KHn6AbevZ2](https://discord.gg/KHn6AbevZ2)**. Or open an [issue](https://github.com/Nicolaslahri/onepacedownloader/issues), or ping [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) on Reddit.
+## Heads Up
 
-— Nicolas
+- **Windows only** &mdash; single `.exe`, nothing to install
+- **SmartScreen warning** on first launch &mdash; the `.exe` isn't signed (certs are expensive). Click **More info &rarr; Run anyway**, or right-click &rarr; Properties &rarr; tick **Unblock**
+
+---
+
+## Credits
+
+This app is just a downloader &mdash; none of the actual content is mine. Huge thanks to:
+
+| | |
+|---|---|
+| **[One Pace team](https://onepace.net)** | Ten-plus years of re-cutting One Piece into the version everyone wishes Toei would air. Every Sub episode comes from their releases. |
+| **Muhny** | Editing Muhn Pace &mdash; the dub fillers covering Enies Lobby &rarr; Wano. ~184 GB of careful audio work that's saved dub watchers months of waiting. |
+| **[u/KPGNL](https://www.reddit.com/user/KPGNL/)** | Maintaining the [dub watch-order guide](https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/) the app links to. Original version by **u/AlternativeAd1098**. |
+| **[SpykerNZ](https://github.com/SpykerNZ/one-pace-for-plex)** | Canonical episode titles, plots, and the Plex/Jellyfin season layout used by the *Organize for media server* option. |
+
+If you find One Pace or Muhn Pace useful, drop them a thank-you wherever they hang out &mdash; that's worth more than anything I could do.
+
+---
+
+<div align="center">
+
+### Found a bug? Want to chat?
+
+Discord is fastest: **[discord.gg/KHn6AbevZ2](https://discord.gg/KHn6AbevZ2)**
+
+Or open an [issue](https://github.com/Nicolaslahri/onepacedownloader/issues) &middot; ping [u/nicolasenjah](https://www.reddit.com/user/nicolasenjah/) on Reddit
+
+<br />
+
+*Made with care by Nicolas*
+
+</div>

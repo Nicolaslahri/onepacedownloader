@@ -10,6 +10,17 @@ __pycache__/
 config.json
 downloads/
 *.part
+.env
+_source/_scratch_*.py
+
+# Runtime data files the .exe writes next to itself when run from the repo
+# root. Leading slash anchors to root only — the real catalogs in _source/
+# stay tracked.
+/arcs.json
+/muhn_arcs.json
+/nyaa_arcs.json
+/usenet_arcs.json
+/episode_index.json
 
 # Editor / OS
 .vscode/

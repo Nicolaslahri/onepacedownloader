@@ -1,0 +1,100 @@
+name: Refresh episode index
+
+# Runs the same scrape every user used to run locally — once a week, on the
+# maintainer's behalf. The result is committed to the `data` branch as
+# episode_index.json so every user's app fetches it in ~2s instead of each
+# spending 60-90s talking to Pixeldrain + SpykerNZ themselves.
+#
+# Usenet is intentionally NOT refreshed here — that needs a private API key.
+# Whatever usenet_arcs.json is committed on `main` gets merged in as-is.
+#
+# Runs on Windows so the tkinter / customtkinter import path matches the
+# real app environment exactly (a headless Linux runner makes that import
+# fragile).
+
+on:
+  schedule:
+    # Sundays at 03:00 UTC — quiet hours globally.
+    - cron: '0 3 * * 0'
+  # Manual trigger from the Actions tab for ad-hoc refreshes.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        # onepace_downloader imports customtkinter at module level, and the
+        # build pipeline imports onepace_downloader. tkinter ships with the
+        # Windows Python from setup-python.
+        run: pip install customtkinter
+
+      - name: Refresh catalogs + rebuild episode index
+        run: python _source/ci_refresh.py
+
+      - name: Stash freshly built data
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/out"
+          cp _source/episode_index.json "$RUNNER_TEMP/out/"
+          cp _source/arcs.json          "$RUNNER_TEMP/out/"
+          cp _source/nyaa_arcs.json     "$RUNNER_TEMP/out/"
+          cp _source/usenet_arcs.json   "$RUNNER_TEMP/out/" || true
+
+      - name: Publish to the data branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          # Publish from a throwaway clone in a temp dir so the build
+          # checkout above is never disturbed by branch switching.
+          cd "$RUNNER_TEMP"
+          git clone --quiet \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            pub
+          cd pub
+          git config user.name  "onepace-bot"
+          git config user.email "onepace-bot@users.noreply.github.com"
+
+          # Switch to (or create) the data branch.
+          if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
+            git fetch --quiet origin data
+            git checkout --quiet data
+          else
+            git checkout --quiet --orphan data
+            git rm -rqf . 2>/dev/null || true
+            echo "# Auto-managed data branch" > README.md
+            echo "" >> README.md
+            echo "Rebuilt weekly by .github/workflows/refresh-index.yml on \`main\`. Do not edit by hand." >> README.md
+          fi
+
+          # Drop the freshly built files in place.
+          cp "$RUNNER_TEMP/out/episode_index.json" .
+          cp "$RUNNER_TEMP/out/arcs.json"          .
+          cp "$RUNNER_TEMP/out/nyaa_arcs.json"     .
+          cp "$RUNNER_TEMP/out/usenet_arcs.json"   . 2>/dev/null || true
+
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No content changes — nothing to publish."
+            exit 0
+          fi
+          git commit --quiet -m "Auto-refresh index: $(date -u +%Y-%m-%d)"
+          git push --quiet origin data
+          echo "Published refreshed index to the data branch."

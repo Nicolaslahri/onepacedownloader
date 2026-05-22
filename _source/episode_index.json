@@ -1,5 +1,5 @@
 {
-  "scraped_at": "2026-05-13T15:06:49",
+  "scraped_at": "2026-05-21T05:52:17",
   "arcs": [
     {
       "title": "Romance Dawn",
@@ -88,6 +88,24 @@
               "album_id": "LC22RWvq",
               "file_id": "RwHyfKZs",
               "filename": "[One Pace][1] Romance Dawn 01 [480p][En Sub][2A8F5846].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 410177000,
+              "guid": "94d906546934fd824305ad69449cca61",
+              "release_title": "[One.Pace][1].Romance.Dawn.01.[1080p][956E3544]",
+              "pub_date": "Thu, 03 Dec 2020 02:31:05 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 331197000,
+              "guid": "5621f0a0e11ceda28f8345649052454e",
+              "release_title": "[One.Pace][1].Romance.Dawn.01.[720p][9FE150E1]",
+              "pub_date": "Sat, 31 Dec 2016 14:11:13 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Romance Dawn, the Dawn of an Adventure",
@@ -177,6 +195,24 @@
               "album_id": "LC22RWvq",
               "file_id": "wxsv8FWy",
               "filename": "[One Pace][2] Romance Dawn 02 [480p][En Sub][164BA736].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 491991000,
+              "guid": "3f1ebc5e1d1fb8260f571932e821c1c8",
+              "release_title": "[One Pace][2] Romance Dawn 02 [1080p][667784D2]",
+              "pub_date": "Mon, 27 Dec 2021 07:39:51 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 144829000,
+              "guid": "34b6d79cae605c4ece8182e3db07ba19",
+              "release_title": "[One.Pace][2].Romance.Dawn.02.[480p][B5576056]",
+              "pub_date": "Thu, 03 Dec 2020 02:36:42 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "They Call Him \"Straw Hat\" Luffy",
@@ -266,6 +302,24 @@
               "album_id": "LC22RWvq",
               "file_id": "ZZ9TnVZh",
               "filename": "[One Pace][3-5] Romance Dawn 03 [480p][En Sub][4B642696].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 639055000,
+              "guid": "c90bb72394b51521d6045076e4edb439",
+              "release_title": "[One Pace][3-5] Romance Dawn 03 [1080p][8F0ACC44]",
+              "pub_date": "Mon, 27 Dec 2021 07:40:32 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 177752000,
+              "guid": "a44821510344afbe439bd5d020cfc8d7",
+              "release_title": "[One.Pace][3-5].Romance.Dawn.03.[480p][C62C6617]",
+              "pub_date": "Thu, 03 Dec 2020 02:31:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Pirate King and the Master Swordsman",
@@ -355,6 +409,24 @@
               "album_id": "LC22RWvq",
               "file_id": "197V7xaE",
               "filename": "[One Pace][5-7] Romance Dawn 04 [480p][En Sub][C7AD776C].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 445609000,
+              "guid": "1414d1858e0bc3513ea936c26dac457a",
+              "release_title": "[One Pace][5-7] Romance Dawn 04 [1080p][9A48E3EB]",
+              "pub_date": "Mon, 27 Dec 2021 07:41:22 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 123891000,
+              "guid": "63b25a49e6ea91efe583c541ecc85464",
+              "release_title": "[One.Pace][5-7].Romance.Dawn.04.[480p][690ABED5]",
+              "pub_date": "Thu, 03 Dec 2020 02:36:42 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The First",
@@ -401,6 +473,15 @@
           "seeders": 1,
           "torrent_title": "[One Pace][001] Romance Dawn [720p][9FE150E1].mkv",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "480p",
+          "size_bytes": 598266000,
+          "guid": "6c08a5ea27eb28bcbf3ff7d4e3bc5997",
+          "release_title": "[One Pace][1-7] Romance Dawn [480p]",
+          "pub_date": "Sat, 31 Dec 2016 12:03:15 +0000",
+          "anime_eps": "1-7"
         }
       ]
     },
@@ -464,6 +545,24 @@
               "album_id": "DB6yzXoa",
               "file_id": "hViM8a6S",
               "filename": "[One Pace][8-11] Orange Town 01 [480p][En Sub][367F99BF].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 442188000,
+              "guid": "6572d349c8a32590da5fc82f1cd01481",
+              "release_title": "[One Pace][8-11] Orange Town 01 [1080p][2388DB63]",
+              "pub_date": "Sun, 08 Aug 2021 03:12:07 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 162167000,
+              "guid": "b172cbfb0f9a5c46be6b4c15926616ef",
+              "release_title": "[One Pace][8-11] Orange Town 01 [480p][A2F5F372]",
+              "pub_date": "Wed, 07 Nov 2018 01:30:00 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Enter: Nami",
@@ -526,6 +625,24 @@
               "album_id": "DB6yzXoa",
               "file_id": "reync9tj",
               "filename": "[One Pace][12-19] Orange Town 02 [480p][En Sub][83E47211].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 728198000,
+              "guid": "ce92f053c2390dd1151cbf644fff8ae3",
+              "release_title": "[One Pace][12-19] Orange Town 02 [1080p][C0A5D51D]",
+              "pub_date": "Sun, 08 Aug 2021 03:08:37 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 194931000,
+              "guid": "a21075f87d776582dabe516bb38c990a",
+              "release_title": "[One.Pace][11-16].Orange.Town.02.[480p][3D7957D8]",
+              "pub_date": "Mon, 30 Apr 2018 19:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Treasure",
@@ -588,6 +705,24 @@
               "album_id": "DB6yzXoa",
               "file_id": "UCND78iR",
               "filename": "[One Pace][19-21] Orange Town 03 [480p][En Sub][85E4CA22].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 406845000,
+              "guid": "dbe56035beec94cc80edac1d78cb3475",
+              "release_title": "[One Pace][19-21] Orange Town 03 [1080p][86CC0CCF]",
+              "pub_date": "Sun, 08 Aug 2021 03:12:07 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 242369000,
+              "guid": "4779e9716da2c3f1531d406913d9704a",
+              "release_title": "[One.Pace][17-21].Orange.Town.03.[480p][800263CF]",
+              "pub_date": "Mon, 30 Apr 2018 19:12:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pirate Buggy \"the Clown\"",
@@ -604,6 +739,15 @@
           "seeders": 66,
           "torrent_title": "[One Pace][8-21] Orange Town [1080p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "480p",
+          "size_bytes": 594894000,
+          "guid": "a666d6c2c557b284a3881913c41c7832",
+          "release_title": "[One Pace][8-21] Orange Town [480p]",
+          "pub_date": "Sat, 04 May 2019 14:04:05 +0000",
+          "anime_eps": "8-21"
         }
       ]
     },
@@ -687,6 +831,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][23-25] Syrup Village 01 [480p][AF592982].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 127019000,
+              "guid": "4010a3c97353a6ee39a6ca089efec4cf",
+              "release_title": "[One.Pace][23-25].Syrup.Village.01.[480p][AF592982]",
+              "pub_date": "Sat, 04 Feb 2017 06:39:27 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Captain Usopp",
@@ -769,6 +922,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][26-27] Syrup Village 02 [480p][B487B92A].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 96720000,
+              "guid": "c91daa3215cfa953b0965679f29ba4d9",
+              "release_title": "[One.Pace][26-27].Syrup.Village.02.[480p][B487B92A]",
+              "pub_date": "Sat, 04 Feb 2017 06:39:27 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Captain Kuro",
@@ -851,6 +1013,15 @@
               "seeders": 21,
               "torrent_title": "[One Pace][28-30] Syrup Village 03 [1080p][35E9CFA6].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 115525000,
+              "guid": "8737a361acf5114d88fe7ec18eae142f",
+              "release_title": "[One Pace][28-30] Syrup Village 03 [480p][BB8FBDB3]",
+              "pub_date": "Thu, 22 Jun 2017 17:03:48 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Slope",
@@ -933,6 +1104,15 @@
               "seeders": 21,
               "torrent_title": "[One Pace][31-34] Syrup Village 04 [1080p][89B18321].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 141114000,
+              "guid": "823dcb2c8ae73d7942a93b6841d525f5",
+              "release_title": "[One Pace][31-34] Syrup Village 04 [480p]3D7C1118]",
+              "pub_date": "Sun, 16 Jul 2017 07:51:32 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Silent Man",
@@ -1015,6 +1195,15 @@
               "seeders": 20,
               "torrent_title": "[One Pace][35-37] Syrup Village 05 [1080p][0D3E2158].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 176626000,
+              "guid": "769111eb3ca2c35405d9eff3b422f497",
+              "release_title": "[One.Pace][35-39].Syrup.Village.05.[480p][5498C538]",
+              "pub_date": "Mon, 28 May 2018 15:29:35 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Pirate \"Kuro of a Hundred Plans\"",
@@ -1097,6 +1286,24 @@
               "seeders": 18,
               "torrent_title": "[One Pace][38-39] Syrup Village 06 [1080p][D08B41AE].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 601045000,
+              "guid": "d76a65e0656a2bc72f088f51d10b034b",
+              "release_title": "[One.Pace][38-39].Syrup.Village.06.[1080p][D08B41AE]",
+              "pub_date": "Sat, 19 Jul 2025 03:44:59 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 88226000,
+              "guid": "a0811bbdbd51457b97a3184bd359d47e",
+              "release_title": "[One.Pace][40-41].Syrup.Village.06.[480p][D1742A98]",
+              "pub_date": "Mon, 28 May 2018 15:29:35 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "For Whom the Bell Tolls",
@@ -1169,6 +1376,15 @@
               "seeders": 18,
               "torrent_title": "[One Pace][40-41] Syrup Village 07 [1080p][EFCC14E1].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 606129000,
+              "guid": "e8448ce3290d3d2eb4af1f63882bb0d7",
+              "release_title": "[One Pace][40-41] Syrup Village 07 [1080p][EFCC14E1]",
+              "pub_date": "Sun, 27 Jul 2025 23:54:43 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "To the Sea",
@@ -1195,6 +1411,15 @@
           "seeders": 64,
           "torrent_title": "[One Pace][23-41] Syrup Village [1080p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "480p",
+          "size_bytes": 757629000,
+          "guid": "96d66433e39298a47354dfff713caac6",
+          "release_title": "[One Pace][023-041] Syrup Village [480p]",
+          "pub_date": "Wed, 07 Feb 2018 07:26:44 +0000",
+          "anime_eps": "023-041"
         }
       ]
     },
@@ -1377,6 +1602,15 @@
               "seeders": 50,
               "torrent_title": "[One Pace][42-44] Baratie 01 [1080p][BE634289].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 397769000,
+              "guid": "3128e6b84b13c007055a8f5dd360d7da",
+              "release_title": "[One Pace][42-44] Baratie 01 [1080p][CC37D6C6]",
+              "pub_date": "Sun, 21 Nov 2021 12:40:20 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Enter: Sanji",
@@ -1459,6 +1693,15 @@
               "seeders": 49,
               "torrent_title": "[One Pace][45-47] Baratie 02 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 816320000,
+              "guid": "1172db86d9ac4cc3c29325ff96296154",
+              "release_title": "[One Pace][45-47] Baratie 02 [1080p][9BD35F80]",
+              "pub_date": "Sun, 10 Aug 2025 00:09:57 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pirate Commodore Don Krieg",
@@ -1541,6 +1784,15 @@
               "seeders": 44,
               "torrent_title": "[One Pace][47-49] Baratie 03 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 996221000,
+              "guid": "828b920a7bfef8680b53130d33ff583c",
+              "release_title": "[One Pace][48-52] Baratie 03 [1080p][E90342F6]",
+              "pub_date": "Sun, 10 Aug 2025 00:25:02 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Oath",
@@ -1613,6 +1865,15 @@
               "seeders": 48,
               "torrent_title": "[One Pace][53-55] Baratie 04 [1080p][792BE789].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 569902000,
+              "guid": "f3d99949d30bb6c65c9b56d619e71613",
+              "release_title": "[One Pace][50-52] Baratie 04 [1080p][15D77CB3]",
+              "pub_date": "Tue, 02 May 2023 02:30:14 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pearl",
@@ -1685,6 +1946,15 @@
               "seeders": 52,
               "torrent_title": "[One Pace][56-59] Baratie 05 [1080p][ACEA0537].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 832201000,
+              "guid": "e7df8021cc5fd72cfeda2f6b98873475",
+              "release_title": "[One Pace][56-59] Baratie 05 [1080p][ACEA0537]",
+              "pub_date": "Sun, 24 Aug 2025 02:58:27 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Because of a Dream",
@@ -1757,6 +2027,15 @@
               "seeders": 44,
               "torrent_title": "[One Pace][59-63] Baratie 06 [1080p][1375A4F5].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 616447000,
+              "guid": "2d6288847cd1f97e34fd65b2bab73ece",
+              "release_title": "[One Pace][56-59] Baratie 06 [1080p][757AF173]",
+              "pub_date": "Sun, 28 May 2023 20:57:51 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "MH5",
@@ -1829,6 +2108,15 @@
               "seeders": 46,
               "torrent_title": "[One Pace][63-67] Baratie 07 [1080p][5B161435].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 686472000,
+              "guid": "36e7ab0eb5c0d3b3659ca816b24224bc",
+              "release_title": "[One Pace][59-63] Baratie 07 [1080p][A1039182]",
+              "pub_date": "Sun, 02 Jul 2023 20:48:53 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Stalwart War Spear",
@@ -1901,10 +2189,34 @@
               "seeders": 42,
               "torrent_title": "[One Pace][67-68] Baratie 08 [1080p][A6F61DEE].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 539337000,
+              "guid": "32bf88b082c9b52b83e8339586eaee0a",
+              "release_title": "[One Pace][67-68] Baratie 08 [1080p][A6F61DEE]",
+              "pub_date": "Sun, 28 Sep 2025 00:24:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Fourth",
           "plot": "As the dust of battle settles, the still poisoned Gin decides to go back to the Grand Line with Krieg, and Sanji makes the difficult decision to join Luffy's crew. Suddenly, Yosaku returns with news of where Nami took the Going Merry.\n\nManga Chapter(s): 67-69\n\nAnime Episode(s): 30"
+        },
+        {
+          "num": 9,
+          "display_title": "Baratie 09",
+          "sources": [
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 434861000,
+              "guid": "19b85d217b46cbefec198c4ff3bb92be",
+              "release_title": "[One Pace][67-68] Baratie 09 [1080p][D8C1FD62]",
+              "pub_date": "Sat, 29 Jul 2023 08:37:03 +0000",
+              "extended": false
+            }
+          ]
         }
       ],
       "arc_packs": []
@@ -2091,6 +2403,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][71-73] Arlong Park 02 [480p][0672410E].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 190223000,
+              "guid": "b27221b490f0fab8ddc99e8940d8dd8e",
+              "release_title": "[One.Pace][71-73].Arlong.Park.02.[480p][97677F37]",
+              "pub_date": "Sun, 13 Sep 2020 02:13:30 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Monsters of the Grand Line",
@@ -2183,6 +2504,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][74-76] Arlong Park 03 [480p][20E382C9].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 209018000,
+              "guid": "9720a27534ead9fb84cc8ef80728230a",
+              "release_title": "[One.Pace][74-76].Arlong.Park.03.[480p][1C80414F]",
+              "pub_date": "Sun, 13 Sep 2020 02:32:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Sea Charts and Fishmen",
@@ -2397,6 +2727,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][79-81] Arlong Park 05 [480p][1FEED0EE].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 226330000,
+              "guid": "8e427b90750dfca3abed102807356a25",
+              "release_title": "[One.Pace][79-81].Arlong.Park.05.[480p][038E3A4B]",
+              "pub_date": "Sun, 13 Sep 2020 02:32:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Live",
@@ -2479,6 +2818,24 @@
               "seeders": 6,
               "torrent_title": "[One Pace][82-84] Arlong Park 06 [480p][7A559716].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 699300000,
+              "guid": "0788d6533edec4ef6e2d837f57e880a7",
+              "release_title": "[One Pace][82-84] Arlong Park 06 [1080p][FCF6BA63]",
+              "pub_date": "Sun, 11 Jan 2026 00:44:22 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 165862000,
+              "guid": "e5ddc035775d83aa5133015fa37f91f1",
+              "release_title": "[One.Pace][82-84].Arlong.Park.06.[480p][7A559716]",
+              "pub_date": "Thu, 14 May 2020 06:32:32 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "OK, LET'S STAND UP",
@@ -2561,6 +2918,24 @@
               "seeders": 6,
               "torrent_title": "[One Pace][85-87] Arlong Park 07 [480p][AE7B08F2].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 760160000,
+              "guid": "5c05afac21cea17b0362eeb5c0123a59",
+              "release_title": "[One Pace][85-88] Arlong Park 07 [1080p][4DDEFE2B]",
+              "pub_date": "Sun, 18 Jan 2026 21:41:11 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 177484000,
+              "guid": "1ee69795e48aede7cdf885217a9db059",
+              "release_title": "[One.Pace][85-87].Arlong.Park.07.[480p][AE7B08F2]",
+              "pub_date": "Wed, 27 May 2020 04:46:55 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Chivalry vs. Fishman Karate",
@@ -2643,6 +3018,15 @@
               "seeders": 8,
               "torrent_title": "[One Pace][88-90] Arlong Park 08 [480p][69313728].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 187753000,
+              "guid": "8ce27fde7b6537f54596f4cb47f07ea7",
+              "release_title": "[One.Pace][88-90].Arlong.Park.08.[480p][83E6D2A7]",
+              "pub_date": "Sun, 13 Sep 2020 02:19:04 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "My Turn",
@@ -2725,6 +3109,15 @@
               "seeders": 7,
               "torrent_title": "[One Pace][91-94] Arlong Park 09 [480p][EB1B1AA6].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 199794000,
+              "guid": "47dfd4021f38850d46ad5f9dc96aafb1",
+              "release_title": "[One.Pace][91-94].Arlong.Park.09.[480p][EB1B1AA6]",
+              "pub_date": "Fri, 19 Jun 2020 05:41:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Happiness",
@@ -2807,6 +3200,15 @@
               "seeders": 21,
               "torrent_title": "[One Pace][94-95] Arlong Park 10 [1080p][72F22A68].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 149885000,
+              "guid": "d97353dab1e5b7f2139a91e836269cdf",
+              "release_title": "[One.Pace][94-95].Arlong.Park.10.[480p][5AF7A9B1]",
+              "pub_date": "Sun, 13 Sep 2020 02:19:03 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Spin, Pinwheel, Spin",
@@ -2912,6 +3314,15 @@
           "seeders": 29,
           "torrent_title": "[One Pace][35-75] The Adventures of Buggy's Crew [1080p][1177A2B6].mkv",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "1080p",
+          "size_bytes": 706095000,
+          "guid": "771952bbd9feb9fece004caa31d9b015",
+          "release_title": "[One Pace][35-75] The Adventures of Buggys Crew [1080p][1177A2B6]",
+          "pub_date": "Sat, 21 Feb 2026 06:39:06 +0000",
+          "anime_eps": "35-75"
         }
       ]
     },
@@ -2939,6 +3350,15 @@
               "album_id": "sng6aHYQ",
               "file_id": "wmhr7VZ7",
               "filename": "[One Pace][96-97] Loguetown 01 [480p][En Sub][58B844A0].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 194830000,
+              "guid": "3972aee0e955a7880e9982e429116464",
+              "release_title": "[One.Pace][96-97].Loguetown.01.[480p][4200CE0D]",
+              "pub_date": "Tue, 22 Sep 2020 23:34:20 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Town of Beginnings and Endings",
@@ -2965,6 +3385,15 @@
               "album_id": "sng6aHYQ",
               "file_id": "dyuMLv6C",
               "filename": "[One Pace][97] Loguetown 02 [480p][En Sub][3A56A92E].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 209970000,
+              "guid": "80caca6cda05fa91427c400acd7d0e4f",
+              "release_title": "[One.Pace][97].Loguetown.02.[480p][8E970FD4]",
+              "pub_date": "Tue, 22 Sep 2020 23:36:46 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Parallels",
@@ -2991,6 +3420,15 @@
               "album_id": "sng6aHYQ",
               "file_id": "f9mNojmf",
               "filename": "[One Pace][98-100] Loguetown 03 [480p][En Sub][8421D804].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 381946000,
+              "guid": "61c8e99410ad7dd7a2ebda9ee6bc74d5",
+              "release_title": "[One.Pace][98-100].Loguetown.03.[480p][23E3E489]",
+              "pub_date": "Tue, 22 Sep 2020 23:24:45 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Legend Has Begun",
@@ -3090,6 +3528,24 @@
               "seeders": 25,
               "torrent_title": "[One Pace][101-102] Reverse Mountain 01 [1080p][EBF6DE81].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 678640000,
+              "guid": "24a17c206f44dcd43bc1ed25747b6224",
+              "release_title": "[One Pace][101-103] Reverse Mountain 01 [1080p][CE01A533]",
+              "pub_date": "Sat, 06 Jan 2024 09:09:07 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 252438000,
+              "guid": "7ae13a3b04fe25f5cfea456428a02d59",
+              "release_title": "[One.Pace][101-103].Reverse.Mountain.01.[480p][43A88918]",
+              "pub_date": "Mon, 28 May 2018 14:24:42 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Reverse Mountain",
@@ -3172,6 +3628,24 @@
               "seeders": 17,
               "torrent_title": "[One Pace][103-105] Reverse Mountain 02 [1080p][103B04A7].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 820662000,
+              "guid": "55bce2458f7fe5e3c22cff22d272ea91",
+              "release_title": "[One Pace][103-105] Reverse Mountain 02 [1080p][5195CDBC]",
+              "pub_date": "Sat, 06 Jan 2024 09:10:58 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 136402000,
+              "guid": "00f2904e3a1c2035daf99bdce9f84a4d",
+              "release_title": "[One.Pace][104-105].Reverse.Mountain.02.[480p][775B819E]",
+              "pub_date": "Mon, 28 May 2018 14:24:43 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Cape Promise",
@@ -3198,6 +3672,15 @@
           "seeders": 0,
           "torrent_title": "[One Pace][101-105] Reverse Mountain [480p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "480p",
+          "size_bytes": 388460000,
+          "guid": "ff9051f090dcfdc7ab7954fc72866373",
+          "release_title": "[One Pace][101-105] Reverse Mountain [480p]",
+          "pub_date": "Mon, 28 May 2018 12:12:59 +0000",
+          "anime_eps": "101-105"
         }
       ]
     },
@@ -3249,6 +3732,15 @@
           "seeders": 88,
           "torrent_title": "[One Pace][106-114] Whiskey Peak [480p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "480p",
+          "size_bytes": 313336000,
+          "guid": "ca2fb9772fdcc4a46e8565612ef492da",
+          "release_title": "[One Pace][106-114] Whiskey Peak [480p]",
+          "pub_date": "Sun, 20 Aug 2017 05:38:50 +0000",
+          "anime_eps": "106-114"
         }
       ]
     },
@@ -3292,6 +3784,15 @@
           "seeders": 83,
           "torrent_title": "[One Pace][83-119] The Trials of Koby-Meppo [1080p][4B56844F].mkv",
           "uploader": "Galaxy9000"
+        },
+        {
+          "kind": "usenet",
+          "quality": "1080p",
+          "size_bytes": 392711000,
+          "guid": "24505b9cf072c949cbf0b89282d76765",
+          "release_title": "[One Pace][83-119] The Trials of Koby-Meppo [1080p][4B56844F]",
+          "pub_date": "Sun, 04 Jun 2023 20:07:28 +0000",
+          "anime_eps": "83-119"
         }
       ]
     },
@@ -3385,6 +3886,15 @@
               "seeders": 5,
               "torrent_title": "[One Pace][115-117] Little Garden 01 [480p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 216165000,
+              "guid": "79314f69e0cdc5b9c641e71dc83d2400",
+              "release_title": "[One.Pace][115-117].Little.Garden.01.[480p][A7C806EA]",
+              "pub_date": "Mon, 27 Jul 2020 11:59:04 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Adventure on Little Garden",
@@ -3477,6 +3987,15 @@
               "seeders": 3,
               "torrent_title": "[One Pace][117-118] Little Garden 02 [480p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 154410000,
+              "guid": "bfdf792b6dc6a5948870da19ff3e257a",
+              "release_title": "[One.Pace][117-118].Little.Garden.02.[480p][6E765449]",
+              "pub_date": "Tue, 04 Aug 2020 21:32:50 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Dorry and Brogy",
@@ -3569,6 +4088,15 @@
               "seeders": 3,
               "torrent_title": "[One Pace][119-122] Little Garden 03 [480p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 284455000,
+              "guid": "12dad71bb3d76e163fdc26ff83c7a52b",
+              "release_title": "[One.Pace][119-122].Little.Garden.03.[480p][B5D2AC50]",
+              "pub_date": "Fri, 20 Nov 2020 04:56:49 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Foul Play",
@@ -3651,6 +4179,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][121-124] Little Garden 04 [480p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 320625000,
+              "guid": "8762b88328b86ab4ef87e659049c6c6b",
+              "release_title": "[One.Pace][121-124].Little.Garden.04.[480p][E5C873C7]",
+              "pub_date": "Fri, 09 Oct 2020 22:38:39 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Luffy vs. Mr. 3",
@@ -3733,6 +4270,24 @@
               "seeders": 3,
               "torrent_title": "[One Pace][127-129] Little Garden 05 [480p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 764672000,
+              "guid": "f00ca813f4050898658ccb5b00476ced",
+              "release_title": "[One.Pace][127-129].Little.Garden.05.[1080p][51105EBB]",
+              "pub_date": "Sat, 19 Jul 2025 03:39:56 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 204565000,
+              "guid": "ad34d7e1c124dc3a4d8fd93344973242",
+              "release_title": "[One.Pace][127-129].Little.Garden.05.[480p][0DAE9783]",
+              "pub_date": "Mon, 19 Oct 2020 11:56:37 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Straight Ahead!!",
@@ -3785,6 +4340,15 @@
               "seeders": 5,
               "torrent_title": "[One Pace][129-132] Drum Island 01 [480p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "480p",
+              "size_bytes": 152969000,
+              "guid": "c62cb7899e707b5b518fb2ada15b0bfe",
+              "release_title": "[One.Pace][129-132].Drum.Island.01.[480p][4583E3C7]",
+              "pub_date": "Wed, 21 Oct 2020 23:50:18 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Tin Plate Wapol",
@@ -3939,6 +4503,15 @@
               "seeders": 73,
               "torrent_title": "[One Pace][141-145] Drum Island 05 [1080p][E7044DBE].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1051037000,
+              "guid": "1cb65c459e6cf263a48f6d274070628a",
+              "release_title": "[One Pace][141-145] Drum Island 05 [1080p][E7044DBE]",
+              "pub_date": "Wed, 22 Mar 2023 03:29:46 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Quack Doctor",
@@ -3975,6 +4548,15 @@
               "seeders": 77,
               "torrent_title": "[One Pace][145-148] Drum Island 06 [1080p][A5145C90].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 669391000,
+              "guid": "4faed2c914ffe572e186c8ce50c1e2b9",
+              "release_title": "[One Pace][145-148] Drum Island 06 [1080p][A5145C90]",
+              "pub_date": "Tue, 16 May 2023 05:42:42 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Unbreakable",
@@ -4011,6 +4593,15 @@
               "seeders": 79,
               "torrent_title": "[One Pace][149-152] Drum Island 07 [1080p][B1D913B9].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 940378000,
+              "guid": "b199152402ff3ad94c426832b5e82759",
+              "release_title": "[One Pace][149-152] Drum Island 07 [1080p][B1D913B9]",
+              "pub_date": "Sun, 18 Jun 2023 07:24:16 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Skies of Drum",
@@ -5765,6 +6356,15 @@
               "seeders": 73,
               "torrent_title": "[One Pace][227-228] Jaya 04 [1080p][86DC8F38].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 544337000,
+              "guid": "55ab4a53ea6d3294c6e0536919568ad1",
+              "release_title": "[One Pace][227-228] Jaya 04 [1080p][86DC8F38]",
+              "pub_date": "Sat, 12 Aug 2023 03:47:43 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Noland the Liar",
@@ -5801,6 +6401,15 @@
               "seeders": 70,
               "torrent_title": "[One Pace][229-230] Jaya 05 [1080p][E468A31D].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 510483000,
+              "guid": "71ad7e12bb9ba069cdda7390730ee55f",
+              "release_title": "[One Pace][229-230] Jaya 05 [1080p][E468A31D]",
+              "pub_date": "Sat, 19 Aug 2023 00:59:20 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Let's Eat",
@@ -5837,6 +6446,15 @@
               "seeders": 73,
               "torrent_title": "[One Pace][231-232] Jaya 06 [1080p][8783E1B0].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 419158000,
+              "guid": "60a6eb463230940e116684507d6b2d0c",
+              "release_title": "[One Pace][231-232] Jaya 06 [1080p][8783E1B0]",
+              "pub_date": "Sat, 09 Sep 2023 07:13:03 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Hundred Million Man",
@@ -5873,6 +6491,15 @@
               "seeders": 72,
               "torrent_title": "[One Pace][232-234] Jaya 07 [1080p][580A0C3B].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 544630000,
+              "guid": "714b05e2f66c6c289808e8a5c1fec615",
+              "release_title": "[One Pace][232-234] Jaya 07 [1080p][580A0C3B]",
+              "pub_date": "Sat, 16 Sep 2023 16:04:23 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Highest Authority in the World",
@@ -5909,6 +6536,15 @@
               "seeders": 67,
               "torrent_title": "[One Pace][235-236] Jaya 08 [1080p][FA2E5ADD].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 477813000,
+              "guid": "2fa6af16465b2d0b9755b1d40be54a66",
+              "release_title": "[One.Pace][235-236].Jaya.08.[1080p][FA2E5ADD]",
+              "pub_date": "Sat, 30 Sep 2023 06:14:03 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Knock-Up Stream",
@@ -5997,6 +6633,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][236-247] Skypiea 1-5 [480p]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 473734000,
+              "guid": "bf00ffcac9088a70151b2f7d91f7c839",
+              "release_title": "[One Pace][237-238] Skypiea 01 [1080p][CA5552FC]",
+              "pub_date": "Mon, 12 Jun 2023 10:09:17 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Heaven's Gate",
@@ -6069,6 +6714,15 @@
               "seeders": 73,
               "torrent_title": "[One Pace][239-240] Skypiea 02 [1080p][EB6E8FF5].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 451735000,
+              "guid": "5ad49da8dc7e07840ef63a830455fea5",
+              "release_title": "[One Pace][239-240] Skypiea 02 [1080p][EB6E8FF5]",
+              "pub_date": "Mon, 12 Jun 2023 10:28:54 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Angel Beach",
@@ -6141,6 +6795,15 @@
               "seeders": 70,
               "torrent_title": "[One Pace][241-242] Skypiea 03 [1080p][A50167E6].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 656422000,
+              "guid": "6016c164c093eef8d9630f14a5f50e81",
+              "release_title": "[One Pace][241-242] Skypiea 03 [1080p][A50167E6]",
+              "pub_date": "Mon, 12 Jun 2023 10:33:16 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Divine Reckoning",
@@ -6213,6 +6876,15 @@
               "seeders": 72,
               "torrent_title": "[One Pace][243-244] Skypiea 04 [1080p][C6120876].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 674770000,
+              "guid": "ff161ff7acc2aaeab94f680edb9b3092",
+              "release_title": "[One Pace][243-244] Skypiea 04 [1080p][C6120876]",
+              "pub_date": "Mon, 12 Jun 2023 09:02:52 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Ordeal",
@@ -6285,6 +6957,15 @@
               "seeders": 75,
               "torrent_title": "[One Pace][245-246] Skypiea 05 [1080p][FEA121C3].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 642990000,
+              "guid": "d1ad99055bab74abaf01e6e3fe0023d1",
+              "release_title": "[One Pace][245-246] Skypiea 05 [1080p][FEA121C3]",
+              "pub_date": "Tue, 13 Jun 2023 03:53:38 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Adventure on God's Island",
@@ -6357,6 +7038,15 @@
               "seeders": 73,
               "torrent_title": "[One Pace][247-249] Skypiea 06 [1080p][BF59EB14].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 992752000,
+              "guid": "6ae9901e09d9237fec8eaaa9601471f4",
+              "release_title": "[One Pace][247-249] Skypiea 06 [1080p][BF59EB14]",
+              "pub_date": "Sat, 14 Oct 2023 08:20:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Village Hidden in the Clouds",
@@ -6429,6 +7119,15 @@
               "seeders": 68,
               "torrent_title": "[One Pace][250-251] Skypiea 07 [1080p][3C665F73].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 597722000,
+              "guid": "f2e807bef5484ebe283ab3e11d98285e",
+              "release_title": "[One Pace][250-251] Skypiea 07 [1080p][3C665F73]",
+              "pub_date": "Fri, 20 Oct 2023 23:38:28 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Overture",
@@ -6501,6 +7200,15 @@
               "seeders": 68,
               "torrent_title": "[One Pace][252-254] Skypiea 08 [1080p][236CCF51].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 867762000,
+              "guid": "a8b1f1dbb8aec8d29530dfe7bbdb7e0c",
+              "release_title": "[One Pace][252-254] Skypiea 08 [1080p][236CCF51]",
+              "pub_date": "Sat, 28 Oct 2023 09:09:17 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Vearth",
@@ -6573,6 +7281,15 @@
               "seeders": 68,
               "torrent_title": "[One Pace][255-257] Skypiea 09 [1080p][CF0B1E5A].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 956628000,
+              "guid": "84004e54c5711bfee0fed6b19648491e",
+              "release_title": "[One Pace][255-257] Skypiea 09 [1080p][CF0B1E5A]",
+              "pub_date": "Fri, 17 Nov 2023 22:31:52 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Dial Battle",
@@ -6645,6 +7362,15 @@
               "seeders": 66,
               "torrent_title": "[One Pace][258-260] Skypiea 10 [1080p][602704E6].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 627779000,
+              "guid": "79b1953531fdef01e95f47ab8768b8ca",
+              "release_title": "[One Pace][258-260] Skypiea 10 [1080p][602704E6]",
+              "pub_date": "Sat, 02 Dec 2023 00:21:36 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pirate Luffy vs. Berserker Wyper",
@@ -6717,6 +7443,15 @@
               "seeders": 65,
               "torrent_title": "[One Pace][261-263] Skypiea 11 [1080p][F0EF6382].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 870122000,
+              "guid": "e38422d4f8cc2771c67211284a81812f",
+              "release_title": "[One.Pace][261-263].Skypiea.11.[1080p][F0EF6382]",
+              "pub_date": "Sat, 13 Apr 2024 03:13:31 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pirate Chopper vs. Priest Gedatsu",
@@ -6861,6 +7596,15 @@
               "seeders": 58,
               "torrent_title": "[One Pace][266-269] Skypiea 13 [1080p][460CC2CD].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 765699000,
+              "guid": "0cc17e90865bb4c0f76880a0a6395c38",
+              "release_title": "[One.Pace][266-269].Skypiea.13.[1080p][460CC2CD]",
+              "pub_date": "Sat, 25 May 2024 02:07:32 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Concerto",
@@ -6933,6 +7677,15 @@
               "seeders": 54,
               "torrent_title": "[One Pace][270-273] Skypiea 14 [1080p][702231E9].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 663134000,
+              "guid": "af5d5cc8324ff7e06b517648684b0f51",
+              "release_title": "[One.Pace][270-273].Skypiea.14.[1080p][702231E9]",
+              "pub_date": "Sat, 22 Jun 2024 02:45:45 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pirate Zoro vs. Priest Ohm",
@@ -7873,6 +8626,15 @@
               "album_id": "naP4DUTn",
               "file_id": "cKRKwjy4",
               "filename": "[One Pace][304-306] Long Ring Long Land 01 [720p][En Sub][8441D91B].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 496824000,
+              "guid": "e76afebb325bab66eff80f2686470826",
+              "release_title": "[One.Pace][304-306].Long.Ring.Long.Land.01.[720p][E5705D35]",
+              "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Adventure on a Long Island",
@@ -7935,6 +8697,15 @@
               "album_id": "naP4DUTn",
               "file_id": "VYa36CrR",
               "filename": "[One Pace][307-309] Long Ring Long Land 02 [720p][En Sub][395134E1].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 465751000,
+              "guid": "80cf783d956fb253074b13f94bef8173",
+              "release_title": "[One.Pace][307-309].Long.Ring.Long.Land.02.[720p][57F75027]",
+              "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Donut Race!!",
@@ -7997,6 +8768,15 @@
               "album_id": "naP4DUTn",
               "file_id": "bELcTHJv",
               "filename": "[One Pace][310-312] Long Ring Long Land 03 [720p][En Sub][D28A9E6C].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 576874000,
+              "guid": "1dc6524f21bfdc3ab48256fd52352de9",
+              "release_title": "[One.Pace][310-312].Long.Ring.Long.Land.03.[720p][24351CC0]",
+              "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Groggy Ring!!",
@@ -8059,6 +8839,15 @@
               "album_id": "naP4DUTn",
               "file_id": "xpGJAL1V",
               "filename": "[One Pace][313-316] Long Ring Long Land 04 [720p][En Sub][F06215E3].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 522485000,
+              "guid": "e5c02d7f9bb6707df1c0a635fd6fcb8b",
+              "release_title": "[One.Pace][313-316].Long.Ring.Long.Land.04.[720p][72C0B595]",
+              "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Combat",
@@ -8121,6 +8910,15 @@
               "album_id": "naP4DUTn",
               "file_id": "KTo45WRB",
               "filename": "[One Pace][317-318] Long Ring Long Land 05 [720p][En Sub][2897AAA6].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 292068000,
+              "guid": "17049b963da2241adfd14240f48741b2",
+              "release_title": "[One.Pace][317-318].Long.Ring.Long.Land.05.[720p][BCF2E97B]",
+              "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "K.O.",
@@ -8183,6 +8981,15 @@
               "album_id": "naP4DUTn",
               "file_id": "Gazka2sW",
               "filename": "[One Pace][318-321] Long Ring Long Land 06 [720p][En Sub][151C9C20].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 458269000,
+              "guid": "ff652acdfeb44622edf225ca2056e992",
+              "release_title": "[One.Pace][318-321].Long.Ring.Long.Land.06.[720p][A65C20C2]",
+              "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Marine HQ Admiral Aokiji",
@@ -8209,6 +9016,15 @@
           "seeders": 0,
           "torrent_title": "[One Pace][304-321] Long Ring Long Land [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 2811407000,
+          "guid": "91d77eb8147df42071b816b12d588daa",
+          "release_title": "[One Pace][304-321] Long Ring Long Land [720p]",
+          "pub_date": "Thu, 03 Nov 2016 19:31:58 +0000",
+          "anime_eps": "304-321"
         }
       ]
     },
@@ -8246,6 +9062,15 @@
               "seeders": 61,
               "torrent_title": "[One Pace][322-324] Water Seven 01 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 941616000,
+              "guid": "e72326af82e466d3dc9f1df1245cd9a5",
+              "release_title": "[One.Pace][322-324].Water.Seven.01.[1080p][9101CF0E]",
+              "pub_date": "Fri, 04 Sep 2020 02:23:11 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The City of Water, Water Seven",
@@ -8282,6 +9107,15 @@
               "seeders": 57,
               "torrent_title": "[One Pace][324-326] Water Seven 02 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 999917000,
+              "guid": "ef7609f02c286d41ed3eb5f3ebc8aaf8",
+              "release_title": "[One.Pace][324-326].Water.Seven.02.[1080p][763C1FA8]",
+              "pub_date": "Mon, 22 Feb 2021 07:22:03 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Mr. Iceburg",
@@ -8318,6 +9152,15 @@
               "seeders": 61,
               "torrent_title": "[One Pace][326-329] Water Seven 03 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1451667000,
+              "guid": "96ec560d8cb872d4cc0e3b47ec671906",
+              "release_title": "[One.Pace][326-329].Water.Seven.03.[1080p][01874097]",
+              "pub_date": "Mon, 22 Feb 2021 07:25:04 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Case of the Kidnapped Pirate",
@@ -8498,6 +9341,15 @@
               "seeders": 61,
               "torrent_title": "[One Pace][340-342] Water Seven 08 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 756200000,
+              "guid": "dd466b20d5af2f9201f39151328cffbc",
+              "release_title": "[One Pace][340-342] Water Seven 08 [1080p][6E2DB1B9]",
+              "pub_date": "Tue, 22 Jun 2021 06:25:06 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Devil",
@@ -8534,6 +9386,15 @@
               "seeders": 58,
               "torrent_title": "[One Pace][342-345] Water Seven 09 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1170043000,
+              "guid": "a279b6ceccf1c2321058cfd45703620b",
+              "release_title": "[One.Pace][342-345].Water.Seven.09.[1080p][F96F0A4A]",
+              "pub_date": "Tue, 27 Jul 2021 06:09:42 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Cipher Pol No. 9",
@@ -8570,6 +9431,15 @@
               "seeders": 58,
               "torrent_title": "[One Pace][346-348] Water Seven 10 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 947740000,
+              "guid": "c62f889c8959b38bfc77558365f9e949",
+              "release_title": "[One Pace][346-348] Water Seven 10 [1080p][BAFD9522]",
+              "pub_date": "Sun, 05 Dec 2021 15:37:21 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Six Powers",
@@ -8606,6 +9476,15 @@
               "seeders": 62,
               "torrent_title": "[One Pace][349-352] Water Seven 11 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1155115000,
+              "guid": "5d1183849615181ae11c327dee38ae5b",
+              "release_title": "[One Pace][349-352] Water Seven 11 [1080p][0D273612]",
+              "pub_date": "Fri, 28 Jan 2022 10:14:37 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Klabautermann",
@@ -8714,6 +9593,15 @@
               "seeders": 56,
               "torrent_title": "[One Pace][358-359] Water Seven 14 [1080p][203E5D6E].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 715577000,
+              "guid": "a9f21e7db8fb9fb5c5e97a291f765819",
+              "release_title": "[One Pace][358-359] Water Seven 14 [1080p][203E5D6E]",
+              "pub_date": "Sat, 04 Nov 2023 07:39:40 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Bingo",
@@ -8750,6 +9638,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][360-362] Water Seven 15 [1080p][87F0C48B].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1121134000,
+              "guid": "e4829fd52fe04cf02340db3b00d17cae",
+              "release_title": "[One Pace][360-362] Water Seven 15 [1080p][87F0C48B]",
+              "pub_date": "Fri, 22 Dec 2023 22:35:44 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Departing Shortly",
@@ -8786,6 +9683,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][363-365] Water Seven 16 [1080p][AF5B5194].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1092278000,
+              "guid": "392ce604d293a588f730cb4730e8fc86",
+              "release_title": "[One.Pace][363-365].Water.Seven.16.[1080p][AF5B5194]",
+              "pub_date": "Sun, 04 Feb 2024 03:05:27 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Aqua Laguna",
@@ -8822,6 +9728,15 @@
               "seeders": 57,
               "torrent_title": "[One Pace][366-367] Water Seven 17 [1080p][AB231A9E].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1235003000,
+              "guid": "841d44b2427f01cd82414da9541db06f",
+              "release_title": "[One.Pace][366-367].Water.Seven.17.[1080p][AB231A9E]",
+              "pub_date": "Sat, 17 Feb 2024 01:39:14 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Sogeking",
@@ -8858,6 +9773,15 @@
               "seeders": 54,
               "torrent_title": "[One Pace][368-369] Water Seven 18 [1080p][47D68652].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 773534000,
+              "guid": "ab37a2486b3547f881e7e010af5a70be",
+              "release_title": "[One.Pace][368-369].Water.Seven.18.[1080p][47D68652]",
+              "pub_date": "Fri, 23 Feb 2024 23:53:39 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Ramen Kenpo",
@@ -8894,6 +9818,15 @@
               "seeders": 54,
               "torrent_title": "[One Pace][370-371] Water Seven 19 [1080p][1206A42A].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1022611000,
+              "guid": "a87c08322471b6bb4067fbfdead16194",
+              "release_title": "[One.Pace][370-371].Water.Seven.19.[1080p][1206A42A]",
+              "pub_date": "Sat, 02 Mar 2024 02:31:40 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Honorable Captain T-Bone",
@@ -8930,6 +9863,15 @@
               "seeders": 55,
               "torrent_title": "[One Pace][372-374] Water Seven 20 [1080p][F0FBC907].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1360776000,
+              "guid": "e360d72494945dd7dfc246abdbb7e9a5",
+              "release_title": "[One.Pace][372-374].Water.Seven.20.[1080p][F0FBC907]",
+              "pub_date": "Sat, 16 Mar 2024 16:32:24 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Necessary Evil",
@@ -9264,6 +10206,24 @@
               "seeders": 32,
               "torrent_title": "[One Pace][381-382] Enies Lobby 04 [1080p][90B6D40E].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1330219000,
+              "guid": "7e156a13a8dfd1e029a44077dbede69d",
+              "release_title": "[One Pace][381-382] Enies Lobby 04 [1080p][90B6D40E]",
+              "pub_date": "Sat, 20 Dec 2025 22:05:12 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 257263000,
+              "guid": "35e43a254a3b252f25367062ecfab3f5",
+              "release_title": "[One Pace][381-382] Enies Lobby 04 [720p][194603B0]",
+              "pub_date": "Fri, 25 Jan 2019 10:55:51 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Fired",
@@ -9346,6 +10306,24 @@
               "seeders": 41,
               "torrent_title": "[One Pace][383-384] Enies Lobby 05 [720p][56E89B6A].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1103232000,
+              "guid": "416de3f2744688e03ae1b246b7769738",
+              "release_title": "[One Pace][383-385] Enies Lobby 05 [1080p][07F7124B]",
+              "pub_date": "Mon, 02 Mar 2026 03:50:29 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 316675000,
+              "guid": "02245eb1bf1da666a6f7b33f7b923e87",
+              "release_title": "[One Pace][383-384] Enies Lobby 05 [720p][56E89B6A]",
+              "pub_date": "Fri, 29 Mar 2019 02:37:37 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Raise the Counterattack Signal",
@@ -9428,6 +10406,24 @@
               "seeders": 38,
               "torrent_title": "[One Pace][385-387] Enies Lobby 06 [720p][0E201E28].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 818009000,
+              "guid": "1edf4ed33a33d79b0791e698637c8244",
+              "release_title": "[One Pace][385-387] Enies Lobby 06 [1080p][46C9CFF8]",
+              "pub_date": "Mon, 02 Mar 2026 03:50:29 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 304912000,
+              "guid": "ed8460e1ce5a93619208075491d87bc2",
+              "release_title": "[One Pace][385-387] Enies Lobby 06 [720p][0E201E28]",
+              "pub_date": "Mon, 29 Apr 2019 19:54:49 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Unprecedented",
@@ -9510,6 +10506,24 @@
               "seeders": 36,
               "torrent_title": "[One Pace][388-390] Enies Lobby 07 [1080p][3CA69C29].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 854943000,
+              "guid": "b8d4bf40fdb48dbb4cb18466a013814e",
+              "release_title": "[One Pace][388-390] Enies Lobby 07 [1080p][3CA69C29]",
+              "pub_date": "Sun, 08 Mar 2026 23:00:37 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 269215000,
+              "guid": "8cc9c495f9660b3ac6d94bb6348d317b",
+              "release_title": "[One.Pace][388-390].Enies.Lobby.07.[720p][3BBE532B]",
+              "pub_date": "Mon, 13 May 2019 05:29:37 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Gear Second",
@@ -9592,6 +10606,15 @@
               "seeders": 31,
               "torrent_title": "[One Pace][391-393] Enies Lobby 08 [1080p][79695827].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 282224000,
+              "guid": "0ad78c94049b081961f9f78b0cfd03e7",
+              "release_title": "[One.Pace][391-393].Enies.Lobby.08.[720p][DECF4267]",
+              "pub_date": "Tue, 04 Jun 2019 02:32:02 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Girl They Called a Devil",
@@ -9674,6 +10697,15 @@
               "seeders": 41,
               "torrent_title": "[One Pace][394-396] Enies Lobby 09 [720p][952F5BEB].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 381298000,
+              "guid": "bf0814f9199471aa650202950f124981",
+              "release_title": "[One.Pace][394-396].Enies.Lobby.09.[720p][952F5BEB]",
+              "pub_date": "Tue, 02 Jul 2019 03:51:29 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Ohara vs. The World Government",
@@ -9756,6 +10788,15 @@
               "seeders": 43,
               "torrent_title": "[One Pace][397-398] Enies Lobby 10 [720p][6C908F32].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 338548000,
+              "guid": "010d36358ecfe4b049e7279dd35c11f9",
+              "release_title": "[One.Pace][397-398].Enies.Lobby.10.[720p][6C908F32]",
+              "pub_date": "Wed, 21 Aug 2019 22:43:38 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Declaration of War",
@@ -9837,6 +10878,15 @@
               "seeders": 50,
               "torrent_title": "[One Pace][399-400] Enies Lobby 11 [720p][CF6F1505].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 431300000,
+              "guid": "3ac0b52e328d6656fa5af7f0ffd432db",
+              "release_title": "[One.Pace][399-400].Enies.Lobby.11.[720p][CF6F1505]",
+              "pub_date": "Wed, 21 Aug 2019 22:43:38 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Jump into the Waterfall!!",
@@ -9918,6 +10968,15 @@
               "seeders": 45,
               "torrent_title": "[One Pace][401-402] Enies Lobby 12 [720p][DA166192].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 193624000,
+              "guid": "c93b6678132c32efd3497f59b3ea3fce",
+              "release_title": "[One.Pace][401-402].Enies.Lobby.12.[720p][DA166192]",
+              "pub_date": "Thu, 12 Mar 2020 01:52:35 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pirates vs. CP9",
@@ -9999,6 +11058,15 @@
               "seeders": 49,
               "torrent_title": "[One Pace][403-404] Enies Lobby 13 [720p][FE0F64E2].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 369636000,
+              "guid": "c28c2ed18cbdcb8b94d70e39391e985c",
+              "release_title": "[One.Pace][403-404].Enies.Lobby.13.[720p][FE0F64E2]",
+              "pub_date": "Sat, 04 Apr 2020 05:24:14 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Mr. Chivalry",
@@ -10080,6 +11148,15 @@
               "seeders": 50,
               "torrent_title": "[One Pace][405-406] Enies Lobby 14 [1080p][A9C9701B].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 414526000,
+              "guid": "eb78e647f14f2e08a758721f83929b73",
+              "release_title": "[One.Pace][405-406].Enies.Lobby.14.[1080p][A9C9701B]",
+              "pub_date": "Thu, 16 Apr 2020 04:44:55 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Vitality Response",
@@ -10161,6 +11238,15 @@
               "seeders": 54,
               "torrent_title": "[One Pace][407-408] Enies Lobby 15 [1080p][160B1E51].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 409871000,
+              "guid": "9ac07c11abacaea199be7c05eca4fcad",
+              "release_title": "[One.Pace][407-408].Enies.Lobby.15.[1080p][160B1E51]",
+              "pub_date": "Thu, 23 Apr 2020 00:20:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Monster",
@@ -10242,6 +11328,15 @@
               "seeders": 52,
               "torrent_title": "[One Pace][409-411] Enies Lobby 16 [1080p][158476AB].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 970744000,
+              "guid": "2228c41aed1a2ec6290de272bce610e5",
+              "release_title": "[One.Pace][409-411].Enies.Lobby.16.[1080p][158476AB]",
+              "pub_date": "Thu, 30 Apr 2020 03:38:19 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Terrifying Emergency Broadcast",
@@ -10323,6 +11418,15 @@
               "seeders": 55,
               "torrent_title": "[One Pace][412-413] Enies Lobby 17 [1080p][7562EF8D].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 917839000,
+              "guid": "50ab2607a963db1a6375657946495afa",
+              "release_title": "[One.Pace][412-413].Enies.Lobby.17.[1080p][7562EF8D]",
+              "pub_date": "Fri, 08 May 2020 05:52:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Hunter",
@@ -10404,6 +11508,15 @@
               "seeders": 50,
               "torrent_title": "[One Pace][414-415] Enies Lobby 18 [1080p][64207B1A].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 707281000,
+              "guid": "76b053d91811c1691a285f4608ef8945",
+              "release_title": "[One.Pace][414-415].Enies.Lobby.18.[1080p][64207B1A]",
+              "pub_date": "Fri, 15 May 2020 06:32:29 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Sanji vs. Jabra",
@@ -10485,6 +11598,15 @@
               "seeders": 53,
               "torrent_title": "[One Pace][416-418] Enies Lobby 19 [1080p][C4106519].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1081977000,
+              "guid": "23dffb769838eba85c93a000cba8b857",
+              "release_title": "[One.Pace][416-418].Enies.Lobby.19.[1080p][C4106519]",
+              "pub_date": "Sat, 23 May 2020 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Zoro vs. Kaku",
@@ -10566,6 +11688,15 @@
               "seeders": 50,
               "torrent_title": "[One Pace][419-420] Enies Lobby 20 [1080p][5AC534CA].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 896560000,
+              "guid": "bb78a637e1c7867c399ae617880c1bd8",
+              "release_title": "[One.Pace][419-420].Enies.Lobby.20.[1080p][5AC534CA]",
+              "pub_date": "Fri, 29 May 2020 05:10:57 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Buster Call",
@@ -10728,6 +11859,15 @@
               "seeders": 51,
               "torrent_title": "[One Pace][423-424] Enies Lobby 22 [1080p][C0B33E05].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 892044000,
+              "guid": "c426e155d6531c1fd1664480401f83d8",
+              "release_title": "[One.Pace][423-424].Enies.Lobby.22.[1080p][C0B33E05]",
+              "pub_date": "Mon, 15 Jun 2020 12:21:35 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Legend of the Mermaid",
@@ -10800,6 +11940,15 @@
               "seeders": 55,
               "torrent_title": "[One Pace][425-427] Enies Lobby 23 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1362050000,
+              "guid": "3c8b14f2f205150f2a2ca0f2d51c050b",
+              "release_title": "[One.Pace][425-427].Enies.Lobby.23.[1080p][25AFC3E5]",
+              "pub_date": "Mon, 10 Aug 2020 20:23:32 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "We're Not in Hell",
@@ -10872,6 +12021,15 @@
               "seeders": 58,
               "torrent_title": "[One Pace][428-429] Enies Lobby 24 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1122952000,
+              "guid": "79a6e36f55ea6f2d2f4d2d745d85406b",
+              "release_title": "[One.Pace][428-429].Enies.Lobby.24.[1080p][7F76CDD9]",
+              "pub_date": "Sat, 15 Aug 2020 23:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Utter Defeat",
@@ -10944,6 +12102,15 @@
               "seeders": 55,
               "torrent_title": "[One Pace][430] Enies Lobby 25 [1080p] [Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 569329000,
+              "guid": "36a64d85791a06f265d19fa80b3b273c",
+              "release_title": "[One.Pace][430].Enies.Lobby.25.[1080p][3251D51B]",
+              "pub_date": "Thu, 27 Aug 2020 22:51:38 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "A Gentle Snowfall of Remembrance",
@@ -10976,6 +12143,15 @@
               "album_id": "jVhFqouN",
               "file_id": "HdSrFyzg",
               "filename": "[Muhn Pace] Post Enies Lobby 01.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 407162000,
+              "guid": "fc8973ba8426251c98e834ed32c15647",
+              "release_title": "[One.Pace][431-432].Post-Enies.Lobby.01.[720p][216595EE]",
+              "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Strongest Family Lineage?! The Vice-Admiral and The Revolutionary!",
@@ -11002,6 +12178,15 @@
               "album_id": "jVhFqouN",
               "file_id": "jq3KZE3u",
               "filename": "[Muhn Pace] Post Enies Lobby 02.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 521251000,
+              "guid": "09314d83f59f076a8976ac4824c11344",
+              "release_title": "[One.Pace][433-435].Post-Enies.Lobby.02.[720p][344EA844]",
+              "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Extent of the Grand Line and The 600,000,000 Crew!",
@@ -11028,6 +12213,15 @@
               "album_id": "jVhFqouN",
               "file_id": "NTbjxngp",
               "filename": "[Muhn Pace] Post Enies Lobby 03.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 473384000,
+              "guid": "a2dcfeb1bad9b62e9406bed453f4f995",
+              "release_title": "[One.Pace][436-437].Post-Enies.Lobby.03.[720p][2C843A0F]",
+              "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Forgive Yourself! Franky Departs!",
@@ -11054,6 +12248,15 @@
               "album_id": "jVhFqouN",
               "file_id": "X3HeCSvg",
               "filename": "[Muhn Pace] Post Enies Lobby 04.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 566224000,
+              "guid": "b4c19bc124ee68ec8b8422f4c472ba39",
+              "release_title": "[One.Pace][438-439].Post-Enies.Lobby.04.[720p][659EF70C]",
+              "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Astonishing Thousand Sunny and Usopp's Tearful Apology!",
@@ -11080,6 +12283,15 @@
               "album_id": "jVhFqouN",
               "file_id": "jfwYnXNy",
               "filename": "[Muhn Pace] Post Enies Lobby 05.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 400780000,
+              "guid": "766fc2e9476967aa3f9a5ef757bcc688",
+              "release_title": "[One.Pace][440-441].Post-Enies.Lobby.05.[720p][CEF78887]",
+              "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Circling Bounties and The Duel on Banaro Island!",
@@ -11106,6 +12318,15 @@
           "seeders": 1,
           "torrent_title": "[One Pace][431-441] Post-Enies Lobby [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 2351156000,
+          "guid": "462ff0070d5aae030e64d2dabb14c753",
+          "release_title": "[One Pace][431-441] Post-Enies Lobby [720p]",
+          "pub_date": "Mon, 19 Aug 2019 10:19:35 +0000",
+          "anime_eps": "431-441"
         }
       ]
     },
@@ -11722,6 +12943,15 @@
               "album_id": "KztkSCuY",
               "file_id": "NetaMVKH",
               "filename": "[Muhn Pace] Sabaody Archipelago 1.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 324529000,
+              "guid": "889df2b6e6a5e30f35c1f70209d9bc4d",
+              "release_title": "[One.Pace][490-491].Sabaody.Archipelago.01.[720p][066FD68B]",
+              "pub_date": "Fri, 16 Aug 2019 06:03:33 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Flying Fish Riders",
@@ -11748,6 +12978,15 @@
               "album_id": "KztkSCuY",
               "file_id": "tMJgeqQD",
               "filename": "[Muhn Pace] Sabaody Archipelago 2.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 283749000,
+              "guid": "c9247b134f5b7fe44bf4c21379de6e0d",
+              "release_title": "[One.Pace][492-493].Sabaody.Archipelago.02.[720p][F0334710]",
+              "pub_date": "Fri, 16 Aug 2019 06:03:33 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Iron Mask Duval",
@@ -11774,6 +13013,15 @@
               "album_id": "KztkSCuY",
               "file_id": "3ctv55ix",
               "filename": "[Muhn Pace] Sabaody Archipelago 3.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 322789000,
+              "guid": "6430aeae093534041afca29a08235e92",
+              "release_title": "[One.Pace][494-495].Sabaody.Archipelago.03.[720p][C19CADF5]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Duval's Tragedy",
@@ -11800,6 +13048,15 @@
               "album_id": "KztkSCuY",
               "file_id": "29kiKeh7",
               "filename": "[Muhn Pace] Sabaody Archipelago 4.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 325930000,
+              "guid": "a8979054a1c6c1472c65e91bac9a419d",
+              "release_title": "[One.Pace][496-497].Sabaody.Archipelago.04.[720p][76D21468]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Adventure on the Archipelago of Dancing Soap Bubbles",
@@ -11826,6 +13083,15 @@
               "album_id": "KztkSCuY",
               "file_id": "RX2hgBnT",
               "filename": "[Muhn Pace] Sabaody Archipelago 5.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 485295000,
+              "guid": "7e661052729a5525b3ef75d2e754b3bb",
+              "release_title": "[One.Pace][498-500].Sabaody.Archipelago.05.[720p][7D6E8499]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Embers of History",
@@ -11852,6 +13118,15 @@
               "album_id": "KztkSCuY",
               "file_id": "N3b5NPut",
               "filename": "[Muhn Pace] Sabaody Archipelago 6.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 330265000,
+              "guid": "fab94be2d0dc591342742610e489fef5",
+              "release_title": "[One.Pace][501-502].Sabaody.Archipelago.06.[720p][234CBFDC]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Auction House Incident",
@@ -11878,6 +13153,15 @@
               "album_id": "KztkSCuY",
               "file_id": "ADsSg3mK",
               "filename": "[Muhn Pace] Sabaody Archipelago 7.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 245391000,
+              "guid": "4d9053bb5d9ea932f65513289b714962",
+              "release_title": "[One.Pace][503-504].Sabaody.Archipelago.07.[720p][63A829E4]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "An Island in Chaos",
@@ -11904,6 +13188,15 @@
               "album_id": "KztkSCuY",
               "file_id": "LPxkYff2",
               "filename": "[Muhn Pace] Sabaody Archipelago 8.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 302621000,
+              "guid": "4e3baf3a6568956af792ea3fbfe28ea3",
+              "release_title": "[One.Pace][505-506].Sabaody.Archipelago.08.[720p][873CB57E]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Roger and Rayleigh",
@@ -11930,6 +13223,15 @@
               "album_id": "KztkSCuY",
               "file_id": "Y3bQMz5H",
               "filename": "[Muhn Pace] Sabaody Archipelago 9.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 263658000,
+              "guid": "47e32ca8231850ad885ff96af6a9b9a3",
+              "release_title": "[One.Pace][507-508].Sabaody.Archipelago.09.[720p][0E0C5A82]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Kizaru Arrives",
@@ -11956,6 +13258,15 @@
               "album_id": "KztkSCuY",
               "file_id": "hgNff1sk",
               "filename": "[Muhn Pace] Sabaody Archipelago 10.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 451807000,
+              "guid": "7e660bb7757528e84e043c9d16a0386c",
+              "release_title": "[One.Pace][509-511].Sabaody.Archipelago.10.[720p][20ADEE90]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Kizaru vs. the Four Captains",
@@ -11982,6 +13293,15 @@
               "album_id": "KztkSCuY",
               "file_id": "kreNYv7j",
               "filename": "[Muhn Pace] Sabaody Archipelago 11.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 354033000,
+              "guid": "e7559f844bce882f24b36beb5cd34238",
+              "release_title": "[One.Pace][512-513].Sabaody.Archipelago.11.[720p][1306F53D]",
+              "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "I Couldn't Save Them!!!",
@@ -12008,6 +13328,15 @@
           "seeders": 0,
           "torrent_title": "[One Pace][490-513] Sabaody Archipelago [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 3662893000,
+          "guid": "93e7672bbdd1fa02adf228c91cf7e281",
+          "release_title": "[One Pace][490-513] Sabaody Archipelago [720p]",
+          "pub_date": "Fri, 16 Aug 2019 03:47:20 +0000",
+          "anime_eps": "490-513"
         }
       ]
     },
@@ -12165,6 +13494,15 @@
           "seeders": 0,
           "torrent_title": "[One Pace][514-524] Amazon Lily [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 1577488000,
+          "guid": "228cb14f795e9a91281121d016647d3d",
+          "release_title": "[One Pace] Amazon Lily [720p]",
+          "pub_date": "Sun, 10 Apr 2016 20:30:51 +0000",
+          "anime_eps": ""
         }
       ]
     },
@@ -12212,6 +13550,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][525-526] Impel Down 01 [720p][5604520C].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 201190000,
+              "guid": "0d222827c9bf288cbacad80e0bc67b77",
+              "release_title": "[One.Pace][525-526].Impel.Down.01.[720p][C1FA3347]",
+              "pub_date": "Sat, 31 Dec 2016 13:51:46 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Underwater Prison, Impel Down",
@@ -12248,6 +13595,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][527-528] Impel Down 02 [720p][7306EDA1].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 397770000,
+              "guid": "15709f4f83b6830aa2a247388e8a002e",
+              "release_title": "[One Pace][527-528] Impel Down 02 [720p][7306EDA1]",
+              "pub_date": "Fri, 30 Dec 2016 14:33:31 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "First Son of the Sea",
@@ -12284,6 +13640,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][529-531] Impel Down 03 [720p][ECA0E5A1].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 346758000,
+              "guid": "9cb2385c324eb5f2b4f8cfb7b5b7c80c",
+              "release_title": "[One Pace][529-531] Impel Down 03 [720p][ECA0E5A1]",
+              "pub_date": "Sat, 07 Jan 2017 17:59:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "From One Hell to Another",
@@ -12320,6 +13685,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][532-533] Impel Down 04 [720p][38C7B3F3].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 258632000,
+              "guid": "1a4e5d92c5c4caadaa0da80b1314385e",
+              "release_title": "[One.Pace][532-533].Impel.Down.04.[720p][38C7B3F3]",
+              "pub_date": "Fri, 20 Jan 2017 16:42:38 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Inferno Hell",
@@ -12392,6 +13766,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][537-538] Impel Down 06 [720p][710A0767].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 288166000,
+              "guid": "aa1f53ed7ec5c21a3e8cafdcf0d421b8",
+              "release_title": "[One Pace][537-538] Impel Down 06 [720p][710A0767]",
+              "pub_date": "Fri, 17 Feb 2017 23:32:03 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "A Ray of Hope",
@@ -12512,6 +13895,15 @@
           "seeders": 74,
           "torrent_title": "[One Pace][525-548] Impel Down [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 2024275000,
+          "guid": "a7aaf559a09fc92c854a6d53ce2e6a64",
+          "release_title": "[One Pace][525-548] Impel Down [720p]",
+          "pub_date": "Wed, 28 Jun 2017 04:28:57 +0000",
+          "anime_eps": "525-548"
         }
       ]
     },
@@ -12600,6 +13992,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "eAbnBBcG",
               "filename": "[Muhn Pace] Marineford 01.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 369361000,
+              "guid": "0faf712fd66c419655bbc743214d9125",
+              "release_title": "[One.Pace][549-550].Marineford.01.[720p][C9143FCD]",
+              "pub_date": "Sat, 29 Feb 2020 03:06:18 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Marine Headquarters",
@@ -12626,6 +14027,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "A7uRRUhh",
               "filename": "[Muhn Pace] Marineford 02.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 242282000,
+              "guid": "3159ac139fb0f9893a0ba84811544970",
+              "release_title": "[One.Pace][551-552].Marineford.02.[720p][4F5151F2]",
+              "pub_date": "Wed, 07 Oct 2020 22:56:35 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Ace and Whitebeard",
@@ -12652,6 +14062,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "hzuX19Gv",
               "filename": "[Muhn Pace] Marineford 03.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 268331000,
+              "guid": "f6e287bfa9f66180341d72f5a2233daf",
+              "release_title": "[One.Pace][553-554].Marineford.03.[720p][D16C3A7A]",
+              "pub_date": "Wed, 07 Oct 2020 21:54:12 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Conflict at the Summit",
@@ -12678,6 +14097,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "CvzpmVSj",
               "filename": "[Muhn Pace] Marineford 04.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 191488000,
+              "guid": "7b80c3758ed83b3c721f8e07e5024f18",
+              "release_title": "[One.Pace][555-556].Marineford.04.[720p][738B1A3B]",
+              "pub_date": "Wed, 07 Oct 2020 21:40:07 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Justice Will Prevail!!",
@@ -12704,6 +14132,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "Eu1UFDKd",
               "filename": "[Muhn Pace] Marineford 05.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 211372000,
+              "guid": "2a39fec1ff23394dcd59321617f829c2",
+              "release_title": "[One.Pace][557-558].Marineford.05.[720p][66006702]",
+              "pub_date": "Wed, 07 Oct 2020 21:58:29 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Luffy and Whitebeard",
@@ -12730,6 +14167,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "wggKDz19",
               "filename": "[Muhn Pace] Marineford 06.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 233680000,
+              "guid": "1463587f2bd640b8a8edd306983ff22c",
+              "release_title": "[One.Pace][559-560].Marineford.06.[720p][E46F5F07]",
+              "pub_date": "Wed, 07 Oct 2020 21:54:12 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Prisoners of Impel Down",
@@ -12756,6 +14202,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "opqftspw",
               "filename": "[Muhn Pace] Marineford 07.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 289664000,
+              "guid": "2c24e028bc7d88f965b0123dfb7c9dcd",
+              "release_title": "[One Pace][561-562] Marineford 07 [720p][F6171492]",
+              "pub_date": "Wed, 18 Jul 2018 21:58:11 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Whirl Spider",
@@ -12782,6 +14237,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "H732QahT",
               "filename": "[Muhn Pace] Marineford 08.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 245617000,
+              "guid": "ba2452718bbfc9c0525dd71286093637",
+              "release_title": "[One.Pace][563-564].Marineford.08.[720p][2A3B3264]",
+              "pub_date": "Wed, 07 Oct 2020 21:58:29 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Man Who Shook the World",
@@ -12808,6 +14272,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "REe1sxFC",
               "filename": "[Muhn Pace] Marineford 09.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 262534000,
+              "guid": "cec503d0e242f4392264650efd212312",
+              "release_title": "[One.Pace][565-566].Marineford.09.[720p][1638FE88]",
+              "pub_date": "Wed, 07 Oct 2020 21:40:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Assault",
@@ -12834,6 +14307,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "SKpbZ2f1",
               "filename": "[Muhn Pace] Marineford 10.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 129233000,
+              "guid": "04c6811d2efdcec068d87bab17c7510b",
+              "release_title": "[One.Pace][567].Marineford.10.[720p][B9690B6D]",
+              "pub_date": "Wed, 26 Dec 2018 18:36:57 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Oris Plaza",
@@ -12860,6 +14342,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "tLcnKHJA",
               "filename": "[Muhn Pace] Marineford 11.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 213685000,
+              "guid": "8ce21b5cf2f9d17d7a3b7acb1cad5cc3",
+              "release_title": "[One Pace][568-569] Marineford 11 [720p][12732A0B]",
+              "pub_date": "Sun, 06 Jan 2019 21:31:06 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The White Monster",
@@ -12886,6 +14377,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "aFAi7qwf",
               "filename": "[Muhn Pace] Marineford 12.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 243825000,
+              "guid": "58ee87c8c62df0fda848fe74b68017d5",
+              "release_title": "[One.Pace][570-571].Marineford.12.[720p][6BD41435]",
+              "pub_date": "Wed, 07 Oct 2020 21:40:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Execution Platform",
@@ -12912,6 +14412,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "t9LCtw7s",
               "filename": "[Muhn Pace] Marineford 13.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 228632000,
+              "guid": "71f3063f1798f2678967f26e0fc33589",
+              "release_title": "[One.Pace][572-573].Marineford.13.[720p][66E68054]",
+              "pub_date": "Wed, 07 Oct 2020 21:58:29 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Times They Are A-Changin'",
@@ -12938,6 +14447,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "rsy3RPew",
               "filename": "[Muhn Pace] Marineford 14.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 133876000,
+              "guid": "1123c04eea4b9d6bbbdc487ae664f8bd",
+              "release_title": "[One.Pace][574].Marineford.14.[720p][364FAA9A]",
+              "pub_date": "Tue, 12 Feb 2019 17:43:53 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Thank You for Loving Me",
@@ -12964,6 +14482,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "dSYpCg8y",
               "filename": "[Muhn Pace] Marineford 15.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 298361000,
+              "guid": "6ad1d81f24021afc3788f73b4a312a87",
+              "release_title": "[One.Pace][575-576].Marineford.15.[720p][00768DB7]",
+              "pub_date": "Wed, 07 Oct 2020 21:54:07 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Edward Newgate",
@@ -12990,6 +14517,15 @@
               "album_id": "oa8oZvZx",
               "file_id": "ikueypEZ",
               "filename": "[Muhn Pace] Marineford 16.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 227861000,
+              "guid": "0c8ab6b1e927728f19d7fc62aba024d6",
+              "release_title": "[One.Pace][577-578].Marineford.16.[720p][91EEA92E]",
+              "pub_date": "Wed, 07 Oct 2020 21:45:30 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "A Gift to a New Era",
@@ -13026,6 +14562,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][579-580] Marineford 17 [720p][90239C49].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 208293000,
+              "guid": "1ace5594449293a6847bd8c02bc40a7f",
+              "release_title": "[One.Pace][579-580].Marineford.17.[720p][2DC3ECF7]",
+              "pub_date": "Wed, 07 Oct 2020 22:56:35 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The War's Conclusion",
@@ -13042,6 +14587,15 @@
           "seeders": 77,
           "torrent_title": "[One Pace][549-580] Marineford [720p][ENG-ESP]",
           "uploader": "Galaxy9000"
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 3788880000,
+          "guid": "8958e264f3c2bec6d94759fdb91f52c7",
+          "release_title": "[One Pace][549-580] Marineford [720p]",
+          "pub_date": "Sat, 06 Jul 2019 17:12:12 +0000",
+          "anime_eps": "549-580"
         }
       ]
     },
@@ -13079,6 +14633,15 @@
               "seeders": 58,
               "torrent_title": "[One Pace][581-582] Post-War 01 [1080p][Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 389718000,
+              "guid": "edc3a9646d41a368527f09e116beb29a",
+              "release_title": "[One.Pace][581-582].Post-War.01.[720p][D1EC78C6]",
+              "pub_date": "Tue, 03 Sep 2019 05:39:15 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Creeping Future",
@@ -13115,6 +14678,24 @@
               "seeders": 56,
               "torrent_title": "[One Pace][583-584] Post-War 02 [1080p][Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 508684000,
+              "guid": "117f49dc81432469f43bc8e5084c3977",
+              "release_title": "[One.Pace][583-584].Post-War.02.[1080p][1A183CBE]",
+              "pub_date": "Mon, 27 Jul 2020 09:58:15 +0000",
+              "extended": false
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 510898000,
+              "guid": "c2d9c7b348156dfab48d6c16a4e2d134",
+              "release_title": "[One.Pace][583-584].Post-War.02.[720p][5374DDDE]",
+              "pub_date": "Wed, 04 Sep 2019 05:20:28 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Gray Terminal",
@@ -13151,6 +14732,15 @@
               "seeders": 57,
               "torrent_title": "[One Pace][585-586] Post-War 03 [1080p][Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 588640000,
+              "guid": "23ad51406acde8f16f39dbb6ac98eb91",
+              "release_title": "[One.Pace][585-586].Post-War.03.[1080p][9DEAD0F3]",
+              "pub_date": "Sun, 26 Jul 2020 09:22:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Oath of Brotherhood",
@@ -13187,6 +14777,15 @@
               "seeders": 54,
               "torrent_title": "[One Pace][587-588] Post-War 04 [1080p][Dual-Audio]",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 533390000,
+              "guid": "f1a39b30e0c765ad554ca0cb29dad6bd",
+              "release_title": "[One.Pace][587-588].Post-War.04.[1080p][5FA1920A]",
+              "pub_date": "Mon, 27 Jul 2020 09:10:25 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Sabo's Sea",
@@ -13304,6 +14903,15 @@
               "seeders": 56,
               "torrent_title": "[One Pace][593-594] Post-War 07 [1080p][D85BC22C].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 513341000,
+              "guid": "4c5799ea6db3edc64a7441108b418882",
+              "release_title": "[One.Pace][593-594].Post-War.07.[1080p][D85BC22C]",
+              "pub_date": "Mon, 21 Dec 2020 00:41:35 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "NEWS",
@@ -13349,6 +14957,15 @@
               "seeders": 59,
               "torrent_title": "[One Pace][595-597] Post-War 08 [1080p][178190BC].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1775726000,
+              "guid": "663342e861be965bb0ea2c887ef6f0c6",
+              "release_title": "[One Pace][595-597] Post-War 08 [1080p][178190BC]",
+              "pub_date": "Mon, 18 Jan 2021 18:15:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "3D2Y",
@@ -13459,6 +15076,15 @@
           "seeders": 0,
           "torrent_title": "[One Pace][598-602] Return to Sabaody [v2][720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 1079615000,
+          "guid": "85316efc5e7a2139f0e703c69870cd71",
+          "release_title": "[One Pace][598-602] Return to Sabaody [720p]",
+          "pub_date": "Sun, 29 Apr 2018 19:15:16 +0000",
+          "anime_eps": "598-602"
         }
       ]
     },
@@ -13798,6 +15424,15 @@
               "album_id": "ZQhstabS",
               "file_id": "wkakb8Lj",
               "filename": "[Muhn Pace] Fishman Island 13.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 783634000,
+              "guid": "954ca640ff2a3c469ac060600373d46a",
+              "release_title": "[One.Pace][627-629].Fishman.Island.13.[720p][04C7B716]",
+              "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Shaking of the Kingdom! Luffy vs. Jinbe!",
@@ -13824,6 +15459,15 @@
               "album_id": "ZQhstabS",
               "file_id": "hiXFpktE",
               "filename": "[Muhn Pace] Fishman Island 14.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 635663000,
+              "guid": "48bd394922fe7a3f854dbf3380472a79",
+              "release_title": "[One.Pace][630-631].Fishman.Island.14.[720p][35A189E2]",
+              "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Gyoncorde Plaza Gathering! The Evil Drug's True Power",
@@ -13904,6 +15548,15 @@
               "album_id": "kuoQYqfR",
               "file_id": "qca1oobC",
               "filename": "[V1][DUB][632-633] Fishman Island 15 (FIXED GROUP SHOT) [1080p].mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 670847000,
+              "guid": "e728a42a8e060de26528ea8b947f5b3e",
+              "release_title": "[One.Pace][632-633].Fishman.Island.15.[720p][8014A332]",
+              "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Hody's Dark Secret! The Straw Hats' Arrival",
@@ -13930,6 +15583,15 @@
               "album_id": "ZQhstabS",
               "file_id": "vttEzm2N",
               "filename": "[Muhn Pace] Fishman Island 16.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 738831000,
+              "guid": "9d4f2e40ebd4eb563b535bd697e7a836",
+              "release_title": "[One.Pace][634-635].Fishman.Island.16.[720p][DF3A7006]",
+              "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "100,000 vs. 10! The Straw Hats' Explosive Moves",
@@ -13956,6 +15618,15 @@
               "album_id": "ZQhstabS",
               "file_id": "ZCMq4z4P",
               "filename": "[Muhn Pace] Fishman Island 17.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 609664000,
+              "guid": "4d83d0badd83ba7f71edb509ea6732e6",
+              "release_title": "[One.Pace][636-637].Fishman.Island.17.[720p][EB0BC95C]",
+              "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The General from the Future Land and the Crisis of Fishman Island's Destruction",
@@ -13982,6 +15653,15 @@
               "album_id": "ZQhstabS",
               "file_id": "QixuDSta",
               "filename": "[Muhn Pace] Fishman Island 18.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 535171000,
+              "guid": "85c42091fde161e6e4cfd5681107f308",
+              "release_title": "[One.Pace][638-639].Fishman.Island.18.[720p][B6BD1A60]",
+              "pub_date": "Sun, 29 Apr 2018 23:34:34 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "I'll Protect Everything",
@@ -14008,6 +15688,15 @@
               "album_id": "ZQhstabS",
               "file_id": "sS5UMR3U",
               "filename": "[Muhn Pace] Fishman Island 19.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 655483000,
+              "guid": "622f495286e7a249a21c5785563cad85",
+              "release_title": "[One.Pace][640-641].Fishman.Island.19.[720p][C19D5680]",
+              "pub_date": "Sun, 29 Apr 2018 23:34:44 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "What Are You?",
@@ -14034,6 +15723,15 @@
               "album_id": "ZQhstabS",
               "file_id": "dP3DaScp",
               "filename": "[Muhn Pace] Fishman Island 20.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 655768000,
+              "guid": "3a2c5a844abc227b4cd28fba857a3bf8",
+              "release_title": "[One.Pace][642-645].Fishman.Island.20.[720p][94E2099D]",
+              "pub_date": "Sun, 29 Apr 2018 23:34:45 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Phantom",
@@ -14060,6 +15758,15 @@
               "album_id": "ZQhstabS",
               "file_id": "YuY3j6Mz",
               "filename": "[Muhn Pace] Fishman Island 21.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 615185000,
+              "guid": "c78f84571a5a13e140c38699b577c8dc",
+              "release_title": "[One.Pace][643-646].Fishman.Island.21.[720p][85AD9C81]",
+              "pub_date": "Sun, 29 Apr 2018 23:34:27 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Death Is Also Revenge",
@@ -14086,6 +15793,15 @@
               "album_id": "ZQhstabS",
               "file_id": "PdSS3JWQ",
               "filename": "[Muhn Pace] Fishman Island 22.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 937731000,
+              "guid": "a6b56f79e69b5738a2771570de6b27ec",
+              "release_title": "[One.Pace][647-649].Fishman.Island.22.[720p][7DBBFA18]",
+              "pub_date": "Sun, 29 Apr 2018 23:34:27 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Path Toward the Sun",
@@ -14112,6 +15828,15 @@
               "album_id": "ZQhstabS",
               "file_id": "ZaLRrv1y",
               "filename": "[Muhn Pace] Fishman Island 23.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 679357000,
+              "guid": "7c374994d55e6380924c6fdb25bb6173",
+              "release_title": "[One.Pace][650-651].Fishman.Island.23.[720p][65BD682D]",
+              "pub_date": "Sun, 29 Apr 2018 23:34:42 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Voice from the New World",
@@ -14138,6 +15863,15 @@
               "album_id": "ZQhstabS",
               "file_id": "wKhUDZq7",
               "filename": "[Muhn Pace] Fishman Island 24.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 708794000,
+              "guid": "9f958e6cf909ff6367ac940dbd29b052",
+              "release_title": "[One.Pace][652-653].Fishman.Island.24.[720p][99A61805]",
+              "pub_date": "Sun, 29 Apr 2018 23:34:45 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Hero's Hat",
@@ -14154,6 +15888,15 @@
           "seeders": 82,
           "torrent_title": "[One Pace][603-653] Fishman Island [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 15643964000,
+          "guid": "f5aabb17394ba26e1e0700eeab79cefc",
+          "release_title": "[One Pace][603-653] Fishman Island [720p]",
+          "pub_date": "Sun, 29 Apr 2018 19:58:19 +0000",
+          "anime_eps": "603-653"
         }
       ]
     },
@@ -14753,6 +16496,15 @@
           "seeders": 0,
           "torrent_title": "[One Pace][654-699] Punk Hazard [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 11559114000,
+          "guid": "4f4b80eb927171573a03f188b7c68e8c",
+          "release_title": "[One Pace][654-699] Punk Hazard [720p]",
+          "pub_date": "Sat, 04 May 2019 16:56:25 +0000",
+          "anime_eps": "654-699"
         }
       ]
     },
@@ -15450,6 +17202,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][750-751] Dressrosa 26 [720p][71CA89FC].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 214395000,
+              "guid": "b03d24342e40bf2dc40351ba0bafa4de",
+              "release_title": "[One Pace][750-751] Dressrosa 26 [720p][71CA89FC]",
+              "pub_date": "Tue, 09 Aug 2016 02:39:55 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The State of the War",
@@ -15486,6 +17247,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][752-753] Dressrosa 27 [720p][DC6C3C54].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 237052000,
+              "guid": "cbfeea1d955b2754b42f736cb746ef97",
+              "release_title": "[One Pace][752-753] Dressrosa 27 [720p][DC6C3C54]",
+              "pub_date": "Tue, 23 Aug 2016 06:24:45 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Battle",
@@ -15522,6 +17292,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][754-755] Dressrosa 28 [720p][04186119].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 259139000,
+              "guid": "0f8d4337de34c9f564aedfac6190d5c5",
+              "release_title": "[One Pace][754-755] Dressrosa 28 [720p][04186119]",
+              "pub_date": "Fri, 02 Sep 2016 01:15:50 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "A Man's World",
@@ -15558,6 +17337,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][756-757] Dressrosa 29 [720p][ACC7852E].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 267050000,
+              "guid": "7e8f98eed8fe4f5679c2fe3d0b1aab39",
+              "release_title": "[One Pace][756-757] Dressrosa 29 [720p][ACC7852E]",
+              "pub_date": "Sun, 18 Sep 2016 03:12:58 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Trump Card",
@@ -15594,6 +17382,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][758-759] Dressrosa 30 [720p][4F16C5DC].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 202847000,
+              "guid": "3641915cf6f20aa9ede2c28c6c4e9a1b",
+              "release_title": "[One Pace][758-759] Dressrosa 30 [720p][4F16C5DC]",
+              "pub_date": "Fri, 23 Sep 2016 21:25:50 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Secret Plan",
@@ -15640,6 +17437,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][760-761] Dressrosa 31 [720p][98100F9C].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 321464000,
+              "guid": "90fe4e9ff9346f2d1e7e2904a7f0bea3",
+              "release_title": "[One Pace][760-761] Dressrosa 31 [720p][98100F9C]",
+              "pub_date": "Thu, 13 Oct 2016 19:11:38 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Operation Fruit",
@@ -15676,6 +17482,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][762-763] Dressrosa 32 [720p][E98F852E].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 236608000,
+              "guid": "6509630314d059f0cc7d836e60d01300",
+              "release_title": "[One Pace][762-763] Dressrosa 32 [720p][E98F852E]",
+              "pub_date": "Sat, 15 Oct 2016 23:37:53 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "White Town",
@@ -15712,6 +17527,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][764-765] Dressrosa 33 [720p][53AEB13C].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 253316000,
+              "guid": "a33155f038cd7ec0e9a1e33a641cb438",
+              "release_title": "[One.Pace][764-765].Dressrosa.33.[720p][53AEB13C]",
+              "pub_date": "Sat, 05 Nov 2016 03:51:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Island of Fate: Minion",
@@ -15784,6 +17608,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][768-769] Dressrosa 35 [720p][1B5DC33C].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 223416000,
+              "guid": "40b0045b7e71db4896b929a736bcbc22",
+              "release_title": "[One.Pace][768-769].Dressrosa.35.[720p][1B5DC33C]",
+              "pub_date": "Sun, 18 Dec 2016 14:05:02 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Bellamy the Pirate",
@@ -15820,6 +17653,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][770-771] Dressrosa 36 [720p][F218F0E4].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 244389000,
+              "guid": "1cf20ea291ccdb0fd2a87133e995e71f",
+              "release_title": "[One.Pace][770-771].Dressrosa.36.[720p][F218F0E4]",
+              "pub_date": "Sat, 14 Jan 2017 21:38:51 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Spear of Elbaph and Don Sai",
@@ -15856,6 +17698,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][772-773] Dressrosa 37 [720p][777A9A6A].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 241670000,
+              "guid": "07f84a66ca8fd8e889e8753ee8f60994",
+              "release_title": "[One Pace][772-773] Dressrosa 37 [720p][777A9A6A]",
+              "pub_date": "Fri, 24 Feb 2017 23:14:25 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Cabbage and Lomeo",
@@ -15928,6 +17779,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][776-778] Dressrosa 39 [720p][7391ECD4].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 407163000,
+              "guid": "74ea8e467a6cda2feb8b05c6f63d0760",
+              "release_title": "[One.Pace][776-778].Dressrosa.39.[720p][7391ECD4]",
+              "pub_date": "Mon, 20 Mar 2017 09:01:51 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Zoro vs. Pica",
@@ -15964,6 +17824,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][779-781] Dressrosa 40 [720p][ECD80B22].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 325296000,
+              "guid": "67d41e43baf39c428b361ba8eaa04982",
+              "release_title": "[One Pace][779-781] Dressrosa 40 [720p][ECD80B22]",
+              "pub_date": "Mon, 27 Mar 2017 00:16:15 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Curse of Heart",
@@ -16000,6 +17869,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][782-783] Dressrosa 41 [720p][3E9F11F9].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 254247000,
+              "guid": "e72e82de504f176f5e042f6beacc842d",
+              "release_title": "[One Pace][782-783] Dressrosa 41 [720p][3E9F11F9]",
+              "pub_date": "Wed, 26 Apr 2017 23:38:55 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "In My Way",
@@ -16026,6 +17904,15 @@
               "album_id": "f8HTXmAk",
               "file_id": "Gv5GjPeH",
               "filename": "[Muhn Pace] Dressrosa 42.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 273593000,
+              "guid": "91ef5a1851475ebf3643671709d8322a",
+              "release_title": "[One.Pace][784-785].Dressrosa.42.[720p][55292D1C]",
+              "pub_date": "Mon, 22 May 2017 22:38:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Gear Fourth",
@@ -16052,6 +17939,15 @@
               "album_id": "f8HTXmAk",
               "file_id": "63XLrtkx",
               "filename": "[Muhn Pace] Dressrosa 43.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 260851000,
+              "guid": "e855d7d8ab461c7b729274b2217a82c9",
+              "release_title": "[One.Pace][786-787].Dressrosa.43.[720p][CAA32C42]",
+              "pub_date": "Mon, 22 May 2017 22:21:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Gatz",
@@ -16078,6 +17974,15 @@
               "album_id": "f8HTXmAk",
               "file_id": "fWFz41rt",
               "filename": "[Muhn Pace] Dressrosa 44.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 355667000,
+              "guid": "084f49ee3eaec4b196f6da7150507a3e",
+              "release_title": "[One.Pace][788-790].Dressrosa.44.[720p][4DDF4C07]",
+              "pub_date": "Sun, 28 May 2017 18:55:55 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Heaven and Earth",
@@ -16114,6 +18019,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][791-793] Dressrosa 45 [720p][15344804].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 291958000,
+              "guid": "b61ec9a377c3b02ab83c42e3d735be6f",
+              "release_title": "[One.Pace][791-793].Dressrosa.45.[720p][15344804]",
+              "pub_date": "Sat, 10 Jun 2017 09:18:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Prostration",
@@ -16150,6 +18064,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][794-795] Dressrosa 46 [720p][81C4666C].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 286211000,
+              "guid": "fc8cab1e6a90ea62b0abdecae761e464",
+              "release_title": "[One Pace][794-795] Dressrosa 46 [720p][81C4666C]",
+              "pub_date": "Wed, 28 Jun 2017 05:05:22 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Sabo's Adventure",
@@ -16186,6 +18109,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][796-797] Dressrosa 47 [720p][01C40FA1].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 285689000,
+              "guid": "06a83d833cfd643d47a51656ce1c3b4b",
+              "release_title": "[One.Pace][796-797].Dressrosa.47.[720p][01C40FA1]",
+              "pub_date": "Sun, 20 Aug 2017 08:49:50 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Soldier's Conviction",
@@ -16228,6 +18160,15 @@
           "seeders": 101,
           "torrent_title": "[One Pace][700-800] Dressrosa [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 465764000,
+          "guid": "7d82d05899f8cee34dcb6dbfb9cba5ce",
+          "release_title": "[One.Pace].Paced.One.Piece-Dressrosa.Episode.01.[720p][2A35B710]",
+          "pub_date": "Wed, 26 Nov 2014 07:19:59 +0000",
+          "anime_eps": ""
         }
       ]
     },
@@ -16265,6 +18206,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][802-803] Zou 01 [720p][AE19A3A0].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 172091000,
+              "guid": "0fb73637c4744dde86d12ab2e0b9630d",
+              "release_title": "[One Pace][802-803] Zou 01 [720p][AE19A3A0]",
+              "pub_date": "Fri, 26 Aug 2016 01:39:47 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Zou",
@@ -16301,6 +18251,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][804-805] Zou 02 [720p][32150FF4].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 226578000,
+              "guid": "e00cbc7ed2b61251b809c3c23378c89d",
+              "release_title": "[One Pace][804-805] Zou 02 [720p][32150FF4]",
+              "pub_date": "Fri, 09 Sep 2016 21:50:55 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Minks",
@@ -16337,6 +18296,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][806-807] Zou 03 [720p][E4B077F8].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 352659000,
+              "guid": "79a3e0c257c7dddb4b5013d2819c3377",
+              "release_title": "[One.Pace][806-807].Zou.03.[720p][E4B077F8]",
+              "pub_date": "Fri, 30 Sep 2016 23:36:44 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "At Rightflank Fortress",
@@ -16373,6 +18341,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][808-809] Zou 04 [720p][A4F76B13].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 210517000,
+              "guid": "93414348c9e204a76611e49dd1659515",
+              "release_title": "[One Pace][808-809] Zou 04 [720p][A4F76B13]",
+              "pub_date": "Sun, 23 Oct 2016 00:02:47 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Duke Inuarashi and Master Nekomamushi",
@@ -16409,6 +18386,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][810-811] Zou 05 [720p][7149D13F].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 219735000,
+              "guid": "a28851179c35108c34c24569784ed6c4",
+              "release_title": "[One.Pace][810-811].Zou.05.[720p][7149D13F]",
+              "pub_date": "Wed, 16 Nov 2016 03:26:46 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Curly Hat Pirates Arrive",
@@ -16445,6 +18431,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][812-813] Zou 06 [720p][7F73DB45].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 213835000,
+              "guid": "dc8dbefa1b62e295f41a8276760c1fc5",
+              "release_title": "[One Pace][812-813] Zou 06 [720p][7F73DB45]",
+              "pub_date": "Thu, 24 Nov 2016 03:22:30 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Tea Party Invitation",
@@ -16491,6 +18486,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][814-815] Zou 07 [720p][55837445].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 237044000,
+              "guid": "906a1a04dcc5656835a0ae1fc9b3126a",
+              "release_title": "[One.Pace][814-815].Zou.07.[720p][55837445]",
+              "pub_date": "Mon, 30 Apr 2018 19:12:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Let's Go See Master Nekomamushi",
@@ -16527,6 +18531,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][816-817] Zou 08 [720p][5B2AAFBF].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 223280000,
+              "guid": "3c7f9d7855b6f78f6510f7a13be14a8d",
+              "release_title": "[One.Pace][816-817].Zou.08.[720p][5B2AAFBF]",
+              "pub_date": "Sun, 25 Dec 2016 08:53:07 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Raizo of the Mist",
@@ -16563,6 +18576,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][818-819] Zou 09 [720p][0880B38F].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 210752000,
+              "guid": "eee3237e1bd4e6052c8571d6794616f5",
+              "release_title": "[One.Pace][818-819].Zou.09.[720p][0880B38F]",
+              "pub_date": "Sat, 28 Jan 2017 00:31:34 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Momonosuke, Heir of the Kozuki Family",
@@ -16599,6 +18621,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][820-822] Zou 10 [720p][4A52B138].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 349114000,
+              "guid": "14ff09d3643b8904daadb7d778b2ae86",
+              "release_title": "[One.Pace][820-822].Zou.10.[720p][4A52B138]",
+              "pub_date": "Sat, 04 Mar 2017 01:13:28 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Understood",
@@ -16615,6 +18646,15 @@
           "seeders": 89,
           "torrent_title": "[One Pace][801-822] Zou [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 2477670000,
+          "guid": "cb8a47e8ff46d9e408d377d7c976f4df",
+          "release_title": "[One Pace][801-822] Zou [720p]",
+          "pub_date": "Mon, 30 Apr 2018 15:13:58 +0000",
+          "anime_eps": "801-822"
         }
       ]
     },
@@ -16642,6 +18682,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "7E7CCJg7",
               "filename": "[Muhn Pace] Whole Cake Island 01.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 250312000,
+              "guid": "3b8822f57560a7ec94ad9b3330d7d6b5",
+              "release_title": "[One.Pace][823-824].Whole.Cake.Island.01.[720p][3F24A1D8]",
+              "pub_date": "Fri, 11 Dec 2020 05:02:06 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "A World Abuzz",
@@ -16668,6 +18717,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "QtoMg5vu",
               "filename": "[Muhn Pace] Whole Cake Island 02.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 237499000,
+              "guid": "404b318a748f0a491cd3d35d70b65263",
+              "release_title": "[One.Pace][825-826].Whole.Cake.Island.02.[720p][837E2CA1]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "0 and 4",
@@ -16694,6 +18752,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "XLRb1kNA",
               "filename": "[Muhn Pace] Whole Cake Island 03.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 223074000,
+              "guid": "616e5cb948107b2326a5f87f07ea4524",
+              "release_title": "[One.Pace][827-828].Whole.Cake.Island.03.[720p][B8A08E6D]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Totto Land",
@@ -16720,6 +18787,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "UaEAvqjm",
               "filename": "[Muhn Pace] Whole Cake Island 04.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 244652000,
+              "guid": "80dbc94821d05709be8f2be4677e7d8e",
+              "release_title": "[One.Pace][829-830].Whole.Cake.Island.04.[720p][A0EEC801]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pirate Emperor, Charlotte Linlin",
@@ -16746,6 +18822,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "rEQFJXnk",
               "filename": "[Muhn Pace] Whole Cake Island 05.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 270669000,
+              "guid": "99a64557f9b9ac940f25ab9ab1418b0e",
+              "release_title": "[One.Pace][831-832].Whole.Cake.Island.05.[720p][DF6B6FEC]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Adventure in the Mysterious Forest",
@@ -16772,6 +18857,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "A81Df2HY",
               "filename": "[Muhn Pace] Whole Cake Island 06.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 234576000,
+              "guid": "776146f58411f1f3405dd1e4350a1b59",
+              "release_title": "[One.Pace][833-834].Whole.Cake.Island.06.[720p][7FC1F643]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Vinsmoke Judge",
@@ -16798,6 +18892,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "weHXYFT3",
               "filename": "[Muhn Pace] Whole Cake Island 07.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 272398000,
+              "guid": "5fb94fcb192b3cac8282ed1d09345e46",
+              "release_title": "[One.Pace][835-836].Whole.Cake.Island.07.[720p][37E1B3D1]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Lola's Vivre Card",
@@ -16834,6 +18937,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][837-838] Whole Cake Island 08 [720p][99396F83].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 253072000,
+              "guid": "961ecc70d70118c0a0300567e5c24c82",
+              "release_title": "[One.Pace][837-838].Whole.Cake.Island.08.[720p][31018FCB]",
+              "pub_date": "Fri, 11 Dec 2020 05:43:59 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Luffy vs. Commander Cracker",
@@ -16860,6 +18972,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "26bBWNGx",
               "filename": "[Muhn Pace] Whole Cake Island 09.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 207404000,
+              "guid": "f8c6a6cef16dd0652ef08b60a62fe41b",
+              "release_title": "[One.Pace][839-840].Whole.Cake.Island.09.[720p][0CE63D1F]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Iron Mask",
@@ -16896,6 +19017,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][841-842] Whole Cake Island 10 [720p][347060ED].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 309228000,
+              "guid": "c3a60ef441ccec9447990c5418b0e942",
+              "release_title": "[One.Pace][841-842].Whole.Cake.Island.10.[720p][E123D314]",
+              "pub_date": "Fri, 11 Dec 2020 05:28:37 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "To the East Blue",
@@ -16922,6 +19052,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "dmXp1FES",
               "filename": "[Muhn Pace] Whole Cake Island 11.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 239074000,
+              "guid": "1a533a893f7aaff771a9b8cfa5c29494",
+              "release_title": "[One.Pace][843-844].Whole.Cake.Island.11.[720p][4A6DFB78]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Luffy vs. Sanji",
@@ -16948,6 +19087,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "1acCoFmh",
               "filename": "[Muhn Pace] Whole Cake Island 12.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 258767000,
+              "guid": "01df19d3ce3ee3cb14ac93632e6f1fd3",
+              "release_title": "[One.Pace][845-846].Whole.Cake.Island.12.[720p][86CA1E99]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Forces of Rage",
@@ -16974,6 +19122,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "6JcKRifc",
               "filename": "[Muhn Pace] Whole Cake Island 13.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 238601000,
+              "guid": "b7c529bcf1ddd3310b8bbae44f532bcb",
+              "release_title": "[One.Pace][847-848].Whole.Cake.Island.13.[720p][34772777]",
+              "pub_date": "Thu, 11 Apr 2019 17:00:38 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Luffy and Big Mom",
@@ -17000,6 +19157,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "wYENFE2p",
               "filename": "[Muhn Pace] Whole Cake Island 14.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 263486000,
+              "guid": "910807d4eb62f618d7dfcf681937b035",
+              "release_title": "[One.Pace][849-850].Whole.Cake.Island.14.[720p][0AF54CB5]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "A Ray of Light",
@@ -17045,6 +19211,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][851-852] Whole Cake Island 15 [720p][AC27E460].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 247547000,
+              "guid": "e76d51dd872c84d6602167e426ea6c72",
+              "release_title": "[One.Pace][851-852].Whole.Cake.Island.15.[720p][0E2022E4]",
+              "pub_date": "Fri, 11 Dec 2020 05:43:59 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Germa's Failure",
@@ -17090,6 +19265,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][853-854] Whole Cake Island 16 [720p][2CA58267].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 216114000,
+              "guid": "24db450ed03bb0341b56737538616dea",
+              "release_title": "[One.Pace][853-854].Whole.Cake.Island.16.[720p][A8E42FE1]",
+              "pub_date": "Fri, 11 Dec 2020 05:28:37 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Not Here",
@@ -17116,6 +19300,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "ufPfc2UC",
               "filename": "[Muhn Pace] Whole Cake Island 17.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 258005000,
+              "guid": "bb343b98c6b27764f1799391db32cb92",
+              "release_title": "[One.Pace][855-856].Whole.Cake.Island.17.[720p][0CF96D5A]",
+              "pub_date": "Fri, 11 Dec 2020 05:28:38 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Liar",
@@ -17152,6 +19345,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][857-858] Whole Cake Island 18 [720p][A94AF722].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 265638000,
+              "guid": "371e6c25fade978383c92d8c18925be8",
+              "release_title": "[One Pace][857-858] Whole Cake Island 18 [720p][A94AF722]",
+              "pub_date": "Tue, 31 Jul 2018 18:19:57 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Rook",
@@ -17188,6 +19390,15 @@
               "seeders": 0,
               "torrent_title": "Unofficial release [One Pace][859-860] Whole Cake Island 19 [720p][2F8600E4].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 266655000,
+              "guid": "7e14cd7c7a4bd5436ca0734fc5ec5bbb",
+              "release_title": "[One.Pace][859-860].Whole.Cake.Island.19.[720p][2F8600E4]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Emperor Assassination Plan",
@@ -17214,6 +19425,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "jr5zCKc8",
               "filename": "[Muhn Pace] Whole Cake Island 20.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 227850000,
+              "guid": "54a1b6a02affeb99590c21c44a9d6617",
+              "release_title": "[One Pace][861-862] Whole Cake Island 20 [720p][FB8F3643]",
+              "pub_date": "Wed, 17 Oct 2018 18:34:28 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Veteran Actor",
@@ -17250,6 +19470,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][863-864] Whole Cake Island 21 [720p][CEC099DE].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 282374000,
+              "guid": "50f420eea64d527ea6e80ae449e32bec",
+              "release_title": "[One Pace][863-864] Whole Cake Island 21 [720p][CEC099DE]",
+              "pub_date": "Tue, 20 Nov 2018 21:29:23 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Honorable",
@@ -17276,6 +19505,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "Xu8BrULz",
               "filename": "[Muhn Pace] Whole Cake Island 22.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 271049000,
+              "guid": "f3f81c1e119f73e5c2c5ddc950d5d00e",
+              "release_title": "[One.Pace][865-866].Whole.Cake.Island.22.[720p][72B13A22]",
+              "pub_date": "Tue, 27 Nov 2018 11:29:31 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Hey, Mother",
@@ -17312,6 +19550,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][867-868] Whole Cake Island 23 [720p][0A99AFB4].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 304682000,
+              "guid": "f984b475e9b87325f292134aef035656",
+              "release_title": "[One Pace][867-868] Whole Cake Island 23 [720p][0A99AFB4]",
+              "pub_date": "Thu, 13 Dec 2018 05:19:22 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "HAPPY BIRTHDAY",
@@ -17348,6 +19595,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][869-870] Whole Cake Island 24 [720p][4378CF27].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 301439000,
+              "guid": "0ce6a4af08f38959adb74a68f83bf123",
+              "release_title": "[One.Pace][869-870].Whole.Cake.Island.24.[720p][4378CF27]",
+              "pub_date": "Mon, 31 Dec 2018 07:25:34 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Under Siege",
@@ -17384,6 +19640,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][870-872] Whole Cake Island 25 [720p][D9C8EECA].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 320914000,
+              "guid": "3aaedf159add72c67439755918415b4c",
+              "release_title": "[One.Pace][870-872].Whole.Cake.Island.25.[720p][D9C8EECA]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "You Can Do It, Caesar!!",
@@ -17420,6 +19685,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][873-874] Whole Cake Island 26 [720p][3715392E].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 295153000,
+              "guid": "0bde000667604f64d1b25ccbff70749a",
+              "release_title": "[One.Pace][873-874].Whole.Cake.Island.26.[720p][3715392E]",
+              "pub_date": "Tue, 05 Feb 2019 12:18:07 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Become My Servant",
@@ -17456,6 +19730,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][875-876] Whole Cake Island 27 [720p][622C0683].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 350167000,
+              "guid": "a40b6d32000e222aa8d0a833b40cf98a",
+              "release_title": "[One.Pace][875-876].Whole.Cake.Island.27.[720p][622C0683]",
+              "pub_date": "Sat, 09 Feb 2019 11:54:20 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "A Woman's Honor",
@@ -17492,6 +19775,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][877-878] Whole Cake Island 28 [720p][ACB7B61D].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 266511000,
+              "guid": "a4491475b5f49cf6bcb3898fa9db1988",
+              "release_title": "[One.Pace][877-878].Whole.Cake.Island.28.[720p][ACB7B61D]",
+              "pub_date": "Fri, 15 Feb 2019 11:23:59 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Mink Pedro, Captain of the Guardians",
@@ -17528,6 +19820,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][879-880] Whole Cake Island 29 [720p][BBB1DBD9].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 257275000,
+              "guid": "937bbef31dcb363e8bbb1d5e771abc60",
+              "release_title": "[One.Pace][879-880].Whole.Cake.Island.29.[720p][BBB1DBD9]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Zero Escape",
@@ -17564,6 +19865,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][881-883] Whole Cake Island 30 [720p][71FF0B55].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 277147000,
+              "guid": "c0d6ed0cb8d78adac441a001fb43ad57",
+              "release_title": "[One.Pace][881-883].Whole.Cake.Island.30.[720p][71FF0B55]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Wave Room",
@@ -17600,6 +19910,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][883-884] Whole Cake Island 31 [720p][0CAEBD5B].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 297026000,
+              "guid": "88cbe64d19d21b97995dacd6e5c57aba",
+              "release_title": "[One.Pace][883-884].Whole.Cake.Island.31.[720p][0CAEBD5B]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Merienda",
@@ -17636,6 +19955,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][885-886] Whole Cake Island 32 [720p][EEA7A87F].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 294016000,
+              "guid": "ce0bf049008347e223a1488859bc10e0",
+              "release_title": "[One.Pace][885-886].Whole.Cake.Island.32.[720p][EEA7A87F]",
+              "pub_date": "Wed, 27 Feb 2019 10:01:02 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Way of Life",
@@ -17672,6 +20000,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][887-888] Whole Cake Island 33 [720p][7CE5E547].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 248193000,
+              "guid": "4afe9137b7ff744bcef94afb249b3c23",
+              "release_title": "[One.Pace][887-888].Whole.Cake.Island.33.[720p][7CE5E547]",
+              "pub_date": "Wed, 27 Feb 2019 10:01:02 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Lion",
@@ -17708,6 +20045,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][889-891] Whole Cake Island 34 [720p][0A9CEB2B].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 332710000,
+              "guid": "3e3b3804c5af09925d84cd5f24974447",
+              "release_title": "[One.Pace][889-891].Whole.Cake.Island.34.[720p][A3939979]",
+              "pub_date": "Fri, 11 Dec 2020 05:32:31 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Unknown Mama",
@@ -17744,6 +20090,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][891-893] Whole Cake Island 35 [720p][CDEBF3F8].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 298535000,
+              "guid": "6e2ec17a1e15a1244a1867057e0b9b04",
+              "release_title": "[One.Pace][891-893].Whole.Cake.Island.35.[720p][CDEBF3F8]",
+              "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "They Believe in Me",
@@ -17780,6 +20135,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][892-895] Whole Cake Island 36 [720p][B9B84ED5].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 348191000,
+              "guid": "b8df42620945975719a6b77f9ffe51f0",
+              "release_title": "[One Pace][892-895] Whole Cake Island 36 [720p][B9B84ED5]",
+              "pub_date": "Sun, 03 Mar 2019 22:32:26 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Pirate Luffy vs. Commander Katakuri",
@@ -17816,6 +20180,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][896-897] Whole Cake Island 37 [720p][CF4FCE05].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 221364000,
+              "guid": "4b71248b219b0c83e91aa192630e9188",
+              "release_title": "[One Pace][896-897] Whole Cake Island 37 [720p][CF4FCE05]",
+              "pub_date": "Wed, 06 Mar 2019 00:30:50 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "One Last Thing",
@@ -17852,6 +20225,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][898-900] Whole Cake Island 38 [720p][914E7EA6].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 393405000,
+              "guid": "b1a8922d5553e93af8a8608ec99a124c",
+              "release_title": "[One.Pace][898-900].Whole.Cake.Island.38.[720p][914E7EA6]",
+              "pub_date": "Sun, 05 May 2019 02:54:57 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "BAD END MUSICAL",
@@ -17878,6 +20260,15 @@
               "album_id": "AyvkmFFZ",
               "file_id": "QkSQW23p",
               "filename": "[Muhn Pace] Whole Cake Island 39.mp4"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 296526000,
+              "guid": "17b59c5a747e95cdfa962fe65b154130",
+              "release_title": "[One.Pace][901-902].Whole.Cake.Island.39.[720p][ADF1B361]",
+              "pub_date": "Thu, 11 Apr 2019 05:06:40 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "END ROLL",
@@ -17914,6 +20305,15 @@
           "seeders": 0,
           "torrent_title": "[One Pace][822-902] Whole Cake Island [720p]",
           "uploader": ""
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 241217000,
+          "guid": "b0a67a00ca0b6665de990330dfeda26f",
+          "release_title": "[One.Pace][823-824].Whole.Cake.Island.01v2.[720p][2CA0B607]",
+          "pub_date": "Tue, 05 Feb 2019 12:18:07 +0000",
+          "anime_eps": "823-824"
         }
       ]
     },
@@ -17987,6 +20387,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][903-904] Reverie 01 [720p][728FD8D8].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 236641000,
+              "guid": "2a82d9aba8aedab31f3e45a5960cb7d5",
+              "release_title": "[One.Pace][903-904].Reverie.01.[720p][728FD8D8]",
+              "pub_date": "Tue, 30 Apr 2019 07:39:36 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Fifth Emperor",
@@ -18059,6 +20468,15 @@
               "seeders": 1,
               "torrent_title": "[One Pace][905-906] Reverie 02 [720p][202E6B32].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 260343000,
+              "guid": "69b0fc710327a8bde5ccf02e1ecda610",
+              "release_title": "[One.Pace][905-906].Reverie.02.[720p][202E6B32]",
+              "pub_date": "Sat, 15 Jun 2019 08:40:06 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "A Beautiful World",
@@ -18131,6 +20549,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][907-908] Reverie 03 [720p][A760D82E].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "720p",
+              "size_bytes": 345233000,
+              "guid": "f246880d9341537f5eb9aa3f36e1e778",
+              "release_title": "[One.Pace][907-908].Reverie.03.[720p][A760D82E]",
+              "pub_date": "Tue, 02 Jul 2019 03:54:02 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Empty Throne",
@@ -18147,6 +20574,15 @@
           "seeders": 48,
           "torrent_title": "[One Pace][903-908] Reverie [1080p]",
           "uploader": "Galaxy9000"
+        },
+        {
+          "kind": "usenet",
+          "quality": "720p",
+          "size_bytes": 835910000,
+          "guid": "970a215e9279e1c006346089711fbfee",
+          "release_title": "[One Pace][903-908] Reverie [720p]",
+          "pub_date": "Sun, 07 Jul 2019 16:45:22 +0000",
+          "anime_eps": "903-908"
         }
       ]
     },
@@ -18220,6 +20656,15 @@
               "seeders": 29,
               "torrent_title": "[One Pace][909-910] Wano 01 [1080p][F15AFDE0].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 583407000,
+              "guid": "afa8b89f362cec8dadc19a447894e466",
+              "release_title": "[One.Pace][909-910].Wano.01.[1080p][F9F0F488]",
+              "pub_date": "Wed, 08 Apr 2020 04:51:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Onward to Wano",
@@ -18302,6 +20747,15 @@
               "seeders": 13,
               "torrent_title": "[One Pace][909-911] Wano 02 [1080p][8538EDC4].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1001512000,
+              "guid": "779d83d9654389bd3b4fafed2f0ecba5",
+              "release_title": "[One.Pace][909-911].Wano.02.[1080p][453DCC92]",
+              "pub_date": "Wed, 08 Apr 2020 04:51:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Seppuku",
@@ -18374,6 +20828,15 @@
               "seeders": 28,
               "torrent_title": "[One Pace][911-912] Wano 03 [1080p][410FD111].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1075757000,
+              "guid": "462b7f4d78df60296419a4a407873321",
+              "release_title": "[One.Pace][911-912].Wano.03.[1080p][6E4E501E]",
+              "pub_date": "Wed, 08 Apr 2020 04:51:05 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Amigasa Village",
@@ -18456,6 +20919,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][913] Wano 04 [1080p][1865E7DF].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 762119000,
+              "guid": "f306ae454de74ee8dbba2f197406662d",
+              "release_title": "[One.Pace][913].Wano.04.[1080p][23CF2FA6]",
+              "pub_date": "Wed, 08 Apr 2020 04:51:06 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Tsuru Returns the Favor",
@@ -18537,6 +21009,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][914-915] Wano 05 [1080p][64E446D3].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 842840000,
+              "guid": "9053d9c0fbec4881868dfbd00f880e7b",
+              "release_title": "[One.Pace][914-915].Wano.05.[1080p][B51C53E9]",
+              "pub_date": "Wed, 08 Apr 2020 04:51:06 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Okobore Town",
@@ -18618,6 +21099,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][915-916] Wano 06 [1080p][4C39B34C].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 777332000,
+              "guid": "d05f3fcae2cfaebb72c998efc2a04b39",
+              "release_title": "[One.Pace][915-916].Wano.06.[1080p][13E4ABCF]",
+              "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Wano's Grand Sumo Tournament",
@@ -18699,6 +21189,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][916-917] Wano 07 [1080p][407B42D5].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 822082000,
+              "guid": "c9ccf499609341678d411d0c2f66f9a5",
+              "release_title": "[One.Pace][916-917].Wano.07.[1080p][F71F9B71]",
+              "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Provisions Ship",
@@ -18780,6 +21279,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][918-919] Wano 08 [1080p][D3899913].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1109485000,
+              "guid": "ecd7738496c1f7b8d2c2c6a2ffee9b60",
+              "release_title": "[One.Pace][918-919].Wano.08.[1080p][6DA86F5F]",
+              "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Ruins of Oden Castle",
@@ -18861,6 +21369,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][919-920] Wano 09 [1080p][A08EC3B9].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 713973000,
+              "guid": "b78025065af1bab67f34ba0b2aa7de93",
+              "release_title": "[One.Pace][919-920].Wano.09.[1080p][5A5E65B1]",
+              "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "I Love Oden",
@@ -18942,6 +21459,15 @@
               "seeders": 0,
               "torrent_title": "[One Pace][921-922] Wano 10 [1080p][919A1140].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1045528000,
+              "guid": "d50ba410be2de0da2257f6c634bb52a6",
+              "release_title": "[One.Pace][921-922].Wano.10.[1080p][0C83A6A1]",
+              "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Shutenmaru",
@@ -19023,6 +21549,15 @@
               "seeders": 11,
               "torrent_title": "[One Pace][922-923] Wano 11 [1080p][10FA8741].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 782044000,
+              "guid": "25d733ce3922bb8e87928f56fa1c2db8",
+              "release_title": "[One.Pace][922-923].Wano.11.[1080p][6A9CF454]",
+              "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Emperor Kaido vs. Luffy",
@@ -19104,6 +21639,15 @@
               "seeders": 11,
               "torrent_title": "[One Pace][924] Wano 12 [1080p][4E97A31D].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 643569000,
+              "guid": "c5789a7d9d8f989dfaa45d3c5020d8e2",
+              "release_title": "[One.Pace][924].Wano.12.[1080p][5ACE812A]",
+              "pub_date": "Wed, 08 Apr 2020 04:47:49 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Hah",
@@ -19185,6 +21729,15 @@
               "seeders": 58,
               "torrent_title": "[One Pace][925-926] Wano 13 [1080p][DCF7AD65].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 935118000,
+              "guid": "3370966bd5383f2457c087fcfbe936c5",
+              "release_title": "[One.Pace][925-926].Wano.13.[1080p][DCF7AD65]",
+              "pub_date": "Wed, 06 May 2020 12:15:40 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Void",
@@ -19266,6 +21819,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][926-927] Wano 14 [1080p][BF92DCAF].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1241063000,
+              "guid": "8aed1277020f3f6a3c050dd6fde44833",
+              "release_title": "[One.Pace][926-927].Wano.14.[1080p][BF92DCAF]",
+              "pub_date": "Thu, 25 Jun 2020 03:19:19 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Otoko the Kamuro",
@@ -19428,6 +21990,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][930-931] Wano 16 [1080p][9FA61F60].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1348462000,
+              "guid": "cf6dce0b6b28a0a7f393b3b34f415e95",
+              "release_title": "[One.Pace][930-931].Wano.16.[1080p][9FA61F60]",
+              "pub_date": "Mon, 27 Jul 2020 09:39:28 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Soba Mask",
@@ -19509,6 +22080,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][932-933] Wano 17 [1080p][D2E02F36].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1721066000,
+              "guid": "606ff26bcc0fbe903e0e8674f191d594",
+              "release_title": "[One.Pace][932-933].Wano.17.[1080p][D2E02F36]",
+              "pub_date": "Fri, 31 Jul 2020 23:20:12 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Shogun and the Oiran",
@@ -19590,6 +22170,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][934-935] Wano 18 [1080p][94F78CF3].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1367481000,
+              "guid": "18e6bfcae16149cb33b8a91599171b54",
+              "release_title": "[One.Pace][934-935].Wano.18.[1080p][94F78CF3]",
+              "pub_date": "Wed, 09 Dec 2020 23:34:04 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Hyogoro the Flower",
@@ -19671,6 +22260,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][936-938] Wano 19 [1080p][6C9E8055].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1646494000,
+              "guid": "6d4a2abf65623437c06d75d8bb664a31",
+              "release_title": "[One.Pace][936-938].Wano.19.[1080p][6C9E8055]",
+              "pub_date": "Wed, 09 Dec 2020 23:22:41 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Gyukimaru of Bandit's Bridge",
@@ -19995,6 +22593,15 @@
               "seeders": 58,
               "torrent_title": "[One Pace][943-944] Wano 23 [1080p][37670A03].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 2251777000,
+              "guid": "36e2fcba23c0a86a11b230a0f63e177b",
+              "release_title": "[One Pace][943-944] Wano 23 [1080p][37670A03]",
+              "pub_date": "Tue, 18 Jan 2022 22:54:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "SMILE",
@@ -20076,6 +22683,15 @@
               "seeders": 58,
               "torrent_title": "[One Pace][945] Wano 24 [1080p][6173BCE1].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1665017000,
+              "guid": "10055a8380c7530d22dbdc36289579f1",
+              "release_title": "[One Pace][944-945] Wano 24 [1080p][1F083723]",
+              "pub_date": "Tue, 29 Jun 2021 03:36:47 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Olin",
@@ -20157,6 +22773,15 @@
               "seeders": 65,
               "torrent_title": "[One Pace][946-947] Wano 25 [1080p][C3825063].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1748441000,
+              "guid": "6e25c4b71ed976728e3977102d825cdb",
+              "release_title": "[One Pace][946-947] Wano 25 [1080p][C3825063]",
+              "pub_date": "Fri, 10 Sep 2021 06:07:17 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Queen vs. Olin",
@@ -20238,6 +22863,15 @@
               "seeders": 64,
               "torrent_title": "[One Pace][948-949] Wano 26 [1080p][F3E829E8].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 2025761000,
+              "guid": "017ea016d6c7c3f30d0d54ce7364c10d",
+              "release_title": "[One Pace][948-949] Wano 26 [1080p][F3E829E8]",
+              "pub_date": "Tue, 18 Jan 2022 22:54:11 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Mummy",
@@ -20634,6 +23268,15 @@
               "seeders": 62,
               "torrent_title": "[One Pace][956] Wano 31 [1080p][F6C7EB83].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1042691000,
+              "guid": "995d51dbf00d392b03526117e14996bf",
+              "release_title": "[One Pace][956] Wano 31 [1080p][F6C7EB83]",
+              "pub_date": "Tue, 27 Jun 2023 03:29:16 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Big News",
@@ -20706,6 +23349,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][957] Wano 32 [1080p][29B91F56].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 854633000,
+              "guid": "d75a61690f19b84cb04c61f96e82b95e",
+              "release_title": "[One Pace][957] Wano 32 [1080p][29B91F56]",
+              "pub_date": "Sat, 22 Jul 2023 02:44:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Ultimate",
@@ -20778,6 +23430,15 @@
               "seeders": 65,
               "torrent_title": "[One Pace][958-959] Wano 33 [1080p][E3AB2BA0].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1617711000,
+              "guid": "e76a5e5a577b8c4940f211aff7034499",
+              "release_title": "[One Pace][958-959] Wano 33 [1080p][E3AB2BA0]",
+              "pub_date": "Sat, 02 Sep 2023 00:10:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Designated Port",
@@ -20850,6 +23511,15 @@
               "seeders": 62,
               "torrent_title": "[One Pace][960-961] Wano 34 [1080p][224B7846].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1417748000,
+              "guid": "0fe4846257cc1a6c5d6975fc152fdc88",
+              "release_title": "[One.Pace][960-961].Wano.34.[1080p][224B7846]",
+              "pub_date": "Sun, 24 Sep 2023 09:51:08 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Day of the Mountain God",
@@ -20922,6 +23592,15 @@
               "seeders": 61,
               "torrent_title": "[One Pace][962-963] Wano 35 [1080p][98B5E26D].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 2063721000,
+              "guid": "27bb40436adf6cea74ceae06c5bc46a5",
+              "release_title": "[One Pace][962-963] Wano 35 [1080p][98B5E26D]",
+              "pub_date": "Sat, 11 Nov 2023 04:36:59 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Daimyo and Retainers",
@@ -20994,6 +23673,15 @@
               "seeders": 61,
               "torrent_title": "[One Pace][964-965] Wano 36 [1080p][BAFFE801].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1883024000,
+              "guid": "88e34b2ed13021d799d71580f38cd4fc",
+              "release_title": "[One Pace][964-965] Wano 36 [1080p][BAFFE801]",
+              "pub_date": "Sat, 09 Dec 2023 03:39:12 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Oden's Adventure",
@@ -21066,6 +23754,15 @@
               "seeders": 64,
               "torrent_title": "[One Pace][965-966] Wano 37 [1080p][AD8C9C16].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 2246183000,
+              "guid": "ff394bd90837f9e78dc84efa3c8e9485",
+              "release_title": "[One Pace][965-966] Wano 37 [1080p][AD8C9C16]",
+              "pub_date": "Sat, 16 Dec 2023 04:05:14 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Roger and Whitebeard",
@@ -21138,6 +23835,15 @@
               "seeders": 60,
               "torrent_title": "[One Pace][967] Wano 38 [1080p][298A4284].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1199407000,
+              "guid": "68655c116000f48eeef289887c7324f4",
+              "release_title": "[One.Pace][967].Wano.38.[1080p][298A4284]",
+              "pub_date": "Sat, 27 Jan 2024 02:41:40 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Roger's Adventure",
@@ -21282,6 +23988,15 @@
               "seeders": 57,
               "torrent_title": "[One Pace][970-972] Wano 40 [1080p][713F7916].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 2714889000,
+              "guid": "ff24a17ba84edca390363dbb602b6dfd",
+              "release_title": "[One.Pace][970-972].Wano.40.[1080p][713F7916]",
+              "pub_date": "Sat, 11 May 2024 04:03:09 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Oden Was Meant to Boil",
@@ -22238,6 +24953,15 @@
               "seeders": 19,
               "torrent_title": "[One Pace][996-997] Wano 53 [1080p][CE6E899D].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1816655000,
+              "guid": "6ab452987e6673266181221f5680a95e",
+              "release_title": "[One.Pace][996-997].Wano.53.[1080p][C99E7631]",
+              "pub_date": "Sat, 19 Jul 2025 03:39:56 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Flame Clouds",
@@ -22310,6 +25034,15 @@
               "seeders": 46,
               "torrent_title": "[One Pace][998-999] Wano 54 [1080p][79C6DC33].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1883099000,
+              "guid": "dc3c52696390f68faf9cda3f5cc023a6",
+              "release_title": "[One Pace][998-999] Wano 54 [1080p][79C6DC33]",
+              "pub_date": "Mon, 15 Sep 2025 08:16:32 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Sake I Brewed to Drink With You",
@@ -22392,6 +25125,15 @@
               "seeders": 26,
               "torrent_title": "[One Pace][1000] Wano 55 [1080p][2501AC5A].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 853325000,
+              "guid": "b75587b7bb884dd02cfc6f4902e66596",
+              "release_title": "[One Pace][1000] Wano 55 Extended [1080p][425F93B9]",
+              "pub_date": "Sun, 28 Sep 2025 00:24:05 +0000",
+              "extended": true
             }
           ],
           "canonical_title": "Straw Hat Luffy",
@@ -22608,6 +25350,15 @@
               "seeders": 48,
               "torrent_title": "[One Pace][1005-1006] Wano 58 [1080p][A0FCAB46].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1697084000,
+              "guid": "da7cd864ee207730a8803ed8654443d3",
+              "release_title": "[One Pace][1005-1006] Wano 58 [1080p][A0FCAB46]",
+              "pub_date": "Sat, 21 Feb 2026 06:32:57 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Honorable Hyogoro \"the Flower\"",
@@ -22680,6 +25431,15 @@
               "seeders": 44,
               "torrent_title": "[One Pace][1007-1008] Wano 59 [1080p][2ED1FD82].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1615939000,
+              "guid": "e2717ac6c22e6b325319261cc13a332d",
+              "release_title": "[One Pace][1007-1008] Wano 59 [1080p][2ED1FD82]",
+              "pub_date": "Mon, 23 Mar 2026 00:09:23 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Leader of the Mt. Atama Thieves, Ashura Doji",
@@ -23225,6 +25985,15 @@
               "seeders": 40,
               "torrent_title": "[One Pace][1058-1059] Egghead 01 [1080p][CA3F14A8].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 554312000,
+              "guid": "afe2853ac5eb1b4b84f33ee77c46ccea",
+              "release_title": "[One.Pace][1058-1059].Egghead.01.[1080p][1B5D9178]",
+              "pub_date": "Fri, 12 Jan 2024 18:16:14 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "New Emperors",
@@ -23288,6 +26057,15 @@
               "seeders": 43,
               "torrent_title": "[One Pace][1059-1060] Egghead 02 [1080p][D511F339].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 683094000,
+              "guid": "b8f8060e5e82086ef2c51cfeafad9903",
+              "release_title": "[One.Pace][1059-1060].Egghead.02.[1080p][01B6EE9A]",
+              "pub_date": "Sat, 20 Jan 2024 00:17:52 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Matter Involving Captain Koby",
@@ -23351,6 +26129,15 @@
               "seeders": 36,
               "torrent_title": "[One Pace][1060-1061] Egghead 03 [1080p][5B546203].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 897060000,
+              "guid": "3b5bceea698d1b97ba35e3694b115c76",
+              "release_title": "[One.Pace][1060-1061].Egghead.03.[1080p][979285FE]",
+              "pub_date": "Fri, 09 Feb 2024 22:33:04 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Future Island Egghead",
@@ -23414,6 +26201,15 @@
               "seeders": 38,
               "torrent_title": "[One Pace][1062-1063] Egghead 04 [1080p][ACBE88D6].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 817231000,
+              "guid": "69810479353f3f620a1d78d73a74fa05",
+              "release_title": "[One.Pace][1062-1063].Egghead.04.[1080p][92F9FD5D]",
+              "pub_date": "Sat, 09 Mar 2024 14:14:54 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Adventure in the Land of Science",
@@ -23477,6 +26273,15 @@
               "seeders": 37,
               "torrent_title": "[One Pace][1064-1065] Egghead 05 [1080p][C6E79353].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 833726000,
+              "guid": "54b2adc9fcc84e54b46a9816ebc2ddd7",
+              "release_title": "[One.Pace][1064-1065].Egghead.05.[1080p][E80E4B80]",
+              "pub_date": "Sat, 23 Mar 2024 02:17:01 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Six Vegapunks",
@@ -23540,6 +26345,15 @@
               "seeders": 38,
               "torrent_title": "[One Pace][1066] Egghead 06 [1080p][69F1BBD5].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 413273000,
+              "guid": "f05a5961f90d6294fd5107bb78061788",
+              "release_title": "[One.Pace][1066].Egghead.06.[1080p][C9D76388]",
+              "pub_date": "Fri, 19 Apr 2024 23:26:50 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Will of Ohara",
@@ -23603,6 +26417,15 @@
               "seeders": 37,
               "torrent_title": "[One Pace][1067-1068] Egghead 07 [1080p][A42DEAED].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 728477000,
+              "guid": "9a7632f7ba201ce9394cb6b3c37c777f",
+              "release_title": "[One.Pace][1067-1068].Egghead.07.[1080p][713FF32B]",
+              "pub_date": "Sat, 04 May 2024 00:38:45 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Punk Records",
@@ -23676,6 +26499,15 @@
               "seeders": 15,
               "torrent_title": "[One Pace][1069-1070] Egghead 08 [1080p][4C1997F3].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 893834000,
+              "guid": "2b3d9d1d4610fc7ddebfac2b5958ebd0",
+              "release_title": "[One.Pace][1069-1070].Egghead.08.[1080p][126ECF70]",
+              "pub_date": "Fri, 31 May 2024 23:16:30 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Strongest Form of Humanity",
@@ -23739,6 +26571,15 @@
               "seeders": 41,
               "torrent_title": "[One Pace][1071-1072] Egghead 09 [1080p][29B2D72D].mkv",
               "uploader": "Galaxy9000"
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 740777000,
+              "guid": "73d195cddeeb55ad941854cd50be9e44",
+              "release_title": "[One.Pace][1071-1072].Egghead.09.[1080p][ED808618]",
+              "pub_date": "Sat, 22 Jun 2024 02:46:10 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "The Weight of Memory",
@@ -24074,6 +26915,15 @@
               "seeders": 16,
               "torrent_title": "[One Pace][1080-1081] Egghead 14 [1080p][3C0010BE].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1793978000,
+              "guid": "4873ebe11549b292627d4e34358a67a1",
+              "release_title": "[One Pace][1080-1081] Egghead 14 Extended [1080p][CA3683BA]",
+              "pub_date": "Sun, 10 Aug 2025 00:40:52 +0000",
+              "extended": true
             }
           ],
           "canonical_title": "The Legendary Hero",
@@ -24147,6 +26997,15 @@
               "seeders": 40,
               "torrent_title": "[One Pace][1082-1083] Egghead 15 [1080p][21BF9495].mkv",
               "uploader": ""
+            },
+            {
+              "kind": "usenet",
+              "quality": "1080p",
+              "size_bytes": 1164009000,
+              "guid": "b7ba174f5c48defba0dad7f323c2c79e",
+              "release_title": "[One Pace][1082-1083] Egghead 15 [1080p][21BF9495]",
+              "pub_date": "Sun, 24 Aug 2025 03:04:00 +0000",
+              "extended": false
             }
           ],
           "canonical_title": "Let's Go and Take It!!",
