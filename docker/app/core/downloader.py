@@ -58,9 +58,17 @@ def open_stream(url: str, *, start: int = 0, timeout: int = 60, retries: int = 5
 
 
 def open_stream_dual(file_id: str, *, start: int = 0, timeout: int = 60,
-                     on_log=None):
-    """Try pixeldrain.com first; fall back to the bypass CDN on rate-limit."""
+                     on_log=None, force_bypass: bool = False):
+    """Try pixeldrain.com first; fall back to the bypass CDN on rate-limit
+    or unreachability. Pass `force_bypass=True` to skip pixeldrain.com
+    entirely — used once the speed-based detector has already shown the
+    upstream is throttled this session (saves an 8-second slow start per
+    subsequent file)."""
     log = on_log or (lambda _m: None)
+    if force_bypass:
+        return (open_stream(BYPASS_FILE.format(file_id=file_id),
+                            start=start, timeout=timeout),
+                "cdn.pixeldrain.eu.cc")
     primary = PIXELDRAIN_FILE.format(file_id=file_id)
     headers = {"User-Agent": UA}
     if start:
@@ -127,6 +135,9 @@ class Downloader:
         self.cancel_evt = cancel_evt
         self.file_filter = file_filter
         self.subfolder = subfolder
+        # Flipped on the moment the speed-based detector judges pixeldrain.com
+        # too slow — subsequent files in the same album skip it outright.
+        self._prefer_bypass = False
 
     def fetch_album(self) -> dict:
         data = json.loads(http_get(PIXELDRAIN_API.format(album_id=self.album_id)))
@@ -202,14 +213,28 @@ class Downloader:
 
     def _stream_to(self, file_id: str, partial: Path, start: int,
                    size: int, idx: int, total: int) -> None:
-        resp, host = open_stream_dual(file_id, start=start, on_log=self.on_log)
+        # Switch off pixeldrain.com to the bypass CDN if it's running slow —
+        # catches the daily 6 GB cap (which just throttles, doesn't error)
+        # AND any other source of sluggishness. Judges after a brief
+        # warm-up so a slow TCP ramp-up doesn't trigger the switch.
+        SLOW_AFTER_SEC = 8.0
+        SLOW_BYTES_PER_SEC = 500 * 1024   # 500 KB/s — clearly throttled
+
+        resp, host = open_stream_dual(
+            file_id, start=start, on_log=self.on_log,
+            force_bypass=self._prefer_bypass)
         if start == 0:
-            self.on_log(f"  source: {host}")
-        with resp:
-            mode = "ab" if start else "wb"
-            t0 = time.time()
-            t_last = t0
-            bytes_now = start
+            suffix = " (forced — pixeldrain.com was slow earlier)" \
+                if self._prefer_bypass else ""
+            self.on_log(f"  source: {host}{suffix}")
+
+        mode = "ab" if start else "wb"
+        t0 = time.time()
+        t_last = t0
+        bytes_now = start
+        display_start = start
+
+        try:
             with open(partial, mode) as f:
                 while True:
                     if self.cancel_evt.is_set():
@@ -220,12 +245,47 @@ class Downloader:
                     f.write(chunk)
                     bytes_now += len(chunk)
                     now = time.time()
+
+                    # Mid-stream switch when pixeldrain.com is slow.
+                    if (host == "pixeldrain.com"
+                            and not self._prefer_bypass
+                            and (now - t0) >= SLOW_AFTER_SEC):
+                        avg_bps = (bytes_now - display_start) / max(now - t0, 0.001)
+                        if avg_bps < SLOW_BYTES_PER_SEC:
+                            self.on_log(
+                                f"  pixeldrain.com is slow "
+                                f"({fmt_bytes(avg_bps)}/s) — switching to "
+                                f"bypass CDN at {fmt_bytes(bytes_now)}")
+                            self._prefer_bypass = True
+                            try:
+                                try:
+                                    resp.close()
+                                except Exception:
+                                    pass
+                                resp = open_stream(
+                                    BYPASS_FILE.format(file_id=file_id),
+                                    start=bytes_now, timeout=60)
+                                host = "cdn.pixeldrain.eu.cc"
+                                display_start = bytes_now
+                                t0 = now
+                                t_last = now
+                            except Exception as e:
+                                self.on_log(
+                                    f"  bypass switch failed ({e}) -- "
+                                    f"continuing on pixeldrain.com")
+
                     if now - t_last >= 0.2:
-                        speed = (bytes_now - start) / max(now - t0, 0.001)
+                        speed = (bytes_now - display_start) / max(now - t0, 0.001)
                         frac = bytes_now / size if size else 0.0
                         self.on_progress(
                             frac, fmt_bytes(speed) + "/s", idx, total, bytes_now
                         )
                         t_last = now
-            speed = (bytes_now - start) / max(time.time() - t0, 0.001)
+
+            speed = (bytes_now - display_start) / max(time.time() - t0, 0.001)
             self.on_progress(1.0, fmt_bytes(speed) + "/s", idx, total, bytes_now)
+        finally:
+            try:
+                resp.close()
+            except Exception:
+                pass

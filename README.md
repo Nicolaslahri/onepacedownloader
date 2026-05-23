@@ -13,7 +13,11 @@
 <br />
 
 <a href="https://github.com/Nicolaslahri/onepacedownloader/releases/latest">
-  <img src="https://img.shields.io/badge/Download_Latest-.exe-E44D26?style=for-the-badge&logo=windows&logoColor=white" alt="Download" />
+  <img src="https://img.shields.io/badge/Download_Latest-.exe-E44D26?style=for-the-badge&logo=windows&logoColor=white" alt="Download .exe" />
+</a>
+&nbsp;
+<a href="https://github.com/Nicolaslahri/onepacedownloader/pkgs/container/onepacedownloader">
+  <img src="https://img.shields.io/badge/Or_Self_host-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker image" />
 </a>
 
 <br /><br />
@@ -76,6 +80,38 @@ Total size shown up front so you know what you're committing to. The right colum
 <div align="center">
 <img src="assets/screenshot_downloading.png" width="750" alt="Download in progress" />
 </div>
+
+---
+
+## Or run it on a home server
+
+Prefer to leave it running on a NAS, mini-PC, or Pi instead of opening the `.exe` on your desktop? A Docker version is published with the same arcs and the same Plex organize &mdash; **plus** direct API integration with **SABnzbd** (Usenet) and **qBittorrent** (torrents), so anything you queue runs server-side and lands straight in your library.
+
+**One command:**
+
+```bash
+docker run -d \
+  --name onepace-downloader \
+  -p 7654:7654 \
+  -e PUID=1000 -e PGID=1000 \
+  -v /path/to/your/media:/media \
+  -v onepace-config:/config \
+  ghcr.io/nicolaslahri/onepacedownloader:latest
+```
+
+Then open **`http://YOUR-SERVER-IP:7654`**.
+
+| Source | How it downloads |
+|---|---|
+| **One Pace** / **Muhn Pace** | Pulled directly into `/media`, auto-organized into `One Pace/Season N/` with `.nfo` |
+| **Usenet** (NZBGeek) | Sent to your **SABnzbd** via its API |
+| **Nyaa** torrents | Sent to your **qBittorrent** via its Web API |
+
+Live progress for all three, a Saved indicator per episode, per-arc download progress (`12/35`), a Log panel, and an "Update available" pill when a newer image is published — all in the browser.
+
+Full setup (Docker Compose, Portainer instructions, environment variables, volume layout): **[`docker/README.md`](docker/README.md)**.
+
+> **PUID / PGID:** matches the linuxserver.io pattern — set them to the owner of your media folder so downloads aren't owned by root. The container makes `/config` writable on startup for you.
 
 ---
 
