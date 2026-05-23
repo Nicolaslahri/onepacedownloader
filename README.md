@@ -109,6 +109,10 @@ Then open **`http://YOUR-SERVER-IP:7654`**.
 
 Live progress for all three, a Saved indicator per episode, per-arc download progress (`12/35`), a Log panel, and an "Update available" pill when a newer image is published — all in the browser.
 
+<div align="center">
+<img src="docker/assets/screenshot_main.jpg" width="780" alt="Docker web UI" />
+</div>
+
 Full setup (Docker Compose, Portainer instructions, environment variables, volume layout): **[`docker/README.md`](docker/README.md)**.
 
 > **PUID / PGID:** matches the linuxserver.io pattern — set them to the owner of your media folder so downloads aren't owned by root. The container makes `/config` writable on startup for you.
