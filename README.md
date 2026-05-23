@@ -201,13 +201,13 @@ Fair question. Verify yourself.
 
 <div align="center">
 
-**SHA256:** `f3ac31a905a7a01caafb3c42119f64453e0da49c42a80e2add8e91d7fe5c0853`
+**SHA256:** `75935b45d4f589f501001743e5ab653a5f39c689c17615012e0d3dd88fa926ef`
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-Scan_Report-394EFF?style=for-the-badge&logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/f3ac31a905a7a01caafb3c42119f64453e0da49c42a80e2add8e91d7fe5c0853)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-Scan_Report-394EFF?style=for-the-badge&logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/75935b45d4f589f501001743e5ab653a5f39c689c17615012e0d3dd88fa926ef)
 
 </div>
 
-Most engines clean &mdash; Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender all pass. A handful of heuristic scanners (APEX, Bkav, CrowdStrike, Cylance, SentinelOne) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior &mdash; a common false-positive for unsigned solo-dev tools.
+Most engines clean &mdash; Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender all pass. A handful of heuristic scanners (APEX, Bkav, Cylance, SentinelOne, Yandex) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior &mdash; a common false-positive for unsigned solo-dev tools.
 
 > Don't trust the badge? Drop the `.exe` onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) &mdash; one file, stdlib only, MIT.
 
