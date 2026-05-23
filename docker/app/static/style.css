@@ -345,6 +345,19 @@ body::before {
   color: var(--orange);
   background: rgba(247,147,26,0.12);
 }
+/* Per-arc download progress: partial = orange, complete = green */
+.arc-item-badge.partial {
+  color: var(--orange);
+  background: rgba(247,147,26,0.12);
+  border: 1px solid rgba(247,147,26,0.25);
+  padding: 1px 8px;
+}
+.arc-item-badge.done {
+  color: var(--green);
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.25);
+  padding: 1px 8px;
+}
 
 /* ── Episode column ──────────────────────────────────────────────────── */
 .ep-toolbar {
@@ -427,8 +440,10 @@ body::before {
   letter-spacing: 0.06em;
   border: 1px solid transparent;
 }
-.tag-sub { background: rgba(247,147,26,0.12); color: var(--orange); border-color: rgba(247,147,26,0.25); }
-.tag-dub { background: rgba(255,196,46,0.1);  color: var(--gold);   border-color: rgba(255,196,46,0.22); }
+.tag-sub      { background: rgba(247,147,26,0.12); color: var(--orange); border-color: rgba(247,147,26,0.25); }
+.tag-dub      { background: rgba(255,196,46,0.1);  color: var(--gold);   border-color: rgba(255,196,46,0.22); }
+.tag-saved    { background: rgba(34,197,94,0.12);  color: var(--green);  border-color: rgba(34,197,94,0.3); }
+.tag-official { background: rgba(34,197,94,0.14);  color: var(--green);  border-color: rgba(34,197,94,0.35); font-weight: 600; }
 .ep-size {
   font-family: var(--f-mono);
   font-size: 0.78rem;
@@ -621,6 +636,141 @@ body::before {
 .src-pixeldrain { background: rgba(247,147,26,0.12); color: var(--orange);  border-color: rgba(247,147,26,0.25); }
 .src-usenet     { background: rgba(96,165,250,0.12); color: #7cb0f5;        border-color: rgba(96,165,250,0.25); }
 .src-nyaa       { background: rgba(34,197,94,0.12);  color: var(--green);   border-color: rgba(34,197,94,0.25); }
+
+/* Cancel button on an active download card */
+.dl-cancel-btn {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: var(--red-soft);
+  font-family: var(--f-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-left: 6px;
+}
+.dl-cancel-btn:hover { background: rgba(239,68,68,0.2); color: #fff; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   LOG PANEL — collapsible above the status bar
+   ══════════════════════════════════════════════════════════════════════ */
+.log-panel {
+  flex-shrink: 0;
+  height: 0;
+  overflow: hidden;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  transition: height 0.2s ease;
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+}
+.log-panel.open { height: 32vh; }
+.log-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-head);
+  flex-shrink: 0;
+}
+.log-panel-title {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.log-close {
+  background: none;
+  border: none;
+  color: var(--dim);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  line-height: 1;
+}
+.log-close:hover { color: var(--fg); background: var(--hover); }
+.log-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 1.25rem 0.75rem;
+  font-family: var(--f-mono);
+  font-size: 0.76rem;
+  color: var(--fg-2);
+  line-height: 1.55;
+}
+.log-entry {
+  display: flex;
+  gap: 0.7rem;
+  padding: 1px 0;
+}
+.log-entry .ts {
+  color: var(--dim);
+  flex-shrink: 0;
+  user-select: none;
+}
+.log-empty {
+  color: var(--dim);
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.82rem;
+}
+
+/* Footer Log toggle */
+.log-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border-2);
+  color: var(--fg-2);
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.log-toggle-btn:hover { color: var(--fg); border-color: rgba(255,255,255,0.25); }
+.log-toggle-btn.active {
+  background: rgba(247,147,26,0.12);
+  color: var(--orange);
+  border-color: rgba(247,147,26,0.3);
+}
+
+/* Confirm dialog — size preview */
+.confirm-summary {
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.confirm-summary .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.confirm-summary .row:last-child { border-bottom: none; }
+.confirm-summary .key {
+  color: var(--muted);
+  font-family: var(--f-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.confirm-summary .val { color: var(--fg); font-weight: 500; }
+.confirm-summary .size-big {
+  font-family: var(--f-mono);
+  font-size: 1.4rem;
+  color: var(--orange);
+  font-weight: 600;
+}
 
 /* ══════════════════════════════════════════════════════════════════════
    STATUS BAR
@@ -837,6 +987,19 @@ body::before {
   font-size: 0.72rem;
   color: var(--dim);
 }
+.torrent-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.torrent-title-row .ep-title {
+  flex: 1;
+  min-width: 0;
+}
+.torrent-title-row .tag-official {
+  flex-shrink: 0;
+}
 .ep-row-disabled { opacity: 0.38; cursor: default; }
 .ep-row-disabled:hover { background: transparent; }
 .ep-na {
@@ -936,6 +1099,44 @@ body::before {
 .test-status.testing { color: var(--muted); }
 .test-status.ok  { color: var(--green); }
 .test-status.bad { color: var(--red-soft); }
+
+/* "Get my API key →" style helper links inside settings labels */
+.settings-help-link {
+  font-family: var(--f-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--orange);
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: 0.5rem;
+}
+.settings-help-link:hover { color: var(--gold); text-decoration: underline; }
+
+/* About section (last block in Settings) */
+.about-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 1.25rem;
+  row-gap: 0.5rem;
+  font-size: 0.88rem;
+}
+.about-key {
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  align-self: center;
+}
+.about-val { color: var(--fg-2); }
+.about-credit {
+  font-size: 0.78rem;
+  color: var(--dim);
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
 
 /* ══════════════════════════════════════════════════════════════════════
    RESPONSIVE

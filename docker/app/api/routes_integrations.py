@@ -21,6 +21,7 @@ from ..core.episode_index import (
     load_episode_index,
     usenet_source_for,
 )
+from ..core.log import log as _log
 from ..core.models import (
     SendResult,
     SettingsPayload,
@@ -99,6 +100,8 @@ def usenet_send(req: UsenetSendRequest):
             result.failed += 1
             result.messages.append(f"Episode {num}: {e}")
 
+    _log(f"SABnzbd send: {result.sent} queued, {result.failed} failed "
+         f"({req.arc_title})")
     if result.sent == 0 and result.failed > 0:
         # All failed — surface the first reason as the error.
         raise HTTPException(502, result.messages[0] if result.messages
@@ -136,6 +139,7 @@ def torrents_send(req: TorrentSendRequest):
         except ClientError as e:
             result.failed += 1
             result.messages.append(str(e))
+    _log(f"qBittorrent send: {result.sent} queued, {result.failed} failed")
     return result
 
 

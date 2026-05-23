@@ -43,6 +43,13 @@ class SettingsPayload(BaseModel):
     nzbgeek_api_key: str | None = None
 
 
+class DownloadEstimate(BaseModel):
+    """Server-side accurate size estimate for a planned download."""
+    total_bytes: int = 0
+    matched: int = 0
+    missing: int = 0
+
+
 class UsenetSendRequest(BaseModel):
     """Queue selected episodes' NZBs into SABnzbd."""
     arc_title: str

@@ -11,6 +11,7 @@ from pathlib import Path
 
 from .config import AUTO_REFRESH, PORT, load_config, save_config
 from .core.episode_index import try_remote_refresh
+from .core.log import log as _log
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
@@ -24,10 +25,10 @@ async def lifespan(app: FastAPI):
     if AUTO_REFRESH:
         try:
             cfg = load_config()
-            if try_remote_refresh(cfg, log=print):
+            if try_remote_refresh(cfg, log=_log):
                 save_config(cfg)
         except Exception as e:
-            print(f"[startup] index refresh skipped: {e}")
+            _log(f"[startup] index refresh skipped: {e}")
     yield
 
 

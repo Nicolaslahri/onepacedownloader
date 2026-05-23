@@ -11,6 +11,12 @@ let activeSource = "onepace";
 let settings = {};
 let downloads = {};
 let clientTransfers = [];
+let savedKeys = new Set();      // "sNNeMM" of episodes already on disk
+let logOpen = false;
+let logPollTimer = null;
+
+const MUHN_GDRIVE_URL =
+  "https://drive.google.com/drive/folders/1OiT81U_kJulO9ptcBJA0wdZTSQAq83Sl";
 
 const SOURCE_DESCS = {
   onepace: "Fan re-cut. Sub for every arc, Dub for newer ones. Direct download via the bypass CDN.",
@@ -63,6 +69,9 @@ function switchSource(source) {
     t.classList.toggle("active", t.dataset.source === source);
   });
   document.getElementById("sourceDesc").textContent = SOURCE_DESCS[source] || "";
+  // Muhn-only Google Drive fallback card visibility
+  document.getElementById("muhnFallbackCard").style.display =
+    source === "muhn" ? "" : "none";
   activeArc = null;
   episodes = [];
   torrents = [];
@@ -115,12 +124,26 @@ function renderArcs(filter = "") {
   list.innerHTML = filtered
     .map((a) => {
       const isActive = activeArc === a.title;
-      const badge = `${a.episode_count} ep${a.episode_count !== 1 ? "s" : ""}`;
+      const seasonNum = arcs.indexOf(a) + 1;
+      const prefix = `s${String(seasonNum).padStart(2, "0")}e`;
+      let downloaded = 0;
+      for (const k of savedKeys) if (k.startsWith(prefix)) downloaded++;
+      const total = a.episode_count;
+
+      let badgeHTML;
+      if (downloaded === 0) {
+        badgeHTML = `<span class="arc-item-badge">${total} ep${total !== 1 ? "s" : ""}</span>`;
+      } else if (downloaded >= total) {
+        badgeHTML = `<span class="arc-item-badge done" title="All ${total} episodes downloaded">✓ ${total}/${total}</span>`;
+      } else {
+        badgeHTML = `<span class="arc-item-badge partial" title="${downloaded} of ${total} downloaded">${downloaded}/${total}</span>`;
+      }
+
       return `
       <div class="arc-item${isActive ? " active" : ""}"
            onclick="selectArc('${escapeAttr(a.title)}')">
         <span class="arc-item-title">${esc(a.title)}</span>
-        <span class="arc-item-badge">${badge}</span>
+        ${badgeHTML}
       </div>`;
     })
     .join("");
@@ -186,12 +209,18 @@ function renderEpisodes() {
   document.getElementById("selectAllBtn").textContent =
     `Select all (${selectable})`;
 
+  const arcObj = arcs.find((a) => a.title === activeArc);
+  const seasonNum = arcObj ? arcs.indexOf(arcObj) + 1 : 0;
+
   list.innerHTML = episodes
     .map((ep) => {
       const available = (ep.kinds || []).includes(activeSource);
+      const key = `s${String(seasonNum).padStart(2, "0")}e${String(ep.num).padStart(2, "0")}`;
+      const isSaved = savedKeys.has(key);
       let tags = "";
       if (ep.has_sub) tags += '<span class="tag tag-sub">Sub</span>';
       if (ep.has_dub) tags += '<span class="tag tag-dub">Dub</span>';
+      if (isSaved)   tags += '<span class="tag tag-saved" title="Already on disk">✓ Saved</span>';
       const checkOrLabel = available
         ? `<input type="checkbox" data-num="${ep.num}" />`
         : `<span class="ep-na" title="Not on ${activeSource}">—</span>`;
@@ -234,6 +263,7 @@ function renderTorrents() {
 
   list.innerHTML = torrents
     .map((t, i) => {
+      const official = t.uploader === "Galaxy9000";
       const meta = [
         t.quality,
         t.size,
@@ -242,11 +272,17 @@ function renderTorrents() {
       ]
         .filter(Boolean)
         .join("  &middot;  ");
+      const officialBadge = official
+        ? '<span class="tag tag-official">Official</span>'
+        : "";
       return `
       <div class="ep-row torrent-row" onclick="toggleTorrentRow(event, ${i})">
         <span class="ep-check"><input type="checkbox" data-idx="${i}" /></span>
         <span class="torrent-info">
-          <span class="ep-title" title="${escapeAttr(t.title)}">${esc(t.title)}</span>
+          <span class="torrent-title-row">
+            <span class="ep-title" title="${escapeAttr(t.title)}">${esc(t.title)}</span>
+            ${officialBadge}
+          </span>
           <span class="torrent-meta">${meta}</span>
         </span>
       </div>`;
@@ -290,21 +326,56 @@ function checkedEpisodeNums() {
 async function downloadSelected() {
   const nums = checkedEpisodeNums();
   if (!nums.length) return toast("No episodes selected", "error");
+
+  const version = settings.version || "English Subtitles";
+  const quality = settings.quality || "1080p";
+  const payload = {
+    arc_title: activeArc,
+    episode_nums: nums,
+    source: activeSource,
+    version,
+    quality,
+  };
+
+  // Ask the server for an accurate size — it picks the exact source per
+  // episode (matches what we'll actually download).
+  let est = { total_bytes: 0, matched: nums.length, missing: 0 };
   try {
-    await api("/api/downloads", {
+    est = await api("/api/downloads/estimate", {
       method: "POST",
-      body: JSON.stringify({
-        arc_title: activeArc,
-        episode_nums: nums,
-        source: activeSource,
-        version: settings.version || "English Subtitles",
-        quality: settings.quality || "1080p",
-      }),
+      body: JSON.stringify(payload),
     });
-    toast(`Download started: ${activeArc} (${nums.length} episodes)`, "info");
-  } catch (e) {
-    toast("Download failed: " + e.message, "error");
-  }
+  } catch (e) {}
+
+  const sizeText = est.total_bytes ? fmtBytes(est.total_bytes) : "—";
+  const missingNote = est.missing
+    ? `<div class="row"><span class="key">Unavailable</span> <span class="val" style="color:var(--red-soft)">${est.missing} episode${est.missing !== 1 ? "s" : ""} have no ${esc(activeSource)} source — will be skipped</span></div>`
+    : "";
+
+  confirmDialog({
+    title: `Download ${est.matched} episode${est.matched !== 1 ? "s" : ""}`,
+    body: `
+      <div class="confirm-summary">
+        <div class="row"><span class="key">Arc</span>     <span class="val">${esc(activeArc)}</span></div>
+        <div class="row"><span class="key">Source</span>  <span class="val">${esc(activeSource === "muhn" ? "Muhn Pace" : "One Pace")}</span></div>
+        <div class="row"><span class="key">Version</span> <span class="val">${esc(version)}</span></div>
+        <div class="row"><span class="key">Quality</span> <span class="val">${esc(quality)}</span></div>
+        ${missingNote}
+        <div class="row"><span class="key">Total size</span> <span class="size-big">${sizeText}</span></div>
+      </div>`,
+    okText: "Start download",
+    onOk: async () => {
+      try {
+        await api("/api/downloads", {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+        toast(`Download started: ${activeArc} (${est.matched} episodes)`, "info");
+      } catch (e) {
+        toast("Download failed: " + e.message, "error");
+      }
+    },
+  });
 }
 
 /* Usenet → SABnzbd */
@@ -367,6 +438,9 @@ const SOURCE_TAGS = {
 function transferCard(t) {
   const pct = Math.round((t.progress || 0) * 100);
   const tag = SOURCE_TAGS[t.source] || t.source;
+  const cancelBtn = (t.cancelable && (t.status === "downloading" || t.status === "queued"))
+    ? `<button class="dl-cancel-btn" onclick="cancelDownload('${t.id}')" title="Cancel download">Cancel</button>`
+    : "";
   return `
     <div class="dl-job">
       <div class="dl-job-head">
@@ -381,7 +455,10 @@ function transferCard(t) {
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="dl-job-meta">
         <span>${esc(t.meta || "")}</span>
-        <span class="dl-status-pill ${t.status}">${esc(t.status)}</span>
+        <span>
+          <span class="dl-status-pill ${t.status}">${esc(t.status)}</span>
+          ${cancelBtn}
+        </span>
       </div>
     </div>`;
 }
@@ -393,6 +470,8 @@ function renderDownloads() {
     .filter((d) => d.status === "downloading" || d.status === "queued")
     .map((d) => ({
       source: "pixeldrain",
+      id: d.id,
+      cancelable: true,
       title: d.arc_title,
       sub: d.current_file || "Preparing...",
       progress: d.progress,
@@ -497,6 +576,7 @@ function connectSSE() {
         toast(`Completed: ${data.arc_title}`);
         data._toasted = true;
         loadStats();
+        loadDownloaded();  // refresh saved chips + arc progress
       }
       if (data.status === "error" && !data._toasted) {
         toast(`Error: ${data.arc_title} — ${data.error || "unknown"}`, "error");
@@ -582,6 +662,13 @@ async function loadSettings() {
       const el = document.getElementById(elId);
       if (el) el.value = settings[key] || "";
     }
+    // About section
+    document.getElementById("aboutVersion").textContent =
+      settings.app_version || "—";
+    document.getElementById("aboutBuild").textContent =
+      settings.build_sha || "—";
+    document.getElementById("aboutRefresh").textContent =
+      settings.last_refresh || "Never";
     startClientPolling();
   } catch (e) {}
 }
@@ -642,7 +729,84 @@ async function testIntegration(which) {
   }
 }
 
+/* ── Saved tracking (which episodes are already on disk) ─────────────── */
+
+async function loadDownloaded() {
+  try {
+    const r = await api("/api/downloaded");
+    savedKeys = new Set(r.keys || []);
+    // Re-render any view that uses savedKeys
+    renderArcs(document.getElementById("arcSearch").value);
+    if (activeArc && activeSource !== "nyaa") renderEpisodes();
+  } catch (e) {}
+}
+
+/* ── Cancel an active download ───────────────────────────────────────── */
+
+async function cancelDownload(jobId) {
+  try {
+    await api(`/api/downloads/${jobId}`, { method: "DELETE" });
+    toast("Cancel requested", "info");
+  } catch (e) {
+    toast("Cancel failed: " + e.message, "error");
+  }
+}
+
+/* ── Confirm dialog (download size preview) ──────────────────────────── */
+
+function confirmDialog({ title, body, okText, onOk }) {
+  document.getElementById("confirmTitle").textContent = title;
+  document.getElementById("confirmBody").innerHTML = body;
+  const ok = document.getElementById("confirmOkBtn");
+  ok.textContent = okText || "Confirm";
+  ok.onclick = () => { closeConfirm(); onOk && onOk(); };
+  document.getElementById("confirmModal").classList.add("active");
+}
+function closeConfirm() {
+  document.getElementById("confirmModal").classList.remove("active");
+}
+
+/* ── Log panel ───────────────────────────────────────────────────────── */
+
+function toggleLog() {
+  logOpen = !logOpen;
+  document.getElementById("logPanel").classList.toggle("open", logOpen);
+  document.querySelector(".log-toggle-btn").classList.toggle("active", logOpen);
+  if (logOpen) {
+    renderLog();
+    logPollTimer = setInterval(renderLog, 3000);
+  } else if (logPollTimer) {
+    clearInterval(logPollTimer);
+    logPollTimer = null;
+  }
+}
+
+async function renderLog() {
+  try {
+    const r = await api("/api/log");
+    const entries = r.entries || [];
+    const body = document.getElementById("logBody");
+    if (!entries.length) {
+      body.innerHTML = `<div class="log-empty">No activity yet.</div>`;
+      return;
+    }
+    const wasAtBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 30;
+    body.innerHTML = entries
+      .map((e) => `<div class="log-entry"><span class="ts">${esc(e.t)}</span><span>${esc(e.msg)}</span></div>`)
+      .join("");
+    if (wasAtBottom) body.scrollTop = body.scrollHeight;
+  } catch (e) {}
+}
+
 /* ── Utilities ───────────────────────────────────────────────────────── */
+
+function fmtBytes(n) {
+  let v = Number(n) || 0;
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  let i = 0;
+  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++; }
+  return v.toFixed(v >= 100 ? 0 : 1) + " " + units[i];
+}
 
 function esc(s) {
   const d = document.createElement("div");
@@ -660,13 +824,17 @@ function escapeAttr(s) {
 document.addEventListener("DOMContentLoaded", () => {
   loadSettings();
   loadArcs();
+  loadDownloaded();
   connectSSE();
   checkUpdate();
 
   document.getElementById("settingsModal").addEventListener("click", (e) => {
     if (e.target === e.currentTarget) closeSettings();
   });
+  document.getElementById("confirmModal").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) closeConfirm();
+  });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeSettings();
+    if (e.key === "Escape") { closeSettings(); closeConfirm(); }
   });
 });

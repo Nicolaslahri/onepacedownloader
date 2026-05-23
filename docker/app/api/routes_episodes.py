@@ -50,6 +50,7 @@ def list_episodes(arc_title: str):
                         reverse=True,
                     ),
                     "size": fmt_bytes(total_size) if total_size else "",
+                    "size_bytes": total_size,
                 })
             return result
     raise HTTPException(404, f"Arc {arc_title!r} not found")

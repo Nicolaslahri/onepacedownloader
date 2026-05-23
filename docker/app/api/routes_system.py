@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 import urllib.request
 
@@ -18,6 +19,10 @@ from ..config import (
     save_config,
 )
 from ..core.episode_index import load_episode_index, try_remote_refresh
+from ..core.log import all_entries as _all_log_entries, log as _log
+
+_SXXEYY_RE = re.compile(r"\bs(\d{2})e(\d{2})\b", re.IGNORECASE)
+_VIDEO_EXTS = (".mkv", ".mp4", ".m4v", ".avi", ".mov", ".ts")
 
 router = APIRouter(prefix="/api", tags=["system"])
 
@@ -41,7 +46,12 @@ def refresh_index():
     """Trigger a remote index refresh from the GitHub data branch."""
     cfg = load_config()
     messages: list[str] = []
-    ok = try_remote_refresh(cfg, log=lambda m: messages.append(m))
+
+    def collect(msg: str) -> None:
+        messages.append(msg)
+        _log(msg)
+
+    ok = try_remote_refresh(cfg, log=collect)
     if ok:
         save_config(cfg)
     return {"success": ok, "messages": messages}
@@ -56,22 +66,54 @@ def stats():
         len(a.get("episodes", [])) for a in index.get("arcs", [])
     )
 
-    # Count downloaded files in the One Pace tree
+    # Count downloaded episodes — use the same sNNeMM video-file rule as
+    # /api/downloaded so the LIBRARY widget can't drift from the per-arc
+    # progress badges (subtitle sidecars etc. don't inflate the count).
     plex_dir = MEDIA_DIR / "One Pace"
     downloaded = 0
     if plex_dir.exists():
         for season_dir in plex_dir.iterdir():
-            if season_dir.is_dir():
-                downloaded += sum(
-                    1 for f in season_dir.iterdir()
-                    if f.is_file() and not f.suffix == ".nfo"
-                )
+            if not season_dir.is_dir():
+                continue
+            for f in season_dir.iterdir():
+                if (f.is_file()
+                        and f.suffix.lower() in _VIDEO_EXTS
+                        and _SXXEYY_RE.search(f.name)):
+                    downloaded += 1
 
     return {
         "total_arcs": total_arcs,
         "total_episodes": total_eps,
         "downloaded_episodes": downloaded,
     }
+
+
+@router.get("/downloaded")
+def downloaded_keys():
+    """Set of (season, episode) keys already present in /media, derived
+    from the Plex/Jellyfin folder layout written by the organize step.
+    The frontend uses this to draw the green "Saved" chips and the
+    per-arc N/M progress badges."""
+    keys: set[str] = set()
+    plex_dir = MEDIA_DIR / "One Pace"
+    if not plex_dir.exists():
+        return {"keys": []}
+    for season_dir in plex_dir.iterdir():
+        if not season_dir.is_dir():
+            continue
+        for f in season_dir.iterdir():
+            if not f.is_file() or f.suffix.lower() not in _VIDEO_EXTS:
+                continue
+            m = _SXXEYY_RE.search(f.name)
+            if m:
+                keys.add(f"s{int(m.group(1)):02d}e{int(m.group(2)):02d}")
+    return {"keys": sorted(keys)}
+
+
+@router.get("/log")
+def log_entries():
+    """Recent activity from the in-memory ring buffer (~250 lines)."""
+    return {"entries": _all_log_entries()}
 
 
 @router.get("/update")

@@ -5,8 +5,10 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from ..config import (
+    APP_VERSION,
     DEFAULT_QUALITY,
     DEFAULT_VERSION,
+    GIT_SHA,
     QUALITIES,
     VERSIONS,
     get_setting,
@@ -28,13 +30,18 @@ _INTEGRATION_KEYS = (
 
 @router.get("")
 def get_settings():
-    """Return current settings — download defaults + integration config."""
+    """Return current settings — download defaults + integration config +
+    a small block of "About" info (app version, build, last index refresh)
+    so the Settings panel can surface it."""
     cfg = load_config()
     out = {
         "version": cfg.get("default_version", DEFAULT_VERSION),
         "quality": cfg.get("default_quality", DEFAULT_QUALITY),
         "available_versions": VERSIONS,
         "available_qualities": QUALITIES,
+        "app_version": APP_VERSION,
+        "build_sha": (GIT_SHA[:7] if GIT_SHA and GIT_SHA != "dev" else "dev"),
+        "last_refresh": (cfg.get("refresh_cache") or {}).get("last_refresh", ""),
     }
     for key in _INTEGRATION_KEYS:
         out[key] = get_setting(cfg, key)

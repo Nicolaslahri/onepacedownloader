@@ -134,19 +134,22 @@ class Downloader:
             raise RuntimeError(f"Pixeldrain API error: {data}")
         return data
 
-    def run(self) -> None:
+    def run(self) -> Path:
+        """Download the (filtered) album. Returns the on-disk target folder
+        so callers can pass it straight to the organize step without
+        re-fetching the album metadata."""
         album = self.fetch_album()
         files = album.get("files", [])
         title = album.get("title") or self.album_id
         if self.file_filter is not None:
             files = [f for f in files if f.get("id") in self.file_filter]
-            if not files:
-                self.on_log(
-                    f"Album {title!r}: no files matched the filter -- nothing to do."
-                )
-                return
         folder_name = sanitize_filename(self.subfolder or title)
         target = self.dest_dir / folder_name
+        if not files:
+            self.on_log(
+                f"Album {title!r}: no files matched the filter -- nothing to do."
+            )
+            return target
         target.mkdir(parents=True, exist_ok=True)
         self.on_log(
             f"Album: {title} ({len(files)} file{'s' if len(files) != 1 else ''}) "
@@ -162,6 +165,7 @@ class Downloader:
             self.on_status(f"[{idx}/{total}] {name}")
             self._download_one(f["id"], out, size, idx, total)
         self.on_log(f"Done: {title}")
+        return target
 
     def _download_one(self, file_id: str, out: Path, size: int,
                       idx: int, total: int) -> None:

@@ -121,6 +121,16 @@
               </div>
             </div>
           </div>
+          <div class="right-card" id="muhnFallbackCard" style="display:none">
+            <div class="right-card-title">PIXELDRAIN THROTTLED?</div>
+            <p style="font-size:0.84rem;color:var(--fg-2);margin-bottom:0.7rem;line-height:1.45">
+              Grab the same Muhn Pace files from the Google Drive mirror.
+            </p>
+            <a href="https://drive.google.com/drive/folders/1OiT81U_kJulO9ptcBJA0wdZTSQAq83Sl"
+               target="_blank" rel="noopener" class="btn btn-outline btn-sm">
+              Open Google Drive mirror
+            </a>
+          </div>
           <div class="right-card">
             <div class="right-card-title">NEED HELP?</div>
             <div class="help-links">
@@ -146,10 +156,20 @@
     </div>
   </div>
 
+  <!-- ═══ Log panel (collapsible) ═══ -->
+  <section class="log-panel" id="logPanel">
+    <div class="log-panel-head">
+      <span class="log-panel-title">LOG</span>
+      <button class="log-close" onclick="toggleLog()" aria-label="Close log">&times;</button>
+    </div>
+    <div class="log-panel-body" id="logBody"></div>
+  </section>
+
   <!-- ═══ Bottom status bar ═══ -->
   <footer class="status-bar">
     <span class="status-text" id="statusText">Pick an arc on the left to get started →</span>
     <span class="status-right">
+      <button class="log-toggle-btn" onclick="toggleLog()">Log</button>
       <span class="live-dot"></span>
       <span id="footerStats" class="font-mono"></span>
     </span>
@@ -218,7 +238,10 @@
             <input type="text" id="geekUrl" placeholder="https://api.nzbgeek.info" />
           </div>
           <div class="form-group">
-            <label>API Key</label>
+            <label>
+              API Key
+              <a href="https://nzbgeek.info/dashboard.php?myaccount" target="_blank" rel="noopener" class="settings-help-link">Get my API key &rarr;</a>
+            </label>
             <input type="text" id="geekKey" placeholder="NZBGeek API key" />
           </div>
           <div class="test-row">
@@ -257,10 +280,41 @@
           </div>
         </div>
 
+        <!-- About -->
+        <div class="settings-section">
+          <div class="settings-section-head">
+            <span class="settings-section-title">About</span>
+          </div>
+          <div class="about-grid">
+            <span class="about-key">App version</span>     <span class="about-val" id="aboutVersion">—</span>
+            <span class="about-key">Build</span>           <span class="about-val font-mono" id="aboutBuild">—</span>
+            <span class="about-key">Last index refresh</span><span class="about-val font-mono" id="aboutRefresh">—</span>
+            <span class="about-key">Source</span>          <span class="about-val">
+              <a href="https://github.com/Nicolaslahri/onepacedownloader" target="_blank" rel="noopener" class="settings-help-link">GitHub &rarr;</a>
+            </span>
+          </div>
+          <p class="about-credit">Made by Nicolas · MIT licensed</p>
+        </div>
+
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline btn-sm" onclick="closeSettings()">Cancel</button>
         <button class="btn btn-primary btn-sm" onclick="saveSettings()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Confirm dialog (size preview before download) ═══ -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="confirmTitle">Confirm download</h3>
+        <button class="modal-close" onclick="closeConfirm()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="confirmBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline btn-sm" onclick="closeConfirm()">Cancel</button>
+        <button class="btn btn-primary btn-sm" id="confirmOkBtn">Start download</button>
       </div>
     </div>
   </div>

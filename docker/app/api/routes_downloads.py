@@ -8,8 +8,8 @@ import json
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
-from ..core.episode_index import load_episode_index
-from ..core.models import DownloadRequest
+from ..core.episode_index import best_source_for, load_episode_index
+from ..core.models import DownloadEstimate, DownloadRequest
 from ..download_manager import manager
 
 router = APIRouter(prefix="/api/downloads", tags=["downloads"])
@@ -43,6 +43,28 @@ def start_download(req: DownloadRequest):
         index=index,
     )
     return {"job_id": job_id}
+
+
+@router.post("/estimate", response_model=DownloadEstimate)
+def estimate(req: DownloadRequest) -> DownloadEstimate:
+    """Accurate size estimate for the planned download — sums size_bytes of
+    the source actually picked per episode (matches what we'll download)."""
+    index = load_episode_index()
+    arc = next((a for a in index.get("arcs", [])
+                if a.get("title") == req.arc_title), None)
+    if not arc:
+        raise HTTPException(404, f"Arc {req.arc_title!r} not found")
+    total = matched = missing = 0
+    for ep in arc.get("episodes", []):
+        if ep.get("num") not in req.episode_nums:
+            continue
+        src = best_source_for(ep, req.source, req.version, req.quality)
+        if src:
+            matched += 1
+            total += int(src.get("size_bytes", 0) or 0)
+        else:
+            missing += 1
+    return DownloadEstimate(total_bytes=total, matched=matched, missing=missing)
 
 
 @router.get("")

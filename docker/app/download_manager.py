@@ -8,8 +8,9 @@ import threading
 import uuid
 
 from .config import MEDIA_DIR
-from .core.downloader import Downloader, DownloadCancelled, sanitize_filename
+from .core.downloader import Downloader, DownloadCancelled
 from .core.episode_index import best_source_for
+from .core.log import log
 from .core.models import DownloadStatus
 from .core.organize import organize_for_plex
 
@@ -138,10 +139,8 @@ class DownloadManager:
         job.status = "downloading"
         self._broadcast(job)
         index = job.index
-        log_lines: list[str] = []
-
-        def log(msg: str):
-            log_lines.append(msg)
+        log(f"Download started: {job.arc.get('title','?')} "
+            f"({len(job.episodes)} ep, {job.source_kind} {job.quality})")
 
         try:
             # Group episodes by album_id for efficient batch downloading
@@ -200,13 +199,9 @@ class DownloadManager:
                     file_filter=file_ids,
                     subfolder=subfolder or None,
                 )
-                dl.run()
+                downloaded_sub = dl.run()
 
                 # Plex organize (always on in Docker mode)
-                subfolder_name = sanitize_filename(
-                    subfolder or dl.fetch_album().get("title", album_id)
-                )
-                downloaded_sub = MEDIA_DIR / subfolder_name
                 if downloaded_sub.exists():
                     organize_for_plex(
                         downloaded_sub, file_ids, job.arc, index,
@@ -218,17 +213,30 @@ class DownloadManager:
             job.status = "done"
             job.progress = 1.0
             job.speed = ""
+            log(f"Download complete: {job.arc.get('title','?')}")
 
         except DownloadCancelled:
             job.status = "cancelled"
-            log("Download cancelled.")
+            log(f"Download cancelled: {job.arc.get('title','?')}")
 
         except Exception as e:
             job.status = "error"
             job.error = str(e)
-            log(f"Download error: {e}")
+            log(f"Download error ({job.arc.get('title','?')}): {e}")
 
         self._broadcast(job)
+        self._evict_old_history()
+
+    def _evict_old_history(self) -> None:
+        """Stop completed jobs from piling up forever — keep at most the
+        50 most recent done/error/cancelled ones. Dict insertion order
+        gives us the enqueue order, so the slice is correct."""
+        with self._lock:
+            terminal = [jid for jid, j in self._jobs.items()
+                        if j.status in ("done", "error", "cancelled")]
+            excess = len(terminal) - 50
+            for jid in terminal[:excess] if excess > 0 else ():
+                self._jobs.pop(jid, None)
 
     # ── SSE broadcast ─────────────────────────────────────────────────
 
