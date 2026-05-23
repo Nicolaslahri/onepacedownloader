@@ -4,7 +4,16 @@ A self-hosted web version of One Pace Downloader for your home server. Runs
 in the browser, downloads arcs straight into your Plex / Jellyfin library,
 and hands Usenet / torrent jobs off to SABnzbd / qBittorrent.
 
-The web UI runs on port **7654**.
+**What's inside:**
+
+- 🎬 **Direct downloads** from One Pace / Muhn Pace, auto-organized into `One Pace/Season N/` with `.nfo` so Plex and Jellyfin pick it up automatically.
+- 🔌 **Send-to-client integration** with **SABnzbd** (Usenet) and **qBittorrent** (torrents) via their APIs.
+- 📊 **Live progress** for all three sources in one panel — with cancel, ETA, source tags, and a collapsible log.
+- ✅ **Saved tracking** — green chip on every episode already on disk, plus per-arc `N/M` progress badges.
+- 🔔 **Update notifications** — a pill in the header when a newer image is published.
+- 🔐 **PUID/PGID** file ownership (linuxserver.io pattern) + settings persistence across updates.
+
+Web UI runs on port **7654**.
 
 ---
 

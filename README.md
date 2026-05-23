@@ -211,15 +211,6 @@ Most engines clean &mdash; Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malw
 
 > Don't trust the badge? Drop the `.exe` onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) &mdash; one file, stdlib only, MIT.
 
-<details>
-<summary><b>What if my AV flags <code>cdn.pixeldrain.eu.cc</code> while downloading?</b></summary>
-
-<br />
-
-That's the CDN, not the `.exe`. `pixeldrain.eu.cc` is the no-cap mirror of pixeldrain.com (same files, unofficial host) &mdash; the only way to grab a full arc without hitting the 6 GB/day limit. Some AVs (Bitdefender, Norton) flag the domain on reputation because it has no track record, not because of a payload. Allow the domain in your AV's web protection, or pause web shield during the download.
-
-</details>
-
 ---
 
 ## Heads Up
