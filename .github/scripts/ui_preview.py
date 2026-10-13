@@ -25,7 +25,15 @@ SHOTS = [
     ("settings-dark", "Dark", "onepace", "Alabasta", 3, "", "settings"),
     ("update-light", "Light", "onepace", "", 0, "", "update"),
     ("narrow-dark", "Dark", "onepace", "Alabasta", 3, "1", "narrow"),
+    # Display scaling: logical size x scale is roughly a 1080p screen.
+    ("scale125-dark", "Dark", "onepace", "Romance Dawn", 2, "", "s125"),
+    ("scale150-light", "Light", "onepace", "Romance Dawn", 2, "", "s150"),
+    ("wide-dark", "Dark", "onepace", "Romance Dawn", 2, "", "wide"),
 ]
+
+GEOMETRY = {"narrow": "1060x760+20+20", "s125": "1500x780+10+10",
+            "s150": "1250x690+10+10", "wide": "1880x1000+10+10"}
+SCALE = {"s125": 1.25, "s150": 1.5}
 
 
 def run_one(out, mode, src, arc_t, epn, ticks, extra):
@@ -39,10 +47,12 @@ def run_one(out, mode, src, arc_t, epn, ticks, extra):
 
     od.load_config = lambda: {"appearance": mode, "source": src,
                               "save_folder": r"D:\Media\One Pace",
-                              "geometry": ("1060x760+40+40" if extra == "narrow"
-                                           else "1360x860+40+40")}
+                              "geometry": GEOMETRY.get(extra, "1360x860+40+40")}
     od.save_config = lambda c: None
     od.App._check_for_updates_async = lambda self: None
+    if extra in SCALE:
+        od.ctk.set_widget_scaling(SCALE[extra])
+        od.ctk.set_window_scaling(SCALE[extra])
     app = od.App()
     ticks = [int(t) for t in ticks.split(",") if t]
 
