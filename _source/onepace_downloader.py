@@ -16,6 +16,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import webbrowser
+import zlib
 from pathlib import Path
 from tkinter import filedialog, messagebox
 
@@ -801,11 +802,23 @@ class Downloader:
         while attempt < 5:
             attempt += 1
             try:
-                self._stream_to(file_id, partial, start, size, idx, total)
-                if size and partial.stat().st_size != size:
-                    raise IOError(
-                        f"size mismatch: expected {size}, got {partial.stat().st_size}"
-                    )
+                if size and start > size:
+                    # Left over from a resume the server didn't honour.
+                    self.on_log(f"  discarding oversized partial file "
+                                f"for {out.name}")
+                    partial.unlink()
+                    start = 0
+                if not (size and start == size):
+                    # A .part already at full size (closed before the
+                    # rename) only needs verifying — asking the server for
+                    # bytes past the end just earns a 416.
+                    self._stream_to(file_id, partial, start, size, idx, total)
+                got = partial.stat().st_size
+                if size and got != size:
+                    if got > size:
+                        partial.unlink()
+                    raise IOError(f"size mismatch: expected {size}, got {got}")
+                self._verify_crc(partial, out.name)
                 if out.exists():
                     out.unlink()
                 partial.rename(out)
@@ -821,6 +834,23 @@ class Downloader:
                     raise DownloadCancelled()
         raise RuntimeError(f"failed after 5 attempts: {last_exc}")
 
+    @staticmethod
+    def _verify_crc(path: Path, name: str) -> None:
+        """One Pace names every file with its CRC32, e.g. [DEC3026A]. A file
+        of the right size can still be damaged; this catches it."""
+        m = _CRC_TAG_RE.search(name)
+        if not m:
+            return
+        expected = int(m.group(0)[1:-1], 16)
+        crc = 0
+        with open(path, "rb") as f:
+            while chunk := f.read(1024 * 1024):
+                crc = zlib.crc32(chunk, crc)
+        if crc != expected:
+            path.unlink()
+            raise IOError(f"checksum mismatch (got {crc:08X}, expected "
+                          f"{expected:08X}) — file was damaged, re-downloading")
+
     def _stream_to(
         self, file_id: str, partial: Path, start: int, size: int, idx: int, total: int
     ) -> None:
@@ -834,6 +864,11 @@ class Downloader:
         resp, host = open_stream_dual(
             file_id, start=start, on_log=self.on_log,
             force_bypass=self._prefer_bypass)
+        if start and getattr(resp, "status", 206) != 206:
+            # The server ignored the Range header and is sending the whole
+            # file. Appending it would corrupt the .part, so start over.
+            self.on_log(f"  {host} can't resume this file — restarting it")
+            start = 0
         if start == 0:
             suffix = " (forced — pixeldrain.com was slow earlier)" \
                 if self._prefer_bypass else ""
@@ -876,6 +911,9 @@ class Downloader:
                                 resp = open_stream(
                                     BYPASS_FILE.format(file_id=file_id),
                                     start=bytes_now, timeout=60)
+                                if getattr(resp, "status", 206) != 206:
+                                    raise IOError(
+                                        "bypass CDN ignored the resume offset")
                                 host = "cdn.pixeldrain.eu.cc"
                                 display_start = bytes_now
                                 t0 = now
