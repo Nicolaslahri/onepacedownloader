@@ -30,3 +30,6 @@ _source/_scratch_*.py
 Thumbs.db
 *.log
 *.tmp
+
+# Release binary lives on GitHub Releases, not in git
+/OnePaceDownloader.exe

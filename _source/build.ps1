@@ -3,8 +3,9 @@
 #     pip install -r requirements.txt
 #     .\build.ps1
 #
-# Output lands in dist\OnePaceDownloader.exe; copy it to the repo root to
-# replace the shipped binary.
+# Output lands in dist\OnePaceDownloader.exe. Attach it to a GitHub release
+# (the README's download button points at releases/latest); it isn't
+# committed to the repo.
 
 $ErrorActionPreference = "Stop"
 

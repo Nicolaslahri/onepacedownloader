@@ -29,20 +29,21 @@ jobs:
 
     steps:
       - name: Check out main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: main
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
       - name: Install dependencies
         # onepace_downloader imports customtkinter at module level, and the
         # build pipeline imports onepace_downloader. tkinter ships with the
-        # Windows Python from setup-python.
-        run: pip install customtkinter
+        # Windows Python from setup-python. Pinned to what the .exe ships
+        # with so a new major release can't break the weekly run.
+        run: pip install customtkinter==5.2.2 "certifi>=2026.7.22"
 
       - name: Refresh catalogs + rebuild episode index
         run: python _source/ci_refresh.py

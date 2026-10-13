@@ -7,7 +7,7 @@ import asyncio
 import threading
 import uuid
 
-from .config import MEDIA_DIR
+from .config import MEDIA_DIR, load_config
 from .core.downloader import Downloader, DownloadCancelled
 from .core.episode_index import best_source_for
 from .core.log import log
@@ -19,13 +19,14 @@ class _Job:
     """Internal representation of a queued/active download."""
     def __init__(self, *, job_id: str, arc: dict, episodes: list[dict],
                  source_kind: str, version: str, quality: str,
-                 index: dict):
+                 index: dict, allow_subs: bool = False):
         self.id = job_id
         self.arc = arc
         self.episodes = episodes
         self.source_kind = source_kind
         self.version = version
         self.quality = quality
+        self.allow_subs = allow_subs
         self.index = index
         self.status = "queued"
         self.progress = 0.0
@@ -34,6 +35,7 @@ class _Job:
         self.current_idx = 0
         self.total_files = len(episodes)
         self.error: str | None = None
+        self.warnings: list[str] = []
         self.cancel_evt = threading.Event()
 
     def to_model(self) -> DownloadStatus:
@@ -47,6 +49,7 @@ class _Job:
             current_idx=self.current_idx,
             total_files=self.total_files,
             error=self.error,
+            warnings=self.warnings,
         )
 
 
@@ -60,19 +63,24 @@ class DownloadManager:
         self._lock = threading.Lock()
         self._worker = threading.Thread(target=self._run_loop, daemon=True)
         self._wake = threading.Event()
-        self._sse_listeners: list[asyncio.Queue] = []
+        # Each SSE client's queue plus the event loop it lives on. Updates
+        # come from the worker thread, so they have to be handed to that
+        # loop — a bare put_nowait() from another thread doesn't wake the
+        # waiting client until something else does (up to 30s later).
+        self._sse_listeners: list[tuple[asyncio.AbstractEventLoop,
+                                        asyncio.Queue]] = []
         self._worker.start()
 
     # ── Public API ────────────────────────────────────────────────────
 
     def enqueue(self, *, arc: dict, episodes: list[dict],
                 source_kind: str, version: str, quality: str,
-                index: dict) -> str:
+                index: dict, allow_subs: bool = False) -> str:
         job_id = uuid.uuid4().hex[:12]
         job = _Job(
             job_id=job_id, arc=arc, episodes=episodes,
             source_kind=source_kind, version=version, quality=quality,
-            index=index,
+            index=index, allow_subs=allow_subs,
         )
         with self._lock:
             self._jobs[job_id] = job
@@ -104,15 +112,16 @@ class DownloadManager:
             return [j.to_model() for j in self._jobs.values()]
 
     def subscribe(self) -> asyncio.Queue:
-        q: asyncio.Queue = asyncio.Queue()
-        self._sse_listeners.append(q)
+        """Call from the SSE handler (on the event loop)."""
+        q: asyncio.Queue = asyncio.Queue(maxsize=500)
+        with self._lock:
+            self._sse_listeners.append((asyncio.get_running_loop(), q))
         return q
 
     def unsubscribe(self, q: asyncio.Queue) -> None:
-        try:
-            self._sse_listeners.remove(q)
-        except ValueError:
-            pass
+        with self._lock:
+            self._sse_listeners = [
+                (lp, x) for lp, x in self._sse_listeners if x is not q]
 
     # ── Background worker ─────────────────────────────────────────────
 
@@ -139,18 +148,27 @@ class DownloadManager:
         job.status = "downloading"
         self._broadcast(job)
         index = job.index
+        organize = load_config().get("organize", True)
         log(f"Download started: {job.arc.get('title','?')} "
             f"({len(job.episodes)} ep, {job.source_kind} {job.quality})")
 
         try:
             # Group episodes by album_id for efficient batch downloading
             album_groups: dict[str, tuple[str, set[str], list[dict]]] = {}
+            expected_names: dict[str, str] = {}
             for ep in job.episodes:
                 src = best_source_for(ep, job.source_kind,
-                                      job.version, job.quality)
+                                      job.version, job.quality,
+                                      allow_subs=job.allow_subs)
                 if not src:
-                    log(f"  No source found for episode {ep.get('num', '?')}")
+                    msg = (f"Episode {ep.get('num', '?')}: no "
+                           f"{job.version} source, skipped")
+                    log(f"  {msg}")
+                    job.warnings.append(msg)
                     continue
+                if src.get("version") and src["version"] != job.version:
+                    log(f"  Episode {ep.get('num', '?')}: no {job.version}, "
+                        f"using {src['version']}")
                 album_id = src.get("album_id", "")
                 file_id = src.get("file_id", "")
                 if not album_id or not file_id:
@@ -162,6 +180,7 @@ class DownloadManager:
                         [],
                     )
                 album_groups[album_id][1].add(file_id)
+                expected_names[file_id] = src.get("filename", "")
                 album_groups[album_id][2].append(ep)
 
             if not album_groups:
@@ -197,16 +216,27 @@ class DownloadManager:
                     on_log=log,
                     cancel_evt=job.cancel_evt,
                     file_filter=file_ids,
+                    expected_names=expected_names,
                     subfolder=subfolder or None,
                 )
                 downloaded_sub = dl.run()
 
-                # Plex organize (always on in Docker mode)
-                if downloaded_sub.exists():
-                    organize_for_plex(
+                for name in dl.missing:
+                    job.warnings.append(
+                        f"{name} is no longer on Pixeldrain, skipped")
+
+                # Plex organize (Settings → "Sort for Plex / Jellyfin")
+                if organize and downloaded_sub.exists():
+                    moved = organize_for_plex(
                         downloaded_sub, file_ids, job.arc, index,
                         MEDIA_DIR, log=log,
                     )
+                    left = len(file_ids) - len(dl.missing) - moved
+                    if left > 0:
+                        job.warnings.append(
+                            f"{left} file(s) couldn't be sorted into "
+                            f"One Pace/Season folders and are still in "
+                            f"{downloaded_sub.name}")
 
                 done_eps += len(eps)
 
@@ -242,14 +272,23 @@ class DownloadManager:
 
     def _broadcast(self, job: _Job):
         data = job.to_model().model_dump()
-        dead: list[asyncio.Queue] = []
-        for q in self._sse_listeners:
+        with self._lock:
+            listeners = list(self._sse_listeners)
+        for loop, q in listeners:
             try:
-                q.put_nowait(data)
-            except Exception:
-                dead.append(q)
-        for q in dead:
-            self.unsubscribe(q)
+                loop.call_soon_threadsafe(_offer, q, data)
+            except RuntimeError:
+                # That client's loop is gone.
+                self.unsubscribe(q)
+
+
+def _offer(q: asyncio.Queue, data: dict) -> None:
+    # A client too slow to drain 500 updates just misses some; the next
+    # one carries the full job state anyway.
+    try:
+        q.put_nowait(data)
+    except asyncio.QueueFull:
+        pass
 
 
 # Module-level singleton

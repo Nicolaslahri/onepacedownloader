@@ -47,6 +47,23 @@ SPYKER_LATEST_COMMIT_API = (
     "https://api.github.com/repos/SpykerNZ/one-pace-for-plex/commits/main")
 
 
+def dedupe_sources(sources: list[dict]) -> list[dict]:
+    """Drop repeats of the same Pixeldrain file. One Pace albums sometimes
+    list one file under several quality albums, which shows up as several
+    identical "sources" with different quality labels."""
+    seen: set[tuple] = set()
+    out = []
+    for s in sources:
+        fid = s.get("file_id")
+        if fid:
+            key = (s.get("kind"), fid)
+            if key in seen:
+                continue
+            seen.add(key)
+        out.append(s)
+    return out
+
+
 def hash_arcs(arcs: list[dict]) -> str:
     """Stable hash of (title, album_id) tuples across all arcs. Changes only
     when the arc list or any album ID changes — i.e. exactly the things that
@@ -330,9 +347,9 @@ def build(log=print, cancel_evt=None, cache: dict | None = None,
     specials: list[dict] = []  # truly arc-less content (sub-cuts, fan letter, etc.)
 
     if skip_pixeldrain:
-        log(f"Arcs unchanged since last refresh — reusing cached onepace + "
-            f"muhn sources from existing index (saved ~30-60s of Pixeldrain "
-            f"calls).")
+        log("Arcs unchanged since last refresh — reusing cached onepace + "
+            "muhn sources from existing index (saved ~30-60s of Pixeldrain "
+            "calls).")
         existing = _load_existing_index()
         # Copy onepace + muhn sources back into the by_episode map so the
         # downstream merge (nyaa, usenet, spyker) layers on as usual.
@@ -419,7 +436,6 @@ def build(log=print, cancel_evt=None, cache: dict | None = None,
 
     log(f"Walking {sum(len(b['torrents']) for b in nyaa)} Nyaa torrents...")
     for bucket in nyaa:
-        bucket_arc = bucket["title"]
         for t in bucket["torrents"]:
             parsed = parse_episode(t["title"], needles)
             torrent_src = {
@@ -501,7 +517,7 @@ def build(log=print, cancel_evt=None, cache: dict | None = None,
             eps.append({
                 "num": ep,
                 "display_title": f"{title} {ep:02d}",
-                "sources": sources,
+                "sources": dedupe_sources(sources),
             })
         out_arcs.append({
             "title": title,

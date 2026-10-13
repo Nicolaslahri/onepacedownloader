@@ -605,6 +605,7 @@ body::before {
 .dl-status-pill.downloading { background: rgba(247,147,26,0.12); color: var(--orange); }
 .dl-status-pill.done        { background: rgba(34,197,94,0.12);  color: var(--green); }
 .dl-status-pill.error       { background: rgba(239,68,68,0.12);  color: var(--red-soft); }
+.dl-status-pill.done.warn   { background: rgba(247,147,26,0.14); color: var(--orange); cursor: help; }
 .dl-status-pill.cancelled   { background: rgba(255,255,255,0.04); color: var(--dim); }
 
 /* Transfer card header — title + source tag on one row */
@@ -765,6 +766,23 @@ body::before {
   letter-spacing: 0.04em;
 }
 .confirm-summary .val { color: var(--fg); font-weight: 500; }
+.confirm-summary .sub-only { gap: 1rem; align-items: flex-start; }
+.confirm-summary .sub-only .key { white-space: nowrap; }
+.confirm-summary .sub-only .val {
+  text-align: right;
+  font-weight: 400;
+  color: var(--orange);
+}
+.sub-only-toggle {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  color: var(--fg);
+  font-weight: 500;
+  cursor: pointer;
+}
 .confirm-summary .size-big {
   font-family: var(--f-mono);
   font-size: 1.4rem;
@@ -1169,3 +1187,16 @@ body::before {
   .ep-size { display: none; }
   .status-bar { padding: 0.45rem 1rem; }
 }
+
+/* Settings: on/off row with a description */
+.settings-toggle {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 12px;
+  cursor: pointer;
+}
+.settings-toggle input { margin-top: 3px; accent-color: var(--orange); }
+.settings-toggle span { display: flex; flex-direction: column; gap: 2px; }
+.settings-toggle strong { font-size: 13px; font-weight: 600; }
+.settings-toggle small { font-size: 12px; color: var(--muted); }

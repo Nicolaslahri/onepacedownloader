@@ -8,17 +8,16 @@ import time
 import xml.sax.saxutils as su
 from pathlib import Path
 
-from .downloader import sanitize_filename
+from .downloader import episode_key, sanitize_filename
+from .seasons import season_for_arc
 
 
 # ── Helpers ───────────────────────────────────────────────────────────
 
 def arc_index_for_title(index: dict, title: str) -> int | None:
-    """0-based canonical arc index for a given arc title."""
-    for i, a in enumerate(index.get("arcs", [])):
-        if a.get("title") == title:
-            return i
-    return None
+    """Season number minus one for an arc title (see seasons.py)."""
+    season = season_for_arc(index, title)
+    return season - 1 if season else None
 
 
 def build_nfo_xml(season: int, ep_num: int, title: str, plot: str) -> str:
@@ -97,11 +96,23 @@ def organize_for_plex(
                         found = True
                         break
             if not found:
+                # Re-released upstream: CRC changed, episode didn't.
+                key = episode_key(raw_name)
+                for p in downloaded_subfolder.glob("*"):
+                    if (p.is_file()
+                            and not p.name.endswith(".part")
+                            and episode_key(p.name) == key):
+                        src_path = p
+                        found = True
+                        break
+            if not found:
+                # Only safe when this run fetched a single episode — with
+                # several, the lone file left may belong to another one.
                 candidates = [
                     p for p in downloaded_subfolder.glob("*")
                     if p.is_file() and not p.name.endswith(".part")
                 ]
-                if len(candidates) == 1:
+                if len(candidates) == 1 and len(ep_for_file) == 1:
                     src_path = candidates[0]
                 else:
                     _log(f"  [warn] Plex organize: file not found -- "
@@ -163,7 +174,10 @@ def retroactive_organize(media_dir: Path, index: dict, log=None) -> int:
 
     # Build lookup: sanitized_filename -> (arc_idx, ep_num, canonical, plot)
     file_map: dict[str, tuple[int, int, str, str]] = {}
-    for arc_idx, arc in enumerate(index.get("arcs", [])):
+    for arc in index.get("arcs", []):
+        arc_idx = arc_index_for_title(index, arc.get("title", ""))
+        if arc_idx is None:
+            continue
         for ep in arc.get("episodes", []):
             for src in ep.get("sources", []):
                 fn = src.get("filename")

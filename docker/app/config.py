@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import threading
 from pathlib import Path
 
 # ── Paths ──────────────────────────────────────────────────────────────
@@ -32,7 +33,7 @@ UA = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
 )
 
-APP_VERSION = "2.0.5"
+APP_VERSION = "2.1.0"
 
 # Git commit the image was built from — baked in by the Dockerfile via a
 # build arg. Empty / "dev" for local builds. Used for the update check.
@@ -49,6 +50,8 @@ PORT = int(os.environ.get("PORT", "7654"))
 DEFAULT_VERSION = os.environ.get("DEFAULT_VERSION", "English Subtitles")
 DEFAULT_QUALITY = os.environ.get("DEFAULT_QUALITY", "1080p")
 AUTO_REFRESH = os.environ.get("AUTO_REFRESH", "true").lower() in ("1", "true", "yes")
+# Optional login for the web UI. Unset = open, as before.
+WEB_PASSWORD = os.environ.get("WEB_PASSWORD", "")
 
 # ── Integration defaults (env → config.json override → these) ─────────
 # These let docker-compose pre-seed a SABnzbd / qBittorrent / NZBGeek
@@ -86,6 +89,19 @@ def load_config() -> dict:
     return {}
 
 
+_save_lock = threading.Lock()
+
+
+def atomic_write(path: Path, data: bytes) -> None:
+    """Write to a temp file and swap it in. A crash or a concurrent save
+    can't leave a half-written file behind — load_config() would read that
+    as empty and lose every saved setting."""
+    with _save_lock:
+        tmp = path.with_name(path.name + ".tmp")
+        tmp.write_bytes(data)
+        os.replace(tmp, path)
+
+
 def save_config(cfg: dict) -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    CONFIG_FILE.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+    atomic_write(CONFIG_FILE, json.dumps(cfg, indent=2).encode("utf-8"))
