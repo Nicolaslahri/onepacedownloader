@@ -94,7 +94,7 @@ INDEX_FILE = APP_DIR / "episode_index.json"
 CONFIG_FILE = APP_DIR / "config.json"
 DEFAULT_DOWNLOADS = APP_DIR / "downloads"
 
-APP_VERSION = "2.1.0"
+APP_VERSION = "2.1.1"
 
 # Sources
 SRC_ONE_PACE = "One Pace"
@@ -306,6 +306,39 @@ def icon(name: str) -> str:
 def icon_font(size: int = 16):
     return (ICON_FONT, size) if ICON_FONT else (FAMILY, size)
 
+
+
+class TextLabel(ctk.CTkLabel):
+    """CTkLabel whose wraplength follows the width it is laid out at.
+
+    A fixed wraplength only fits one window size and one display scale; when
+    the label is stretched across its parent (pack fill x, or grid sticky
+    "ew") the text is re-wrapped to the real width instead."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._fit_width = None
+        if kwargs.get("wraplength"):
+            tk.Frame.bind(self, "<Configure>", self._rewrap, add="+")
+
+    def _rewrap(self, _event=None) -> None:
+        try:
+            manager = self.winfo_manager()
+            if manager == "pack":
+                stretched = self.pack_info().get("fill") in ("x", "both")
+            elif manager == "grid":
+                sticky = self.grid_info().get("sticky", "")
+                stretched = "e" in sticky and "w" in sticky
+            else:
+                stretched = False
+            if not stretched:
+                return
+            width = int(self.winfo_width() / self._get_widget_scaling()) - 8
+            if width > 40 and width != self._fit_width:
+                self._fit_width = width
+                self.configure(wraplength=width)
+        except Exception:
+            pass
 
 
 def fit_label(label, text: str) -> None:
@@ -1591,16 +1624,16 @@ class App(ctk.CTk):
             except tk.TclError:
                 self._brand_img = None
         self._brand_text.pack(side="left", fill="x", expand=True)
-        ctk.CTkLabel(self._brand_text, text="One Pace", font=F_BOLD_BASE,
+        TextLabel(self._brand_text, text="One Pace", font=F_BOLD_BASE,
                      text_color=TEXT, anchor="w", height=18).pack(fill="x")
-        ctk.CTkLabel(self._brand_text, text=f"Downloader  ·  v{APP_VERSION}",
+        TextLabel(self._brand_text, text=f"Downloader  ·  v{APP_VERSION}",
                      font=F_XS, text_color=TEXT_DIM, anchor="w",
                      height=16).pack(fill="x")
 
         self._nav_items: dict[str, dict] = {}
         self._tab_labels = self._compute_tab_labels()
         self._tab_key_by_label = {v: k for k, v in self._tab_labels.items()}
-        self._nav_section = ctk.CTkLabel(
+        self._nav_section = TextLabel(
             nav, text="Sources", font=F_BOLD_XS, text_color=TEXT_DIM,
             anchor="w", height=28)
         self._nav_section.pack(fill="x", padx=SP_LG + SP_XS, pady=(SP_SM, 0))
@@ -1634,12 +1667,18 @@ class App(ctk.CTk):
                              border_width=1, border_color=BORDER)
         # Oversize by the corner radius so only the top-left corner shows.
         # (tk's own place: CTk refuses width/height offsets there)
+        # Raw tk sizes (place offsets, grid minsize) skip CTk's display
+        # scaling, so they go through _px.
         tk.Place.place_configure(layer, x=0, y=0, relwidth=1, relheight=1,
-                                 width=RADIUS_LG * 2, height=RADIUS_LG * 2)
+                                 width=self._px(RADIUS_LG * 2),
+                                 height=self._px(RADIUS_LG * 2))
+        self._layer = layer
         inner = ctk.CTkFrame(layer, fg_color="transparent", corner_radius=0)
         inner.pack(fill="both", expand=True, padx=(1, RADIUS_LG * 2 + 1),
                    pady=(1, RADIUS_LG * 2 + 1))
-        inner.grid_columnconfigure(0, weight=0, minsize=self.ARC_WIDTH)
+        self._inner = inner
+        inner.grid_columnconfigure(0, weight=0,
+                                   minsize=self._px(self.ARC_WIDTH))
         inner.grid_columnconfigure(1, weight=0, minsize=1)
         inner.grid_columnconfigure(2, weight=1)
         inner.grid_rowconfigure(0, weight=1)
@@ -1675,7 +1714,7 @@ class App(ctk.CTk):
             bar, height=3, width=160, corner_radius=2,
             progress_color=ACCENT, fg_color=BORDER_STRONG, border_width=0)
         self.progress.set(0)
-        ctk.CTkLabel(bar, textvariable=self.status_var, font=F_SM,
+        TextLabel(bar, textvariable=self.status_var, font=F_SM,
                      anchor="w", text_color=TEXT_MUTED).pack(
             side="left", fill="x", expand=True, padx=(SP_LG, SP_SM))
 
@@ -1699,12 +1738,12 @@ class App(ctk.CTk):
         head1 = ctk.CTkFrame(col1, fg_color="transparent")
         head1.grid(row=0, column=0, sticky="ew",
                    padx=SP_XL, pady=(SP_XL, 0))
-        ctk.CTkLabel(head1, text="Arcs", font=F_BOLD_XL,
+        TextLabel(head1, text="Arcs", font=F_BOLD_XL,
                      text_color=TEXT).pack(side="left")
-        self._arc_count_lbl = ctk.CTkLabel(head1, text="", font=F_SM,
+        self._arc_count_lbl = TextLabel(head1, text="", font=F_SM,
                                            text_color=TEXT_DIM)
         self._arc_count_lbl.pack(side="left", padx=(SP_SM, 0), pady=(4, 0))
-        self.source_info = ctk.CTkLabel(
+        self.source_info = TextLabel(
             col1, text="", anchor="w", justify="left", font=F_XS,
             text_color=TEXT_DIM, wraplength=self.ARC_WIDTH - 2 * SP_XL)
         self.source_info.grid(row=1, column=0, sticky="ew",
@@ -1745,17 +1784,20 @@ class App(ctk.CTk):
         main = ctk.CTkFrame(inner, fg_color="transparent", corner_radius=0)
         main.grid(row=0, column=2, sticky="nsew")
         main.grid_columnconfigure(0, weight=1)
-        main.grid_columnconfigure(1, weight=0, minsize=self.DETAIL_WIDTH)
+        main.grid_columnconfigure(1, weight=0,
+                                  minsize=self._px(self.DETAIL_WIDTH))
+        self._main = main
+        main.bind("<Configure>", self._fit_detail_pane, add="+")
         main.grid_rowconfigure(2, weight=1)
 
         head2 = ctk.CTkFrame(main, fg_color="transparent")
         head2.grid(row=0, column=0, columnspan=2, sticky="ew",
                    padx=SP_XXL, pady=(SP_XL, 0))
-        self.episodes_header = ctk.CTkLabel(
+        self.episodes_header = TextLabel(
             head2, text="Episodes", anchor="w", font=F_TITLE,
             text_color=TEXT)
         self.episodes_header.pack(fill="x")
-        self.episodes_sub = ctk.CTkLabel(
+        self.episodes_sub = TextLabel(
             head2, text="", anchor="w", font=F_SM, text_color=TEXT_MUTED)
         self.episodes_sub.pack(fill="x")
 
@@ -1781,7 +1823,7 @@ class App(ctk.CTk):
             ep_tools, "Download selected", self._download_selected_episodes,
             style="accent", glyph="download")
         self.download_selected_btn.pack(side="right")
-        self.selection_size_lbl = ctk.CTkLabel(
+        self.selection_size_lbl = TextLabel(
             ep_tools, text="", font=F_SM, text_color=TEXT_MUTED)
         self.selection_size_lbl.pack(side="right", padx=(0, SP_MD))
 
@@ -1803,7 +1845,7 @@ class App(ctk.CTk):
                                 border_width=1, border_color=BORDER)
         det_card.grid(row=2, column=1, sticky="nsew",
                       padx=(SP_SM, SP_XXL), pady=(0, SP_LG))
-        self.source_header = ctk.CTkLabel(
+        self.source_header = TextLabel(
             det_card, text="", anchor="w", font=F_BOLD_XS,
             text_color=ACCENT_TEXT)
         self.source_header.pack(fill="x", padx=SP_XL, pady=(SP_LG, 0))
@@ -1825,7 +1867,38 @@ class App(ctk.CTk):
     NAV_WIDTH = 220
     NAV_COMPACT_WIDTH = 56
     ARC_WIDTH = 260
-    DETAIL_WIDTH = 360
+    DETAIL_WIDTH = 360       # narrowest the details pane gets
+    DETAIL_MAX_WIDTH = 520
+    DETAIL_SHARE = 0.38      # of the main column, between the two
+
+    def _scaling(self) -> float:
+        try:
+            return ctk.ScalingTracker.get_widget_scaling(self)
+        except Exception:
+            return 1.0
+
+    def _px(self, logical: float) -> int:
+        """Logical (100% scale) pixels to real screen pixels."""
+        return int(round(logical * self._scaling()))
+
+    def _fit_detail_pane(self, event=None) -> None:
+        """Give the details pane a share of the main column, so it grows
+        on big windows instead of leaving the episode list mostly empty."""
+        try:
+            width = self._main.winfo_width() / self._scaling()
+            want = max(self.DETAIL_WIDTH,
+                       min(self.DETAIL_MAX_WIDTH, width * self.DETAIL_SHARE))
+            px = self._px(want)
+            if px != getattr(self, "_detail_px", None):
+                self._detail_px = px
+                self._main.grid_columnconfigure(1, minsize=px)
+                self._inner.grid_columnconfigure(
+                    0, minsize=self._px(self.ARC_WIDTH))
+                tk.Place.place_configure(
+                    self._layer, width=self._px(RADIUS_LG * 2),
+                    height=self._px(RADIUS_LG * 2))
+        except Exception:
+            pass
 
     # ----------------------------------------------------- source switch ---
 
@@ -2305,7 +2378,7 @@ class App(ctk.CTk):
         query = self.search_var.get().strip().lower()
         arcs = self.index.get("arcs", [])
         if not arcs:
-            ctk.CTkLabel(self.arc_scroll,
+            TextLabel(self.arc_scroll,
                 text="No episode_index.json found.\n\nRun:\npython _source/build_episode_index.py",
                 justify="left", font=F_SM,
                 text_color=TEXT_MUTED).pack(padx=12, pady=12)
@@ -2340,7 +2413,7 @@ class App(ctk.CTk):
                     row.pack_forget()
 
         if not hasattr(self, "_no_arcs_label") or not self._no_arcs_label.winfo_exists():
-            self._no_arcs_label = ctk.CTkLabel(
+            self._no_arcs_label = TextLabel(
                 self.arc_scroll,
                 text="", font=F_SM, text_color=TEXT_MUTED,
             )
@@ -2375,14 +2448,14 @@ class App(ctk.CTk):
         bar = ctk.CTkFrame(row, width=3, height=16, corner_radius=2,
                            fg_color=ACCENT if is_selected else "transparent")
         bar.place(x=0, rely=0.5, anchor="w")
-        num_lbl = ctk.CTkLabel(
+        num_lbl = TextLabel(
             row, text=f"{idx + 1}" if idx is not None else "",
             width=22, font=F_XS, anchor="e", text_color=TEXT_DIM)
         num_lbl.pack(side="left", padx=(SP_SM, SP_SM))
-        meta_lbl = ctk.CTkLabel(row, text=meta, anchor="e", font=F_XS,
+        meta_lbl = TextLabel(row, text=meta, anchor="e", font=F_XS,
                                 text_color=meta_color)
         meta_lbl.pack(side="right", padx=(SP_XS, SP_MD))
-        title_lbl = ctk.CTkLabel(
+        title_lbl = TextLabel(
             row, text=title, anchor="w", width=20,
             font=F_BOLD_BASE if is_selected else F_BASE, text_color=TEXT)
         title_lbl.pack(side="left", fill="x", expand=True)
@@ -2551,12 +2624,12 @@ class App(ctk.CTk):
         body_card.pack(fill="x", padx=SP_SM, pady=(SP_SM, SP_SM))
         row1 = ctk.CTkFrame(body_card, fg_color="transparent")
         row1.pack(fill="x", padx=SP_MD, pady=(SP_SM, 0))
-        ctk.CTkLabel(row1, text="●", font=F_BASE,
+        TextLabel(row1, text="●", font=F_BASE,
                      text_color=accent, width=14).pack(side="left")
-        ctk.CTkLabel(row1, text=heading, anchor="w",
+        TextLabel(row1, text=heading, anchor="w",
                      font=F_BOLD_SM, text_color=accent).pack(
             side="left", padx=(SP_XS, 0))
-        ctk.CTkLabel(
+        TextLabel(
             body_card, text=body, anchor="w", justify="left",
             font=F_SM, text_color=TEXT,
             wraplength=400,
@@ -2598,6 +2671,7 @@ class App(ctk.CTk):
         quality_pref = self.config_data.get("default_quality", "1080p")
 
         chip_text, chip_style, detail = "", CHIP_NEUTRAL, ""
+        also_dub = False
         if self.current_source in ("onepace", "muhn"):
             best = self._best_source_for(
                 ep, self.current_source,
@@ -2608,6 +2682,8 @@ class App(ctk.CTk):
                 chip_text = f"{_VER_SHORT.get(ver, 'Dub')} {best.get('quality', '')}".strip()
                 chip_style = CHIP_DUB if is_dub(ver) else CHIP_SUB
                 detail = _fmt_size(best.get("size_bytes", 0))
+                also_dub = not is_dub(ver) and any(
+                    is_dub(x.get("version") or "") for x in sources)
             else:
                 detail = "no source"
         elif self.current_source == "nyaa":
@@ -2645,7 +2721,7 @@ class App(ctk.CTk):
         if is_saved:
             self._chip(click_row, "✓ Saved", style=CHIP_OK).pack(
                 side="right", padx=(SP_XS, SP_SM))
-        detail_lbl = ctk.CTkLabel(click_row, text=detail, anchor="e",
+        detail_lbl = TextLabel(click_row, text=detail, anchor="e",
                                   font=F_XS, text_color=TEXT_DIM, width=64)
         detail_lbl.pack(side="right", padx=(SP_XS, SP_SM if not is_saved else 0))
         widgets_extra = [detail_lbl]
@@ -2653,10 +2729,15 @@ class App(ctk.CTk):
             chip = self._chip(click_row, chip_text, style=chip_style)
             chip.pack(side="right", padx=(0, SP_XS))
             widgets_extra.append(chip)
-        num_lbl = ctk.CTkLabel(click_row, text=f"{ep['num']:02d}", width=26,
+        if also_dub:
+            dub_chip = self._chip(click_row, "Dub", style=CHIP_DUB)
+            dub_chip.pack(side="right", padx=(0, SP_XS))
+            Tooltip(dub_chip, "An English dub is available for this episode")
+            widgets_extra.append(dub_chip)
+        num_lbl = TextLabel(click_row, text=f"{ep['num']:02d}", width=26,
                                font=F_SM, text_color=TEXT_DIM, anchor="w")
         num_lbl.pack(side="left", padx=(0, SP_SM))
-        title_lbl = ctk.CTkLabel(
+        title_lbl = TextLabel(
             click_row, text=row_title, anchor="w", width=20,
             font=F_BOLD_BASE if is_active else F_BASE, text_color=TEXT)
         title_lbl.pack(side="left", fill="x", expand=True)
@@ -2707,7 +2788,7 @@ class App(ctk.CTk):
         card.pack(fill="x", padx=SP_SM, pady=SP_XS)
 
         # Line 1: title
-        title_lbl = ctk.CTkLabel(
+        title_lbl = TextLabel(
             card, text=title,
             anchor="w", font=F_SM,
             text_color=TEXT,
@@ -2740,13 +2821,13 @@ class App(ctk.CTk):
                     "Uploaded by Galaxy9000 — the official One Pace Nyaa "
                     "account. Matches what onepace.net hosts.")
 
-        ctk.CTkLabel(
+        TextLabel(
             line2,
             text=f"{size_str}",
             font=F_BOLD_XS,
             text_color=TEXT,
         ).pack(side="left", padx=(SP_SM if is_official else 0, SP_XS))
-        ctk.CTkLabel(
+        TextLabel(
             line2,
             text=f"·  ↑ {seeders}",
             font=F_BOLD_XS, text_color=OK,
@@ -2862,7 +2943,7 @@ class App(ctk.CTk):
 
         hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
         hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_MD))
-        ctk.CTkLabel(
+        TextLabel(
             hero, text=ep.get("canonical_title") or episode_title(ep),
             font=F_BOLD_XL, text_color=TEXT, anchor="w", justify="left",
             wraplength=268,
@@ -2886,7 +2967,7 @@ class App(ctk.CTk):
         if plot:
             if len(plot) > 420:
                 plot = plot[:419].rsplit(" ", 1)[0] + "…"
-            ctk.CTkLabel(
+            TextLabel(
                 hero, text=plot, font=F_SM, text_color=TEXT_MUTED,
                 anchor="w", justify="left", wraplength=268,
             ).pack(fill="x", pady=(SP_MD, 0))
@@ -2919,7 +3000,7 @@ class App(ctk.CTk):
         )
         wrap.pack(fill="x", padx=SP_SM, pady=SP_SM)
 
-        title_lbl = ctk.CTkLabel(
+        title_lbl = TextLabel(
             wrap, text=self.download_title or "(starting…)",
             font=F_BOLD_LG,
             text_color=TEXT,
@@ -2930,12 +3011,12 @@ class App(ctk.CTk):
         # Percent + speed together as a hero pair
         hero_row = ctk.CTkFrame(wrap, fg_color="transparent")
         hero_row.pack(fill="x", padx=SP_LG, pady=(0, SP_SM))
-        pct_lbl = ctk.CTkLabel(
+        pct_lbl = TextLabel(
             hero_row, text="0%", font=F_HERO_BOLD,
             text_color=PRIMARY, anchor="w",
         )
         pct_lbl.pack(side="left")
-        speed_lbl = ctk.CTkLabel(
+        speed_lbl = TextLabel(
             hero_row, text="—",
             font=F_BOLD_BASE, text_color=TEXT_MUTED,
             anchor="e",
@@ -2955,7 +3036,7 @@ class App(ctk.CTk):
         # Friendly "speed varies" note — hidden by default, packed only after
         # _update_download_panel observes a sustained slow rate. Sticky for the
         # session once shown.
-        slow_note = ctk.CTkLabel(
+        slow_note = TextLabel(
             wrap, text=(
                 "Pixeldrain's free CDN throttles in waves — fast one minute, "
                 "slow the next. Nothing we can tune, just how it is. "
@@ -2966,17 +3047,17 @@ class App(ctk.CTk):
         # Single horizontal chip row for the remaining stats
         chip_row = ctk.CTkFrame(wrap, fg_color="transparent")
         chip_row.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_LG))
-        bytes_lbl = ctk.CTkLabel(
+        bytes_lbl = TextLabel(
             chip_row, text="—", font=F_SM,
             text_color=TEXT, anchor="w",
         )
         bytes_lbl.pack(side="left")
-        file_lbl = ctk.CTkLabel(
+        file_lbl = TextLabel(
             chip_row, text="", font=F_SM,
             text_color=TEXT_MUTED, anchor="e",
         )
         file_lbl.pack(side="right")
-        eta_lbl = ctk.CTkLabel(
+        eta_lbl = TextLabel(
             chip_row, text="", font=F_SM,
             text_color=TEXT_MUTED, anchor="center",
         )
@@ -2998,12 +3079,12 @@ class App(ctk.CTk):
             border_width=1, border_color=BORDER,
         )
         folder_card.pack(fill="x", padx=SP_SM, pady=(0, SP_SM))
-        ctk.CTkLabel(
+        TextLabel(
             folder_card, text="Saving to",
             font=F_BOLD_XS,
             text_color=TEXT_MUTED, anchor="w",
         ).pack(fill="x", padx=SP_LG, pady=(SP_MD, 0))
-        ctk.CTkLabel(
+        TextLabel(
             folder_card, text=self.save_dir.get() or "(no folder set)",
             font=F_MONO_SM,
             wraplength=240, justify="left", anchor="w",
@@ -3133,10 +3214,10 @@ class App(ctk.CTk):
         self.source_header.configure(text="Welcome aboard")
         hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
         hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_LG))
-        ctk.CTkLabel(hero, text="Set sail through One Piece, the fast way.",
+        TextLabel(hero, text="Set sail through One Piece, the fast way.",
                      font=F_BOLD_XL, text_color=TEXT, anchor="w",
                      justify="left", wraplength=268).pack(fill="x")
-        ctk.CTkLabel(
+        TextLabel(
             hero, text=_SRC_BLURB.get(src, ""), font=F_SM,
             text_color=TEXT_MUTED, anchor="w", justify="left",
             wraplength=268).pack(fill="x", pady=(SP_SM, 0))
@@ -3158,15 +3239,15 @@ class App(ctk.CTk):
                                 corner_radius=RADIUS_LG,
                                 border_width=1, border_color=BORDER)
             tile.grid(row=0, column=i, sticky="ew", padx=2)
-            ctk.CTkLabel(tile, text=value, font=(FAMILY, 22, "bold"),
+            TextLabel(tile, text=value, font=(FAMILY, 22, "bold"),
                          text_color=GOLD if label == "Saved" else TEXT).pack(
                 anchor="w", padx=SP_MD, pady=(SP_MD, 0))
-            ctk.CTkLabel(tile, text=label, font=F_EYEBROW,
+            TextLabel(tile, text=label, font=F_EYEBROW,
                          text_color=TEXT_DIM).pack(
                 anchor="w", padx=SP_MD, pady=(0, SP_MD))
 
         # How it works
-        ctk.CTkLabel(self.source_scroll, text="How it works", font=F_EYEBROW,
+        TextLabel(self.source_scroll, text="How it works", font=F_EYEBROW,
                      text_color=TEXT_DIM, anchor="w").pack(
             fill="x", padx=SP_LG + SP_XS, pady=(0, SP_SM))
         guide = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
@@ -3184,15 +3265,15 @@ class App(ctk.CTk):
             row.pack(fill="x", padx=SP_MD,
                      pady=(SP_MD if i == 1 else SP_XS,
                            SP_MD if i == len(steps) else SP_XS))
-            ctk.CTkLabel(row, text=str(i), font=F_BOLD_SM,
+            TextLabel(row, text=str(i), font=F_BOLD_SM,
                          fg_color=ACCENT, text_color=ON_ACCENT,
                          corner_radius=12, width=24, height=24).pack(side="left")
-            ctk.CTkLabel(row, text=text, font=F_SM, text_color=TEXT,
+            TextLabel(row, text=text, font=F_SM, text_color=TEXT,
                          anchor="w", justify="left", wraplength=200).pack(
                 side="left", fill="x", expand=True, padx=(SP_MD, 0))
 
         # Community
-        ctk.CTkLabel(self.source_scroll, text="Community", font=F_EYEBROW,
+        TextLabel(self.source_scroll, text="Community", font=F_EYEBROW,
                      text_color=TEXT_DIM, anchor="w").pack(
             fill="x", padx=SP_LG + SP_XS, pady=(0, SP_SM))
         link_row = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
@@ -3242,11 +3323,11 @@ class App(ctk.CTk):
     def _empty_state(self, parent, glyph: str, title: str, body: str) -> None:
         box = ctk.CTkFrame(parent, fg_color="transparent")
         box.pack(fill="x", pady=(SP_XXL * 3, SP_XL))
-        ctk.CTkLabel(box, text=icon("onepace") if glyph == "☰" else glyph,
+        TextLabel(box, text=icon("onepace") if glyph == "☰" else glyph,
                      font=icon_font(40), text_color=TEXT_DIM).pack()
-        ctk.CTkLabel(box, text=title, font=F_BOLD_LG,
+        TextLabel(box, text=title, font=F_BOLD_LG,
                      text_color=TEXT).pack(pady=(SP_MD, SP_XS))
-        ctk.CTkLabel(box, text=body, font=F_SM, text_color=TEXT_MUTED,
+        TextLabel(box, text=body, font=F_SM, text_color=TEXT_MUTED,
                      wraplength=320, justify="center").pack(padx=SP_XL)
 
     def _resolve(self, color):
@@ -3300,13 +3381,13 @@ class App(ctk.CTk):
         pill = ctk.CTkFrame(row, width=3, height=16, corner_radius=2,
                             fg_color="transparent")
         pill.place(x=0, rely=0.5, anchor="w")
-        glyph = ctk.CTkLabel(row, text=icon(key), font=icon_font(16),
+        glyph = TextLabel(row, text=icon(key), font=icon_font(16),
                              width=20, text_color=TEXT)
         glyph.pack(side="left", padx=(SP_MD + 2, 0))
-        label = ctk.CTkLabel(row, text=text, font=F_BASE, text_color=TEXT,
+        label = TextLabel(row, text=text, font=F_BASE, text_color=TEXT,
                              anchor="w")
         label.pack(side="left", fill="x", expand=True, padx=(SP_MD + 2, 0))
-        badge = ctk.CTkLabel(row, text="", font=F_XS, text_color=TEXT_DIM,
+        badge = TextLabel(row, text="", font=F_XS, text_color=TEXT_DIM,
                              anchor="e")
         badge.pack(side="right", padx=(0, SP_MD))
         item = {"row": row, "pill": pill, "glyph": glyph, "label": label,
@@ -3339,7 +3420,7 @@ class App(ctk.CTk):
     def _on_window_resize(self, event) -> None:
         if event.widget is not self:
             return
-        compact = event.width < 1220
+        compact = event.width / self._scaling() < 1220
         if compact == self._nav_compact:
             return
         self._nav_compact = compact
@@ -3410,7 +3491,7 @@ class App(ctk.CTk):
             card.pack(fill="x", padx=SP_LG, pady=(0, SP_SM))
             top = ctk.CTkFrame(card, fg_color="transparent")
             top.pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
-            ctk.CTkLabel(top, text=_VER_LONG.get(ver, ver), font=F_BOLD_BASE,
+            TextLabel(top, text=_VER_LONG.get(ver, ver), font=F_BOLD_BASE,
                          text_color=TEXT, anchor="w").pack(side="left")
             self._chip(top, _VER_SHORT.get(ver, "Dub"),
                        style=CHIP_DUB if is_dub(ver) else CHIP_SUB).pack(
@@ -3442,10 +3523,10 @@ class App(ctk.CTk):
             text=f"SEASON {idx + 1}" if idx is not None else "ARC")
         hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
         hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_LG))
-        ctk.CTkLabel(hero, text=arc["title"], font=F_TITLE, text_color=TEXT,
+        TextLabel(hero, text=arc["title"], font=F_TITLE, text_color=TEXT,
                      anchor="w", justify="left", wraplength=268).pack(fill="x")
         eps, packs = self._arc_source_counts(arc, src)
-        ctk.CTkLabel(
+        TextLabel(
             hero,
             text=(f"{eps} episode{'s' if eps != 1 else ''}"
                   + (f"  ·  {packs} pack{'s' if packs != 1 else ''}" if packs else "")
@@ -3461,9 +3542,9 @@ class App(ctk.CTk):
             card.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
             top = ctk.CTkFrame(card, fg_color="transparent")
             top.pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
-            ctk.CTkLabel(top, text="In your library", font=F_BOLD_SM,
+            TextLabel(top, text="In your library", font=F_BOLD_SM,
                          text_color=TEXT).pack(side="left")
-            ctk.CTkLabel(top, text=f"{saved} / {total}", font=F_BOLD_SM,
+            TextLabel(top, text=f"{saved} / {total}", font=F_BOLD_SM,
                          text_color=OK if total and saved == total else GOLD
                          ).pack(side="right")
             pb = ctk.CTkProgressBar(card, height=6, corner_radius=3,
@@ -3497,10 +3578,10 @@ class App(ctk.CTk):
                                         corner_radius=RADIUS_LG,
                                         border_width=1, border_color=BORDER)
                     tile.grid(row=0, column=i, sticky="ew", padx=2)
-                    ctk.CTkLabel(tile, text=value, font=F_BOLD_LG,
+                    TextLabel(tile, text=value, font=F_BOLD_LG,
                                  text_color=TEXT).pack(
                         anchor="w", padx=SP_MD, pady=(SP_MD, 0))
-                    ctk.CTkLabel(tile, text=label, font=F_EYEBROW,
+                    TextLabel(tile, text=label, font=F_EYEBROW,
                                  text_color=TEXT_DIM).pack(
                         anchor="w", padx=SP_MD, pady=(0, SP_MD))
 
@@ -3509,7 +3590,7 @@ class App(ctk.CTk):
         if src == "nyaa":
             tip = ("Click an episode for its torrents, or switch to Packs "
                    "for whole-arc downloads.")
-        ctk.CTkLabel(self.source_scroll, text=tip, font=F_SM,
+        TextLabel(self.source_scroll, text=tip, font=F_SM,
                      text_color=TEXT_MUTED, anchor="w", justify="left",
                      wraplength=268).pack(fill="x", padx=SP_LG + SP_XS,
                                           pady=(SP_XS, SP_MD))
@@ -3518,7 +3599,7 @@ class App(ctk.CTk):
                            ep: dict, kind: str) -> None:
         if not sources:
             return
-        ctk.CTkLabel(self.source_scroll, text=header.title()
+        TextLabel(self.source_scroll, text=header.title()
                      if header.isupper() else header,
                      font=F_BOLD_BASE, text_color=TEXT, anchor="w").pack(
             fill="x", padx=SP_LG + SP_XS, pady=(SP_MD, SP_SM))
@@ -3543,7 +3624,7 @@ class App(ctk.CTk):
         a Google Drive mirror."""
         row = ctk.CTkFrame(parent, fg_color="transparent")
         row.pack(fill="x", padx=SP_LG + SP_XS, pady=(SP_XS, SP_SM))
-        ctk.CTkLabel(row, text="Pixeldrain down?", font=F_XS,
+        TextLabel(row, text="Pixeldrain down?", font=F_XS,
                      text_color=TEXT_MUTED, anchor="w").pack(side="left")
         ctk.CTkButton(
             row, text="Google Drive mirror ↗", width=150, height=H_SM - 4,
@@ -3558,10 +3639,10 @@ class App(ctk.CTk):
                             fg_color=SURFACE_INNER,
                             border_width=1, border_color=BORDER)
         card.pack(fill="x", padx=SP_LG, pady=SP_SM)
-        ctk.CTkLabel(card, text=header, font=F_EYEBROW, anchor="w",
+        TextLabel(card, text=header, font=F_EYEBROW, anchor="w",
                      text_color=TEXT_DIM).pack(
             fill="x", padx=SP_LG, pady=(SP_MD, 0))
-        ctk.CTkLabel(card, text=msg, font=F_SM, anchor="w",
+        TextLabel(card, text=msg, font=F_SM, anchor="w",
                      text_color=TEXT_MUTED, wraplength=268,
                      justify="left").pack(
             fill="x", padx=SP_LG, pady=(SP_XS, SP_MD))
@@ -3577,14 +3658,14 @@ class App(ctk.CTk):
             release_title = s.get("release_title", "")
             # Truncated release-name hint so users can tell duplicates apart
             short = release_title.split("]")[-1].strip()[:30] if release_title else ""
-            ctk.CTkLabel(row, text=short or "NZB", font=F_SM,
+            TextLabel(row, text=short or "NZB", font=F_SM,
                          text_color=TEXT, anchor="w").pack(
                 side="left", padx=(SP_SM, 0))
             self._button(
                 row, "NZB", lambda src=s, e=ep: self._download_usenet_nzb(src, e),
                 style="accent", glyph="download",
             ).pack(side="right", padx=(SP_SM, 0))
-            ctk.CTkLabel(row, text=size_str, font=F_XS,
+            TextLabel(row, text=size_str, font=F_XS,
                          text_color=TEXT_DIM, anchor="e").pack(side="right")
 
         elif kind == "nyaa":
@@ -3610,9 +3691,9 @@ class App(ctk.CTk):
                         "Nyaa account. Matches what onepace.net hosts.")
             meta = ctk.CTkFrame(info, fg_color="transparent")
             meta.pack(fill="x", pady=(2, 0))
-            ctk.CTkLabel(meta, text=size_str, font=F_XS,
+            TextLabel(meta, text=size_str, font=F_XS,
                          text_color=TEXT_DIM, anchor="w").pack(side="left")
-            ctk.CTkLabel(meta, text=f"↑ {seeders} seeders", font=F_XS,
+            TextLabel(meta, text=f"↑ {seeders} seeders", font=F_XS,
                          text_color=OK, anchor="w").pack(
                 side="left", padx=(SP_SM, 0))
 
@@ -3620,7 +3701,7 @@ class App(ctk.CTk):
     def _chip(parent, text: str, *, fg=None, txt=None, style=None):
         """Small tag — Sub/Dub/quality/Official/Saved labels."""
         bg, fgc = style if style is not None else CHIP_NEUTRAL
-        return ctk.CTkLabel(
+        return TextLabel(
             parent, text=f" {text} ", height=22,
             font=F_XS,
             fg_color=fg if fg is not None else bg,
@@ -4072,9 +4153,9 @@ class App(ctk.CTk):
         dlg.transient(self)
         dlg.after(150, lambda: (dlg.grab_set()
                                 if dlg.winfo_exists() else None))
-        ctk.CTkLabel(dlg, text="No torrent client registered",
+        TextLabel(dlg, text="No torrent client registered",
                      font=("Segoe UI", 14, "bold")).pack(pady=(14, 4))
-        ctk.CTkLabel(
+        TextLabel(
             dlg, justify="left",
             text="Magnet copied to your clipboard.\n\n"
                  "To open it, install a torrent client (qBittorrent is the "
@@ -4203,10 +4284,10 @@ class App(ctk.CTk):
         overlay = ModalOverlay(self, "Set up Usenet", width=480, height=320)
         card = overlay.card
 
-        ctk.CTkLabel(card, text="Add your Usenet indexer",
+        TextLabel(card, text="Add your Usenet indexer",
                      font=F_BOLD_XL, text_color=TEXT, anchor="w").pack(
             fill="x", padx=SP_XL, pady=(SP_XL, SP_SM))
-        ctk.CTkLabel(
+        TextLabel(
             card, anchor="w", justify="left", wraplength=400,
             font=F_SM, text_color=TEXT_MUTED,
             text=("Usenet downloads need your own indexer URL + API key. "
@@ -4833,13 +4914,13 @@ class BatchDownloadDialog(ModalOverlay):
             command=self._confirm, corner_radius=RADIUS_SM).pack(
             side="right", expand=True, fill="x", padx=(0, SP_XS))
 
-        ctk.CTkLabel(
+        TextLabel(
             self.card,
             text=f"Download {len(episodes)} episode"
                  f"{'s' if len(episodes) != 1 else ''}",
             font=F_BOLD_XL, text_color=TEXT, anchor="w",
         ).pack(fill="x", padx=SP_XL, pady=(SP_XL, SP_XS))
-        ctk.CTkLabel(
+        TextLabel(
             self.card, text=f"From {_SRC_LABEL[source]}",
             font=F_SM, text_color=TEXT_MUTED, anchor="w",
         ).pack(fill="x", padx=SP_XL, pady=(0, SP_MD))
@@ -4851,7 +4932,7 @@ class BatchDownloadDialog(ModalOverlay):
         opt.pack(fill="x", padx=SP_XL, pady=SP_SM)
 
         if source == "onepace":
-            ctk.CTkLabel(opt, text="Version",
+            TextLabel(opt, text="Version",
                          font=F_BOLD_SM, text_color=TEXT_MUTED,
                          anchor="w").pack(fill="x",
                                            padx=SP_LG, pady=(SP_MD, 2))
@@ -4871,7 +4952,7 @@ class BatchDownloadDialog(ModalOverlay):
         else:
             self.version_var = ctk.StringVar(value="English Dub")
 
-        ctk.CTkLabel(opt, text="Quality",
+        TextLabel(opt, text="Quality",
                      font=F_BOLD_SM, text_color=TEXT_MUTED,
                      anchor="w").pack(fill="x",
                                        padx=SP_LG, pady=(SP_SM, 2))
@@ -4895,16 +4976,16 @@ class BatchDownloadDialog(ModalOverlay):
             border_width=1, border_color=BORDER,
         )
         size_card.pack(fill="x", padx=SP_XL, pady=SP_SM)
-        ctk.CTkLabel(
+        TextLabel(
             size_card, text="Total download size",
             font=F_EYEBROW, text_color=GOLD, anchor="w",
         ).pack(fill="x", padx=SP_LG, pady=(SP_MD, 0))
-        self.size_lbl = ctk.CTkLabel(
+        self.size_lbl = TextLabel(
             size_card, text="—",
             font=F_HERO_BOLD, text_color=TEXT, anchor="w",
         )
         self.size_lbl.pack(fill="x", padx=SP_LG, pady=(0, 2))
-        self.skipped_lbl = ctk.CTkLabel(
+        self.skipped_lbl = TextLabel(
             size_card, text="",
             font=F_XS, text_color=WARN, anchor="w",
             wraplength=440, justify="left",
@@ -4991,11 +5072,11 @@ class DnsPanel(ModalOverlay):
     def __init__(self, parent: App) -> None:
         super().__init__(parent, "DNS Switcher", width=560, height=460)
 
-        ctk.CTkLabel(
+        TextLabel(
             self.card, text="DNS Switcher",
             font=F_BOLD_XL, text_color=TEXT, anchor="w",
         ).pack(fill="x", padx=SP_XL, pady=(SP_XL, SP_XS))
-        ctk.CTkLabel(
+        TextLabel(
             self.card, text="Bypass ISP-level DNS blocks of the download CDN.",
             font=F_SM, text_color=TEXT_MUTED, anchor="w",
         ).pack(fill="x", padx=SP_XL, pady=(0, SP_MD))
@@ -5005,16 +5086,16 @@ class DnsPanel(ModalOverlay):
             border_width=1, border_color=BORDER,
         )
         card.pack(fill="x", padx=SP_XL, pady=SP_SM)
-        self.state_lbl = ctk.CTkLabel(
+        self.state_lbl = TextLabel(
             card, text="Detecting…",
             anchor="w", font=F_BOLD_LG, text_color=TEXT,
         )
         self.state_lbl.pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_XS))
-        self.iface_lbl = ctk.CTkLabel(
+        self.iface_lbl = TextLabel(
             card, text="", anchor="w", font=F_MONO_SM,
             text_color=TEXT_MUTED)
         self.iface_lbl.pack(fill="x", padx=SP_LG, pady=(0, 2))
-        self.dns_lbl = ctk.CTkLabel(
+        self.dns_lbl = TextLabel(
             card, text="", anchor="w", font=F_MONO_SM,
             text_color=TEXT_MUTED)
         self.dns_lbl.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
@@ -5048,7 +5129,7 @@ class DnsPanel(ModalOverlay):
         self.revert_btn.pack(side="left", fill="x", expand=True,
                               padx=(SP_XS, 0))
 
-        self.status_lbl = ctk.CTkLabel(
+        self.status_lbl = TextLabel(
             self.card, text="", font=F_XS,
             text_color=TEXT_MUTED)
         self.status_lbl.pack(pady=(SP_SM, 0))
@@ -5063,7 +5144,7 @@ class DnsPanel(ModalOverlay):
             command=self._toggle_explainer)
         self.explainer_toggle.pack(pady=(SP_MD, 0))
         self.explainer_frame = ctk.CTkFrame(self.card, fg_color="transparent")
-        ctk.CTkLabel(
+        TextLabel(
             self.explainer_frame, justify="left",
             text="Some Indian ISPs (Jio, Airtel, BSNL, ACT) block the "
                  "Pixeldrain CDN at the DNS level — the app loads but "
@@ -5230,7 +5311,7 @@ class SettingsPanel(ModalOverlay):
         titlebar = ctk.CTkFrame(self.card, fg_color="transparent", height=44)
         titlebar.pack(fill="x", padx=SP_XL, pady=(SP_LG, SP_SM))
         titlebar.pack_propagate(False)
-        ctk.CTkLabel(titlebar, text="Settings", font=F_BOLD_XL,
+        TextLabel(titlebar, text="Settings", font=F_BOLD_XL,
                      text_color=TEXT, anchor="w").pack(side="left")
         ctk.CTkButton(
             titlebar, text=icon("cancel"), width=32, height=32,
@@ -5307,18 +5388,18 @@ class SettingsPanel(ModalOverlay):
 
     @staticmethod
     def _section_title(parent, text: str) -> None:
-        ctk.CTkLabel(parent, text=text, font=F_BOLD_LG, text_color=TEXT,
+        TextLabel(parent, text=text, font=F_BOLD_LG, text_color=TEXT,
                      anchor="w").pack(fill="x", pady=(0, SP_MD))
 
     @staticmethod
     def _field_label(parent, text: str, *, first: bool = False) -> None:
-        ctk.CTkLabel(parent, text=text, font=F_BOLD_SM, text_color=TEXT,
+        TextLabel(parent, text=text, font=F_BOLD_SM, text_color=TEXT,
                      anchor="w").pack(
             fill="x", pady=((0 if first else SP_MD), 2))
 
     @staticmethod
     def _help_text(parent, text: str) -> None:
-        ctk.CTkLabel(parent, text=text, font=F_XS, text_color=TEXT_MUTED,
+        TextLabel(parent, text=text, font=F_XS, text_color=TEXT_MUTED,
                      anchor="w", justify="left", wraplength=460).pack(
             fill="x", pady=(2, 0))
 
@@ -5402,7 +5483,7 @@ class SettingsPanel(ModalOverlay):
                 fg_color=CONTROL_FILL, border_width=1,
                 border_color=CONTROL_STROKE, text_color=TEXT,
                 hover_color=CONTROL_HOVER, font=F_SM, command=cmd, corner_radius=RADIUS_SM).pack(side="left", padx=(0, SP_XS))
-        self.test_status_lbl = ctk.CTkLabel(
+        self.test_status_lbl = TextLabel(
             parent, text="", font=F_XS, anchor="w")
         self.test_status_lbl.pack(fill="x", pady=(SP_XS, 0))
 
@@ -5425,11 +5506,11 @@ class SettingsPanel(ModalOverlay):
 
     def _build_about_section(self, parent) -> None:
         self._section_title(parent, "About")
-        ctk.CTkLabel(
+        TextLabel(
             parent, text=f"One Pace Downloader  ·  v{APP_VERSION}",
             font=F_BOLD_BASE, text_color=TEXT, anchor="w",
         ).pack(fill="x")
-        ctk.CTkLabel(
+        TextLabel(
             parent, text="Made by Nicolas  ·  MIT licensed",
             font=F_SM, text_color=TEXT_MUTED, anchor="w",
         ).pack(fill="x", pady=(2, SP_MD))
