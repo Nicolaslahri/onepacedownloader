@@ -205,9 +205,9 @@ Fair question. Verify yourself.
 
 <div align="center">
 
-**SHA256 (v2.0.5):** `e9d2a1988d1949f3cc608eee02c3aa97e64a952e9257c94eced64809f1bae3f1`
+**SHA256 (v2.1.0):** `488c4489bb3edcb13d332e2bf664802fd87b89ced4f80b4267bf8a863f0cfb36`
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-Scan_Report-394EFF?style=for-the-badge&logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/e9d2a1988d1949f3cc608eee02c3aa97e64a952e9257c94eced64809f1bae3f1)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-Scan_Report-394EFF?style=for-the-badge&logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/488c4489bb3edcb13d332e2bf664802fd87b89ced4f80b4267bf8a863f0cfb36)
 
 </div>
 
