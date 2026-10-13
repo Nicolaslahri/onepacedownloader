@@ -2489,12 +2489,14 @@ class App(ctk.CTk):
                             found = True
                             break
                 if not found:
-                    # Last resort: single-file subfolder
+                    # Last resort: single-file subfolder. Only safe when this
+                    # run fetched a single episode — with several, the lone
+                    # file left may belong to another one.
                     candidates = [
                         p for p in downloaded_subfolder.glob("*")
                         if p.is_file() and not p.name.endswith(".part")
                     ]
-                    if len(candidates) == 1:
+                    if len(candidates) == 1 and len(ep_for_file) == 1:
                         src_path = candidates[0]
                     else:
                         log(f"  [warn] Plex organize: file not found — "
