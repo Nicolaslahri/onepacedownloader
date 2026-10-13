@@ -1769,6 +1769,7 @@ class App(ctk.CTk):
             ep_tools,
             values=["Individual", "Packs"],
             command=self._on_nyaa_view_change,
+            width=180, dynamic_resizing=False,
             height=H_SM, font=F_SM, corner_radius=RADIUS_SM,
             fg_color=CONTROL_STROKE,
             selected_color=ACCENT, selected_hover_color=ACCENT_HOVER,
@@ -2922,7 +2923,7 @@ class App(ctk.CTk):
             wrap, text=self.download_title or "(starting…)",
             font=F_BOLD_LG,
             text_color=TEXT,
-            anchor="w", wraplength=268, justify="left",
+            anchor="w", wraplength=240, justify="left",
         )
         title_lbl.pack(fill="x", padx=SP_LG, pady=(SP_LG, SP_SM))
 
@@ -2960,7 +2961,7 @@ class App(ctk.CTk):
                 "slow the next. Nothing we can tune, just how it is. "
                 "Download finishes either way."),
             font=F_ITALIC_XS, text_color=TEXT_MUTED,
-            wraplength=268, justify="left", anchor="w",
+            wraplength=240, justify="left", anchor="w",
         )
         # Single horizontal chip row for the remaining stats
         chip_row = ctk.CTkFrame(wrap, fg_color="transparent")
@@ -3005,7 +3006,7 @@ class App(ctk.CTk):
         ctk.CTkLabel(
             folder_card, text=self.save_dir.get() or "(no folder set)",
             font=F_MONO_SM,
-            wraplength=268, justify="left", anchor="w",
+            wraplength=240, justify="left", anchor="w",
             text_color=TEXT,
         ).pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_XS))
         ctk.CTkButton(
@@ -3173,8 +3174,8 @@ class App(ctk.CTk):
                              border_width=1, border_color=BORDER)
         guide.pack(fill="x", padx=SP_LG, pady=(0, SP_LG))
         steps = [
-            "Pick a source in the bar at the top.",
-            "Choose an arc on the left.",
+            "Pick a source in the side pane.",
+            "Choose an arc from the list.",
             "Tick the episodes you want.",
             "Hit Download — pick a version and quality, done.",
         ]
@@ -3187,7 +3188,7 @@ class App(ctk.CTk):
                          fg_color=ACCENT, text_color=ON_ACCENT,
                          corner_radius=12, width=24, height=24).pack(side="left")
             ctk.CTkLabel(row, text=text, font=F_SM, text_color=TEXT,
-                         anchor="w", justify="left", wraplength=300).pack(
+                         anchor="w", justify="left", wraplength=200).pack(
                 side="left", fill="x", expand=True, padx=(SP_MD, 0))
 
         # Community
@@ -3589,16 +3590,6 @@ class App(ctk.CTk):
         elif kind == "nyaa":
             seeders = s.get("seeders", 0)
             is_official = s.get("uploader") == NYAA_OFFICIAL_UPLOADER
-            self._chip(row, s.get("quality", "—")).pack(side="left")
-            if is_official:
-                badge = self._chip(row, "Official", style=CHIP_OK)
-                badge.pack(side="left", padx=(SP_XS, 0))
-                Tooltip(badge,
-                        "Uploaded by Galaxy9000 — the official One Pace "
-                        "Nyaa account. Matches what onepace.net hosts.")
-            ctk.CTkLabel(row, text=f"↑ {seeders}", font=F_BOLD_XS,
-                         text_color=OK, anchor="w").pack(
-                side="left", padx=(SP_SM, 0))
             mbtn = self._button(
                 row, "Magnet",
                 lambda m=s["magnet"], t=s.get("torrent_title", ""):
@@ -3606,8 +3597,24 @@ class App(ctk.CTk):
                 style="accent", glyph="open")
             mbtn.pack(side="right", padx=(SP_SM, 0))
             Tooltip(mbtn, "Open this torrent in your torrent app")
-            ctk.CTkLabel(row, text=size_str, font=F_XS,
-                         text_color=TEXT_DIM, anchor="e").pack(side="right")
+            info = ctk.CTkFrame(row, fg_color="transparent")
+            info.pack(side="left", fill="x", expand=True)
+            tags = ctk.CTkFrame(info, fg_color="transparent")
+            tags.pack(fill="x")
+            self._chip(tags, s.get("quality", "—")).pack(side="left")
+            if is_official:
+                badge = self._chip(tags, "Official", style=CHIP_OK)
+                badge.pack(side="left", padx=(SP_XS, 0))
+                Tooltip(badge,
+                        "Uploaded by Galaxy9000 — the official One Pace "
+                        "Nyaa account. Matches what onepace.net hosts.")
+            meta = ctk.CTkFrame(info, fg_color="transparent")
+            meta.pack(fill="x", pady=(2, 0))
+            ctk.CTkLabel(meta, text=size_str, font=F_XS,
+                         text_color=TEXT_DIM, anchor="w").pack(side="left")
+            ctk.CTkLabel(meta, text=f"↑ {seeders} seeders", font=F_XS,
+                         text_color=OK, anchor="w").pack(
+                side="left", padx=(SP_SM, 0))
 
     @staticmethod
     def _chip(parent, text: str, *, fg=None, txt=None, style=None):
