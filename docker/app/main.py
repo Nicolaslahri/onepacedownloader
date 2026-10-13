@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, Response
 from pathlib import Path
 
-from .config import AUTO_REFRESH, PORT, WEB_PASSWORD, load_config, save_config
+from .config import APP_VERSION, AUTO_REFRESH, PORT, WEB_PASSWORD, load_config, save_config
 from .core.episode_index import try_remote_refresh
 from .core.log import log as _log
 
@@ -37,7 +37,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="One Pace Downloader",
-    version="2.0.5",
+    version=APP_VERSION,
     lifespan=lifespan,
 )
 
