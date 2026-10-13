@@ -1,0 +1,65 @@
+name: Release
+
+# Builds OnePaceDownloader.exe on Windows and publishes it as a GitHub
+# release. Run it from the Actions tab with the version to release; the tag
+# is created from the commit the run is on.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, e.g. 2.1.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Check version matches the app
+        shell: pwsh
+        run: |
+          $v = "${{ inputs.version }}"
+          if (-not (Select-String -Path _source/onepace_downloader.py -Pattern "APP_VERSION = `"$v`"" -Quiet)) {
+            throw "APP_VERSION in onepace_downloader.py is not $v"
+          }
+
+      - name: Install
+        run: pip install -r _source/requirements.txt
+
+      - name: Bundle the latest episode index
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/${{ github.repository }}/data/episode_index.json" -OutFile _source/episode_index.new.json
+          python -c "import json; d=json.load(open('_source/episode_index.new.json', encoding='utf-8')); assert d['arcs']"
+          if ($LASTEXITCODE -eq 0) { Move-Item -Force _source/episode_index.new.json _source/episode_index.json }
+
+      - name: Build
+        shell: pwsh
+        working-directory: _source
+        run: .\build.ps1
+
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $v = "${{ inputs.version }}"
+          $exe = "_source/dist/OnePaceDownloader.exe"
+          $sha = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLower()
+          $notes = "release-notes/v$v.md"
+          if (-not (Test-Path $notes)) { $notes = $null }
+          $body = if ($notes) { Get-Content $notes -Raw } else { "" }
+          $body += "`n`n---`n`n**SHA256:** ``$sha``"
+          Set-Content -Path release-body.md -Value $body -Encoding utf8
+          gh release create "v$v" $exe --target "${{ github.sha }}" --title "v$v" --notes-file release-body.md
+          Write-Host "SHA256: $sha"
+          "### v$v published`n`nSHA256: ``$sha``" >> $env:GITHUB_STEP_SUMMARY
