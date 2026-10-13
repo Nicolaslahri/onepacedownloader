@@ -765,6 +765,23 @@ body::before {
   letter-spacing: 0.04em;
 }
 .confirm-summary .val { color: var(--fg); font-weight: 500; }
+.confirm-summary .sub-only { gap: 1rem; align-items: flex-start; }
+.confirm-summary .sub-only .key { white-space: nowrap; }
+.confirm-summary .sub-only .val {
+  text-align: right;
+  font-weight: 400;
+  color: var(--orange);
+}
+.sub-only-toggle {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  color: var(--fg);
+  font-weight: 500;
+  cursor: pointer;
+}
 .confirm-summary .size-big {
   font-family: var(--f-mono);
   font-size: 1.4rem;

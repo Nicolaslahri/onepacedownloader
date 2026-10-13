@@ -347,13 +347,32 @@ async function downloadSelected() {
     });
   } catch (e) {}
 
-  const sizeText = est.total_bytes ? fmtBytes(est.total_bytes) : "—";
   const missingNote = est.missing
     ? `<div class="row"><span class="key">Unavailable</span> <span class="val" style="color:var(--red-soft)">${est.missing} episode${est.missing !== 1 ? "s" : ""} have no ${esc(activeSource)} source — will be skipped</span></div>`
     : "";
+  // A Dub was picked but some episodes only exist subtitled: say so, and
+  // let the user choose instead of silently swapping the audio language.
+  let allowSubs = false;
+  try { allowSubs = localStorage.getItem("allowSubFallback") === "1"; } catch (e) {}
+  const subOnly = est.sub_only || 0;
+  const subOnlyNote = subOnly
+    ? `<div class="row sub-only"><span class="key">No dub yet</span> <span class="val">
+         <span id="subOnlyText"></span>
+         <label class="sub-only-toggle"><input type="checkbox" id="allowSubsChk"${allowSubs ? " checked" : ""}> Get the subtitled version of those instead</label>
+       </span></div>`
+    : "";
+
+  const counts = () => {
+    const extra = allowSubs ? subOnly : 0;
+    return {
+      n: (est.matched || 0) + extra,
+      bytes: (est.total_bytes || 0) + (allowSubs ? est.sub_only_bytes || 0 : 0),
+    };
+  };
+  const plural = (n) => `${n} episode${n !== 1 ? "s" : ""}`;
 
   confirmDialog({
-    title: `Download ${est.matched} episode${est.matched !== 1 ? "s" : ""}`,
+    title: `Download ${plural(counts().n)}`,
     body: `
       <div class="confirm-summary">
         <div class="row"><span class="key">Arc</span>     <span class="val">${esc(activeArc)}</span></div>
@@ -361,21 +380,44 @@ async function downloadSelected() {
         <div class="row"><span class="key">Version</span> <span class="val">${esc(version)}</span></div>
         <div class="row"><span class="key">Quality</span> <span class="val">${esc(quality)}</span></div>
         ${missingNote}
-        <div class="row"><span class="key">Total size</span> <span class="size-big">${sizeText}</span></div>
+        ${subOnlyNote}
+        <div class="row"><span class="key">Total size</span> <span class="size-big" id="confirmSize"></span></div>
       </div>`,
     okText: "Start download",
     onOk: async () => {
+      const { n } = counts();
+      if (!n) return toast("Nothing to download with these settings", "error");
       try {
         await api("/api/downloads", {
           method: "POST",
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ ...payload, allow_subs: allowSubs }),
         });
-        toast(`Download started: ${activeArc} (${est.matched} episodes)`, "info");
+        toast(`Download started: ${activeArc} (${plural(n)})`, "info");
       } catch (e) {
         toast("Download failed: " + e.message, "error");
       }
     },
   });
+
+  const render = () => {
+    const { n, bytes } = counts();
+    document.getElementById("confirmTitle").textContent = `Download ${plural(n)}`;
+    document.getElementById("confirmSize").textContent = bytes ? fmtBytes(bytes) : "—";
+    const t = document.getElementById("subOnlyText");
+    if (t) {
+      t.textContent = `${plural(subOnly)} only exist with Japanese audio and English subtitles — ` +
+        (allowSubs ? "those will be downloaded subtitled." : "those will be skipped.");
+    }
+  };
+  const chk = document.getElementById("allowSubsChk");
+  if (chk) {
+    chk.onchange = () => {
+      allowSubs = chk.checked;
+      try { localStorage.setItem("allowSubFallback", allowSubs ? "1" : "0"); } catch (e) {}
+      render();
+    };
+  }
+  render();
 }
 
 /* Usenet → SABnzbd */

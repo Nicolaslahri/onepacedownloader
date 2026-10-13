@@ -228,6 +228,21 @@ UA = (
 VERSIONS = ["English Subtitles", "English Dub", "English Dub with Closed Captions"]
 QUALITIES = ["1080p", "720p", "480p"]
 
+# Closest substitute first. The two dubs share an audio track, so they stand
+# in for each other before anything falls back to the Japanese audio.
+_VERSION_FALLBACK = {
+    "English Subtitles": ["English Subtitles", "English Dub",
+                          "English Dub with Closed Captions"],
+    "English Dub": ["English Dub", "English Dub with Closed Captions",
+                    "English Subtitles"],
+    "English Dub with Closed Captions": ["English Dub with Closed Captions",
+                                         "English Dub", "English Subtitles"],
+}
+
+
+def is_dub(version: str | None) -> bool:
+    return bool(version) and "Dub" in version
+
 
 # ---------------------------------------------------------------- helpers ---
 
@@ -3877,24 +3892,34 @@ class App(ctk.CTk):
             default_version=self.config_data.get("default_version",
                                                   "English Subtitles"),
             default_quality=self.config_data.get("default_quality", "1080p"),
+            allow_subs=self.config_data.get("allow_sub_fallback", False),
         )
         self.wait_window(dlg)
         if dlg.confirmed is not True:
             return
         version_pref = dlg.chosen_version
         quality_pref = dlg.chosen_quality
+        allow_subs = dlg.allow_subs
+        if allow_subs != self.config_data.get("allow_sub_fallback", False):
+            self.config_data["allow_sub_fallback"] = allow_subs
+            save_config(self.config_data)
         src_kind = self.current_source
 
         plan_full: list[tuple[str, str, str, str]] = []
         expected_names: dict[str, str] = {}
+        total_size = 0
         skipped: list[str] = []
         for ep in self.selected_arc["episodes"]:
             if ep["num"] not in chosen:
                 continue
-            src = self._best_source_for(ep, src_kind, version_pref, quality_pref)
+            src = self._best_source_for(ep, src_kind, version_pref,
+                                        quality_pref, allow_subs=allow_subs)
             if not src:
                 skipped.append(episode_title(ep))
                 continue
+            if src.get("version") and src["version"] != version_pref:
+                self._log(f"{episode_title(ep)}: no {version_pref} — "
+                          f"using {src['version']}")
             ver_short = {"English Subtitles": "Sub",
                          "English Dub": "Dub",
                          "English Dub with Closed Captions": "Dub-CC"}.get(
@@ -3905,16 +3930,18 @@ class App(ctk.CTk):
             plan_full.append((episode_title(ep), src["album_id"],
                               src["file_id"], sub))
             expected_names[src["file_id"]] = src.get("filename", "")
+            total_size += int(src.get("size_bytes", 0))
 
+        wanted = (version_pref if src_kind == "onepace" and not allow_subs
+                  else f"{_SRC_LABEL[src_kind]} source")
         if not plan_full:
             messagebox.showinfo("No downloadable sources",
-                f"None of the selected episodes have a "
-                f"{_SRC_LABEL[src_kind]} source.")
+                f"None of the selected episodes have a {wanted}.")
             return
         if skipped:
             self._log(
                 f"Skipping {len(skipped)} episode(s) with no "
-                f"{_SRC_LABEL[src_kind]} source: {', '.join(skipped[:5])}"
+                f"{wanted}: {', '.join(skipped[:5])}"
                 f"{'…' if len(skipped) > 5 else ''}")
 
         dest = Path(self.save_dir.get())
@@ -3924,14 +3951,6 @@ class App(ctk.CTk):
             return
         self.cancel_evt.clear()
         self._set_cancel_visible(True)
-        total_size = sum(
-            int(self._best_source_for(ep, src_kind, version_pref,
-                                       quality_pref).get("size_bytes", 0))
-            for ep in self.selected_arc["episodes"]
-            if ep["num"] in chosen
-            and self._best_source_for(ep, src_kind, version_pref,
-                                       quality_pref) is not None
-        )
         # Surface the batch download in the right-column status panel
         self.download_title = (
             f"{self.selected_arc['title']}  —  "
@@ -3990,29 +4009,37 @@ class App(ctk.CTk):
 
     @staticmethod
     def _best_source_for(ep: dict, kind: str, version_pref: str,
-                         quality_pref: str) -> dict | None:
-        """Pick the best `kind` source for an episode (onepace/muhn), falling
-        back across quality and version when the exact preference is missing."""
+                         quality_pref: str, *,
+                         allow_subs: bool = True) -> dict | None:
+        """Pick the best `kind` source for an episode (onepace/muhn).
+
+        Versions are tried closest-first (Dub and Dub-CC stand in for each
+        other before Subtitles), and within a version the preferred quality
+        wins, else the best one available. With `allow_subs=False` a Dub
+        preference never falls back to the subtitled release."""
         candidates = [s for s in ep.get("sources", []) if s.get("kind") == kind]
         if not candidates:
             return None
-        # Exact version + quality match wins
-        for s in candidates:
-            if (s.get("version") == version_pref
-                    and s.get("quality") == quality_pref):
-                return s
-        # Same version, best available quality
-        same_ver = [s for s in candidates if s.get("version") == version_pref]
-        if same_ver:
-            return max(same_ver,
+        if not any(s.get("version") for s in candidates):
+            # Muhn Pace: dub-only, no version field.
+            order = [None]
+        else:
+            order = _VERSION_FALLBACK.get(version_pref, [version_pref])
+            if not allow_subs and is_dub(version_pref):
+                order = [v for v in order if is_dub(v)]
+        for ver in order:
+            same_ver = [s for s in candidates if s.get("version") == ver]
+            for s in same_ver:
+                if s.get("quality") == quality_pref:
+                    return s
+            if same_ver:
+                return max(same_ver,
+                           key=lambda s: _quality_rank(s.get("quality", "")))
+        if allow_subs:
+            # A version label we don't know: anything beats nothing.
+            return max(candidates,
                        key=lambda s: _quality_rank(s.get("quality", "")))
-        # Quality match across any version
-        for s in candidates:
-            if s.get("quality") == quality_pref:
-                return s
-        # Whatever has the highest quality
-        return max(candidates,
-                   key=lambda s: _quality_rank(s.get("quality", "")))
+        return None
 
     def _send_selected_nyaa_magnets(self, chosen_ep_nums: list[int]) -> None:
         """Open the top Nyaa magnet for each selected episode (Nyaa tab only).
@@ -4868,13 +4895,15 @@ class BatchDownloadDialog(ModalOverlay):
     estimate computed from the episode index."""
 
     def __init__(self, parent, *, source: str, episodes: list[dict],
-                 default_version: str, default_quality: str) -> None:
-        super().__init__(parent, "Confirm batch download", width=560, height=480)
+                 default_version: str, default_quality: str,
+                 allow_subs: bool = False) -> None:
+        super().__init__(parent, "Confirm batch download", width=560, height=540)
         self.source = source
         self.episodes = episodes
         self.confirmed = False
         self.chosen_version = default_version
         self.chosen_quality = default_quality
+        self.allow_subs = allow_subs
 
         btn_row = ctk.CTkFrame(self.card, fg_color="transparent")
         btn_row.pack(side="bottom", pady=(SP_LG, SP_MD))
@@ -4971,29 +5000,56 @@ class BatchDownloadDialog(ModalOverlay):
             wraplength=440, justify="left",
         )
         self.skipped_lbl.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
+        # Only shown when a Dub is picked and some episodes have no dub.
+        self.allow_subs_var = ctk.BooleanVar(value=allow_subs)
+        self.allow_subs_chk = ctk.CTkCheckBox(
+            size_card, text="Get the subtitled version of those instead",
+            variable=self.allow_subs_var, font=F_SM, text_color=TEXT,
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+            command=self._update_size_preview,
+        )
 
         self._update_size_preview()
 
     def _update_size_preview(self) -> None:
         ver = self.version_var.get()
         qual = self.quality_var.get()
+        allow_subs = self.allow_subs_var.get()
         total_bytes = 0
         skipped = 0
+        sub_only = 0
         for ep in self.episodes:
             best = App._best_source_for(ep, self.source, ver, qual)
+            if best and is_dub(ver) and not is_dub(best.get("version")) \
+                    and best.get("version"):
+                sub_only += 1
+                if not allow_subs:
+                    continue
             if best:
                 total_bytes += int(best.get("size_bytes", 0))
             else:
                 skipped += 1
         self.size_lbl.configure(
             text=_fmt_size(total_bytes) if total_bytes else "—")
-        self.skipped_lbl.configure(
-            text=(f"⚠ {skipped} episode(s) have no matching source — "
-                   "will be skipped." if skipped else ""))
+        notes = []
+        if sub_only:
+            notes.append(
+                f"⚠ {sub_only} episode(s) have no English dub yet — "
+                + ("they'll download with Japanese audio and English "
+                   "subtitles." if allow_subs else "they'll be skipped."))
+        if skipped:
+            notes.append(f"⚠ {skipped} episode(s) have no matching source — "
+                         "will be skipped.")
+        self.skipped_lbl.configure(text="\n".join(notes))
+        if sub_only:
+            self.allow_subs_chk.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
+        else:
+            self.allow_subs_chk.pack_forget()
 
     def _confirm(self) -> None:
         self.chosen_version = self.version_var.get()
         self.chosen_quality = self.quality_var.get()
+        self.allow_subs = self.allow_subs_var.get()
         self.confirmed = True
         self.destroy()
 

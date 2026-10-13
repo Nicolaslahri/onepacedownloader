@@ -12,6 +12,9 @@ class DownloadRequest(BaseModel):
     source: str = Field(default="onepace", pattern="^(onepace|muhn)$")
     version: str = "English Subtitles"
     quality: str = "1080p"
+    # With a Dub picked: also take the subtitled release of episodes that
+    # have no dub yet. Off means those are skipped.
+    allow_subs: bool = False
 
 
 class DownloadStatus(BaseModel):
@@ -48,6 +51,10 @@ class DownloadEstimate(BaseModel):
     total_bytes: int = 0
     matched: int = 0
     missing: int = 0
+    # Episodes that only exist subtitled although a Dub was picked. Not
+    # included in the figures above; added to them when allow_subs is on.
+    sub_only: int = 0
+    sub_only_bytes: int = 0
 
 
 class UsenetSendRequest(BaseModel):

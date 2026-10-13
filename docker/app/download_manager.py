@@ -19,13 +19,14 @@ class _Job:
     """Internal representation of a queued/active download."""
     def __init__(self, *, job_id: str, arc: dict, episodes: list[dict],
                  source_kind: str, version: str, quality: str,
-                 index: dict):
+                 index: dict, allow_subs: bool = False):
         self.id = job_id
         self.arc = arc
         self.episodes = episodes
         self.source_kind = source_kind
         self.version = version
         self.quality = quality
+        self.allow_subs = allow_subs
         self.index = index
         self.status = "queued"
         self.progress = 0.0
@@ -67,12 +68,12 @@ class DownloadManager:
 
     def enqueue(self, *, arc: dict, episodes: list[dict],
                 source_kind: str, version: str, quality: str,
-                index: dict) -> str:
+                index: dict, allow_subs: bool = False) -> str:
         job_id = uuid.uuid4().hex[:12]
         job = _Job(
             job_id=job_id, arc=arc, episodes=episodes,
             source_kind=source_kind, version=version, quality=quality,
-            index=index,
+            index=index, allow_subs=allow_subs,
         )
         with self._lock:
             self._jobs[job_id] = job
@@ -148,10 +149,15 @@ class DownloadManager:
             expected_names: dict[str, str] = {}
             for ep in job.episodes:
                 src = best_source_for(ep, job.source_kind,
-                                      job.version, job.quality)
+                                      job.version, job.quality,
+                                      allow_subs=job.allow_subs)
                 if not src:
-                    log(f"  No source found for episode {ep.get('num', '?')}")
+                    log(f"  No {job.version} source for episode "
+                        f"{ep.get('num', '?')}, skipped")
                     continue
+                if src.get("version") and src["version"] != job.version:
+                    log(f"  Episode {ep.get('num', '?')}: no {job.version}, "
+                        f"using {src['version']}")
                 album_id = src.get("album_id", "")
                 file_id = src.get("file_id", "")
                 if not album_id or not file_id:

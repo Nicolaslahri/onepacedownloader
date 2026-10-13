@@ -98,23 +98,59 @@ def quality_rank(q: str) -> int:
     return int(m.group(1)) if m else 0
 
 
+# Closest substitute first. The two dubs share an audio track, so they stand
+# in for each other before anything falls back to the Japanese audio.
+_VERSION_FALLBACK = {
+    "English Subtitles": ["English Subtitles", "English Dub",
+                          "English Dub with Closed Captions"],
+    "English Dub": ["English Dub", "English Dub with Closed Captions",
+                    "English Subtitles"],
+    "English Dub with Closed Captions": ["English Dub with Closed Captions",
+                                         "English Dub", "English Subtitles"],
+}
+
+
+def is_dub(version: str | None) -> bool:
+    return bool(version) and "Dub" in version
+
+
+def is_sub_fallback(src: dict | None, version_pref: str) -> bool:
+    """True when a Dub was asked for but `src` is the subtitled release."""
+    return bool(src and src.get("version") and is_dub(version_pref)
+                and not is_dub(src["version"]))
+
+
 def best_source_for(ep: dict, kind: str, version_pref: str,
-                    quality_pref: str) -> dict | None:
-    """Pick the best source for an episode, falling back across quality
-    and version when the exact preference is missing."""
+                    quality_pref: str, *,
+                    allow_subs: bool = True) -> dict | None:
+    """Pick the best source for an episode.
+
+    Versions are tried closest-first (Dub and Dub-CC stand in for each other
+    before Subtitles), and within a version the preferred quality wins, else
+    the best one available. With `allow_subs=False` a Dub preference never
+    falls back to the subtitled release."""
     candidates = [s for s in ep.get("sources", []) if s.get("kind") == kind]
     if not candidates:
         return None
-    for s in candidates:
-        if s.get("version") == version_pref and s.get("quality") == quality_pref:
-            return s
-    same_ver = [s for s in candidates if s.get("version") == version_pref]
-    if same_ver:
-        return max(same_ver, key=lambda s: quality_rank(s.get("quality", "")))
-    for s in candidates:
-        if s.get("quality") == quality_pref:
-            return s
-    return max(candidates, key=lambda s: quality_rank(s.get("quality", "")))
+    if not any(s.get("version") for s in candidates):
+        # Muhn Pace: dub-only, no version field.
+        order = [None]
+    else:
+        order = _VERSION_FALLBACK.get(version_pref, [version_pref])
+        if not allow_subs and is_dub(version_pref):
+            order = [v for v in order if is_dub(v)]
+    for ver in order:
+        same_ver = [s for s in candidates if s.get("version") == ver]
+        for s in same_ver:
+            if s.get("quality") == quality_pref:
+                return s
+        if same_ver:
+            return max(same_ver,
+                       key=lambda s: quality_rank(s.get("quality", "")))
+    if allow_subs:
+        # A version label we don't know: anything beats nothing.
+        return max(candidates, key=lambda s: quality_rank(s.get("quality", "")))
+    return None
 
 
 def usenet_source_for(ep: dict, quality_pref: str) -> dict | None:
