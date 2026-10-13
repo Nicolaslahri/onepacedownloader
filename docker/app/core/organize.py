@@ -8,7 +8,7 @@ import time
 import xml.sax.saxutils as su
 from pathlib import Path
 
-from .downloader import sanitize_filename
+from .downloader import episode_key, sanitize_filename
 
 
 # ── Helpers ───────────────────────────────────────────────────────────
@@ -93,6 +93,16 @@ def organize_for_plex(
                     if (p.is_file()
                             and not p.name.endswith(".part")
                             and crc in p.name.upper()):
+                        src_path = p
+                        found = True
+                        break
+            if not found:
+                # Re-released upstream: CRC changed, episode didn't.
+                key = episode_key(raw_name)
+                for p in downloaded_subfolder.glob("*"):
+                    if (p.is_file()
+                            and not p.name.endswith(".part")
+                            and episode_key(p.name) == key):
                         src_path = p
                         found = True
                         break

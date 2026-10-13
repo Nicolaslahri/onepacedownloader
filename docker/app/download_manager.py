@@ -145,6 +145,7 @@ class DownloadManager:
         try:
             # Group episodes by album_id for efficient batch downloading
             album_groups: dict[str, tuple[str, set[str], list[dict]]] = {}
+            expected_names: dict[str, str] = {}
             for ep in job.episodes:
                 src = best_source_for(ep, job.source_kind,
                                       job.version, job.quality)
@@ -162,6 +163,7 @@ class DownloadManager:
                         [],
                     )
                 album_groups[album_id][1].add(file_id)
+                expected_names[file_id] = src.get("filename", "")
                 album_groups[album_id][2].append(ep)
 
             if not album_groups:
@@ -197,6 +199,7 @@ class DownloadManager:
                     on_log=log,
                     cancel_evt=job.cancel_evt,
                     file_filter=file_ids,
+                    expected_names=expected_names,
                     subfolder=subfolder or None,
                 )
                 downloaded_sub = dl.run()

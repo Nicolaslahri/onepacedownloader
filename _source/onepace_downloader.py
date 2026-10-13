@@ -243,9 +243,20 @@ def http_get(url: str, *, timeout: int = 30, retries: int = 5) -> bytes:
     last: Exception | None = None
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            req = urllib.request.Request(url, headers={
+                "User-Agent": UA,
+                "Accept": "text/html,application/json;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+            })
             with tls_trust.urlopen(req, timeout=timeout) as r:
                 return r.read()
+        except urllib.error.HTTPError as e:
+            # A 403/404 won't change in the next 30s of retries. Only
+            # rate limits and server-side hiccups are worth waiting out.
+            if e.code < 500 and e.code not in (408, 429):
+                raise
+            last = e
+            time.sleep(min(2 ** attempt, 15))
         except _TRANSIENT as e:
             # A cert failure means every trust store we have was already
             # tried — retrying just stalls the user for ~30s. Bail out.
@@ -323,6 +334,24 @@ def fmt_bytes(n: float) -> str:
             return f"{n:.1f} {unit}"
         n /= 1024
     return f"{n:.1f} PB"
+
+
+# One Pace re-releases episodes in place: the album keeps its ID but the file
+# is re-uploaded with a new Pixeldrain ID and a new CRC in its name, sometimes
+# with a widened episode range. These are stripped so a re-release still
+# matches what the index recorded.
+_CRC_TAG_RE = re.compile(r"\[[0-9A-Fa-f]{8}\]")
+_RANGE_TAG_RE = re.compile(r"\[\d+(?:[-,]\d+)*\]")
+
+
+def episode_key(filename: str) -> str:
+    """Identity of an episode file that survives a re-release, e.g.
+    '[One Pace][115-117] Little Garden 01 [1080p][En Sub][DEC3026A].mp4'
+    -> 'little garden 01 [1080p][en sub].mp4'."""
+    k = _CRC_TAG_RE.sub("", filename)
+    k = _RANGE_TAG_RE.sub("", k)
+    k = re.sub(r"(?i)\[one pace\]", "", k)
+    return re.sub(r"\s+", " ", k).strip().lower()
 
 
 # ------------------------------------------------------------- arc loader ---
@@ -663,6 +692,7 @@ class Downloader:
         on_log,
         cancel_evt: threading.Event,
         file_filter: set[str] | None = None,
+        expected_names: dict[str, str] | None = None,
         subfolder: str | None = None,
     ) -> None:
         self.album_id = album_id
@@ -672,6 +702,9 @@ class Downloader:
         self.on_log = on_log
         self.cancel_evt = cancel_evt
         self.file_filter = file_filter
+        # file_id -> indexed filename. Lets run() find an episode that was
+        # re-uploaded under a new file ID since the index was built.
+        self.expected_names = expected_names or {}
         # Custom subfolder name (defaults to album title when None)
         self.subfolder = subfolder
         # Flipped on the moment the speed-based detector judges pixeldrain.com
@@ -689,11 +722,8 @@ class Downloader:
         files = album.get("files", [])
         title = album.get("title") or self.album_id
         if self.file_filter is not None:
-            files = [f for f in files if f.get("id") in self.file_filter]
+            files = self._select_files(files, title)
             if not files:
-                self.on_log(
-                    f"Album {title!r}: no files matched the filter — nothing to do."
-                )
                 return
         folder_name = sanitize_filename(self.subfolder or title)
         target = self.dest_dir / folder_name
@@ -711,6 +741,37 @@ class Downloader:
             self._download_one(f["id"], out, size, idx, total)
 
         self.on_log(f"Done: {title}")
+
+    def _select_files(self, files: list[dict], title: str) -> list[dict]:
+        """Files in the album matching file_filter. IDs the album no longer
+        has are matched by episode_key on the indexed filename instead."""
+        wanted = self.file_filter or set()
+        present = {f.get("id") for f in files}
+        missing = wanted - present
+        keys = {episode_key(self.expected_names[i]): i
+                for i in missing if self.expected_names.get(i)}
+        picked = []
+        for f in files:
+            if f.get("id") in wanted:
+                picked.append(f)
+                continue
+            fid = keys.pop(episode_key(f.get("name", "")), None)
+            if fid is not None:
+                picked.append(f)
+                missing.discard(fid)
+        rematched = len(picked) - len(wanted & present)
+        if rematched:
+            self.on_log(
+                f"  {rematched} episode(s) were re-released since the episode "
+                f"list was built — matched them by name.")
+        if missing:
+            names = [self.expected_names.get(i, i) for i in sorted(missing)]
+            self.on_log(
+                f"Album {title!r}: {len(missing)} episode(s) are no longer in "
+                f"this album: {', '.join(names[:3])}"
+                f"{'…' if len(names) > 3 else ''}. Click Refresh to "
+                f"update the episode list.")
+        return picked
 
     def _download_one(self, file_id: str, out: Path, size: int, idx: int, total: int) -> None:
         partial = out.with_suffix(out.suffix + ".part")
@@ -2365,6 +2426,16 @@ class App(ctk.CTk):
                             found = True
                             break
                 if not found:
+                    # Re-released upstream: CRC changed, episode didn't.
+                    key = episode_key(raw_name)
+                    for p in downloaded_subfolder.glob("*"):
+                        if (p.is_file()
+                                and not p.name.endswith(".part")
+                                and episode_key(p.name) == key):
+                            src_path = p
+                            found = True
+                            break
+                if not found:
                     # Last resort: single-file subfolder
                     candidates = [
                         p for p in downloaded_subfolder.glob("*")
@@ -3748,6 +3819,7 @@ class App(ctk.CTk):
                     on_log=lambda m: self.ui_queue.put(("log", m)),
                     cancel_evt=self.cancel_evt,
                     file_filter={file_id},
+                    expected_names={file_id: source.get("filename", "")},
                     subfolder=folder_name,
                 ).run()
                 self._organize_for_plex_layout(
@@ -3814,6 +3886,7 @@ class App(ctk.CTk):
         src_kind = self.current_source
 
         plan_full: list[tuple[str, str, str, str]] = []
+        expected_names: dict[str, str] = {}
         skipped: list[str] = []
         for ep in self.selected_arc["episodes"]:
             if ep["num"] not in chosen:
@@ -3831,6 +3904,7 @@ class App(ctk.CTk):
                    f"{ver_short} {src.get('quality', '')}").strip()
             plan_full.append((episode_title(ep), src["album_id"],
                               src["file_id"], sub))
+            expected_names[src["file_id"]] = src.get("filename", "")
 
         if not plan_full:
             messagebox.showinfo("No downloadable sources",
@@ -3892,6 +3966,7 @@ class App(ctk.CTk):
                         on_log=lambda m: self.ui_queue.put(("log", m)),
                         cancel_evt=self.cancel_evt,
                         file_filter=file_ids,
+                        expected_names=expected_names,
                         subfolder=sub,
                     ).run()
                     self._organize_for_plex_layout(

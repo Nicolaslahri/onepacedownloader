@@ -34,9 +34,20 @@ def http_get(url: str, *, timeout: int = 30, retries: int = 5) -> bytes:
     last: Exception | None = None
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            req = urllib.request.Request(url, headers={
+                "User-Agent": UA,
+                "Accept": "text/html,application/json;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+            })
             with tls_trust.urlopen(req, timeout=timeout) as r:
                 return r.read()
+        except urllib.error.HTTPError as e:
+            # A 403/404 won't change in the next 30s of retries. Only
+            # rate limits and server-side hiccups are worth waiting out.
+            if e.code < 500 and e.code not in (408, 429):
+                raise
+            last = e
+            time.sleep(min(2 ** attempt, 15))
         except _TRANSIENT as e:
             # A cert failure means every trust store we have was already
             # tried — retrying just stalls the caller for ~30s. Bail out.
@@ -103,6 +114,24 @@ def sanitize_filename(name: str) -> str:
     return name or "untitled"
 
 
+# One Pace re-releases episodes in place: the album keeps its ID but the file
+# is re-uploaded with a new Pixeldrain ID and a new CRC in its name, sometimes
+# with a widened episode range. These are stripped so a re-release still
+# matches what the index recorded.
+_CRC_TAG_RE = re.compile(r"\[[0-9A-Fa-f]{8}\]")
+_RANGE_TAG_RE = re.compile(r"\[\d+(?:[-,]\d+)*\]")
+
+
+def episode_key(filename: str) -> str:
+    """Identity of an episode file that survives a re-release, e.g.
+    '[One Pace][115-117] Little Garden 01 [1080p][En Sub][DEC3026A].mp4'
+    -> 'little garden 01 [1080p][en sub].mp4'."""
+    k = _CRC_TAG_RE.sub("", filename)
+    k = _RANGE_TAG_RE.sub("", k)
+    k = re.sub(r"(?i)\[one pace\]", "", k)
+    return re.sub(r"\s+", " ", k).strip().lower()
+
+
 def fmt_bytes(n: float) -> str:
     for unit in ("B", "KB", "MB", "GB", "TB"):
         if n < 1024:
@@ -132,6 +161,7 @@ class Downloader:
         on_log,
         cancel_evt: threading.Event,
         file_filter: set[str] | None = None,
+        expected_names: dict[str, str] | None = None,
         subfolder: str | None = None,
     ) -> None:
         self.album_id = album_id
@@ -141,6 +171,9 @@ class Downloader:
         self.on_log = on_log
         self.cancel_evt = cancel_evt
         self.file_filter = file_filter
+        # file_id -> indexed filename. Lets run() find an episode that was
+        # re-uploaded under a new file ID since the index was built.
+        self.expected_names = expected_names or {}
         self.subfolder = subfolder
         # Flipped on the moment the speed-based detector judges pixeldrain.com
         # too slow — subsequent files in the same album skip it outright.
@@ -160,13 +193,10 @@ class Downloader:
         files = album.get("files", [])
         title = album.get("title") or self.album_id
         if self.file_filter is not None:
-            files = [f for f in files if f.get("id") in self.file_filter]
+            files = self._select_files(files, title)
         folder_name = sanitize_filename(self.subfolder or title)
         target = self.dest_dir / folder_name
         if not files:
-            self.on_log(
-                f"Album {title!r}: no files matched the filter -- nothing to do."
-            )
             return target
         target.mkdir(parents=True, exist_ok=True)
         self.on_log(
@@ -184,6 +214,36 @@ class Downloader:
             self._download_one(f["id"], out, size, idx, total)
         self.on_log(f"Done: {title}")
         return target
+
+    def _select_files(self, files: list[dict], title: str) -> list[dict]:
+        """Files in the album matching file_filter. IDs the album no longer
+        has are matched by episode_key on the indexed filename instead."""
+        wanted = self.file_filter or set()
+        present = {f.get("id") for f in files}
+        missing = wanted - present
+        keys = {episode_key(self.expected_names[i]): i
+                for i in missing if self.expected_names.get(i)}
+        picked = []
+        for f in files:
+            if f.get("id") in wanted:
+                picked.append(f)
+                continue
+            fid = keys.pop(episode_key(f.get("name", "")), None)
+            if fid is not None:
+                picked.append(f)
+                missing.discard(fid)
+        rematched = len(picked) - len(wanted & present)
+        if rematched:
+            self.on_log(
+                f"  {rematched} episode(s) were re-released since the episode "
+                f"list was built -- matched them by name.")
+        if missing:
+            names = [self.expected_names.get(i, i) for i in sorted(missing)]
+            self.on_log(
+                f"Album {title!r}: {len(missing)} episode(s) are no longer in "
+                f"this album: {', '.join(names[:3])}"
+                f"{'...' if len(names) > 3 else ''}.")
+        return picked
 
     def _download_one(self, file_id: str, out: Path, size: int,
                       idx: int, total: int) -> None:
