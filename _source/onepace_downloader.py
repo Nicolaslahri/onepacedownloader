@@ -31,6 +31,8 @@ import tls_trust
 DISCORD_URL = "https://discord.gg/KHn6AbevZ2"
 REDDIT_URL = "https://www.reddit.com/user/nicolasenjah/"
 GITHUB_URL = "https://github.com/Nicolaslahri/onepacedownloader"
+RELEASES_API_URL = (
+    "https://api.github.com/repos/Nicolaslahri/onepacedownloader/releases/latest")
 MUHN_GDRIVE_MIRROR_URL = "https://drive.google.com/drive/folders/1OiT81U_kJulO9ptcBJA0wdZTSQAq83Sl"
 
 # Social brand colors — (fill, hover) for the Discord / Reddit / GitHub
@@ -374,6 +376,17 @@ def fmt_bytes(n: float) -> str:
 # matches what the index recorded.
 _CRC_TAG_RE = re.compile(r"\[[0-9A-Fa-f]{8}\]")
 _RANGE_TAG_RE = re.compile(r"\[\d+(?:[-,]\d+)*\]")
+
+
+def version_tuple(v: str) -> tuple[int, ...]:
+    """"v2.1.0" -> (2, 1, 0). Non-numeric parts end the tuple."""
+    out = []
+    for part in (v or "").strip().lstrip("vV").split("."):
+        m = re.match(r"\d+", part)
+        if not m:
+            break
+        out.append(int(m.group()))
+    return tuple(out)
 
 
 def episode_key(filename: str) -> str:
@@ -1351,6 +1364,7 @@ class App(ctk.CTk):
 
         btn_box = ctk.CTkFrame(top, fg_color="transparent")
         btn_box.pack(side="right")
+        self._header_btn_box = btn_box
 
         def header_btn(text, command, width=96):
             return ctk.CTkButton(
@@ -3463,6 +3477,30 @@ class App(ctk.CTk):
             groups.setdefault((album_id, sub), set()).add(file_id)
 
         arc_for_organize = self.selected_arc
+        n_files = len(plan_full)
+        # The Downloader reports per file and restarts its counter for each
+        # album; turn that into one progress figure for the whole batch.
+        batch = {"files": 0, "bytes": 0, "cur": None, "cur_bytes": 0}
+
+        def flush_file():
+            if batch["cur"] is not None:
+                batch["files"] += 1
+                batch["bytes"] += batch["cur_bytes"]
+                batch["cur"] = None
+                batch["cur_bytes"] = 0
+
+        def batch_progress(frac, speed, idx, _total, bytes_now):
+            if batch["cur"] is not None and idx != batch["cur"]:
+                flush_file()
+            batch["cur"], batch["cur_bytes"] = idx, bytes_now
+            done = batch["bytes"] + bytes_now
+            if total_size:
+                overall = done / total_size
+            else:
+                overall = (batch["files"] + frac) / max(n_files, 1)
+            self._on_progress(min(overall, 1.0), speed,
+                              min(batch["files"] + 1, n_files), n_files, done)
+
         def task():
             for i, ((album_id, sub), file_ids) in enumerate(groups.items(), 1):
                 if self.cancel_evt.is_set():
@@ -3474,13 +3512,14 @@ class App(ctk.CTk):
                     Downloader(
                         album_id, dest,
                         on_status=lambda s: self.ui_queue.put(("status", s)),
-                        on_progress=self._on_progress,
+                        on_progress=batch_progress,
                         on_log=lambda m: self.ui_queue.put(("log", m)),
                         cancel_evt=self.cancel_evt,
                         file_filter=file_ids,
                         expected_names=expected_names,
                         subfolder=sub,
                     ).run()
+                    flush_file()
                     self._organize_for_plex_layout(
                         dest / sanitize_filename(sub),
                         file_ids, arc_for_organize,
@@ -3882,7 +3921,7 @@ class App(ctk.CTk):
         try:
             if available:
                 btn.configure(
-                    text="●  Update ready", text_color=HEADER_ACCENT,
+                    text="●  New episodes", text_color=HEADER_ACCENT,
                     border_color=HEADER_ACCENT)
             else:
                 btn.configure(
@@ -3920,6 +3959,41 @@ class App(ctk.CTk):
                 pass
 
         threading.Thread(target=task, daemon=True).start()
+        threading.Thread(target=self._check_app_release, daemon=True).start()
+
+    def _check_app_release(self) -> None:
+        """Look up the latest GitHub release; if it's newer than this
+        build, show a button in the header. Silent on any failure."""
+        try:
+            req = urllib.request.Request(
+                RELEASES_API_URL,
+                headers={"User-Agent": f"OnePaceDownloader/{APP_VERSION}",
+                         "Accept": "application/vnd.github+json"})
+            with tls_trust.urlopen(req, timeout=15) as r:
+                rel = json.loads(r.read())
+            tag = str(rel.get("tag_name") or "")
+            if version_tuple(tag) > version_tuple(APP_VERSION):
+                self.ui_queue.put((
+                    "app_update",
+                    (tag.lstrip("vV"),
+                     rel.get("html_url") or f"{GITHUB_URL}/releases/latest")))
+        except Exception:
+            pass
+
+    def _show_app_update(self, version: str, url: str) -> None:
+        box = getattr(self, "_header_btn_box", None)
+        if box is None or getattr(self, "_app_update_btn", None) is not None:
+            return
+        self._app_update_btn = ctk.CTkButton(
+            box, text=f"✦  Version {version} is out", height=H_SM,
+            corner_radius=RADIUS_SM, font=F_BOLD_SM,
+            fg_color=HEADER_ACCENT, hover_color="#E0AE3A",
+            text_color=HEADER_BG,
+            command=lambda: webbrowser.open(url))
+        first = box.winfo_children()[0]
+        self._app_update_btn.pack(side="left", padx=(0, SP_SM), before=first)
+        Tooltip(self._app_update_btn, "Open the download page for the new version")
+        self._log(f"Version {version} is available: {url}")
 
     def _refresh_all(self) -> None:
         if self.worker and self.worker.is_alive():
@@ -4268,6 +4342,8 @@ class App(ctk.CTk):
                     self._on_usenet_nzb_error(payload)
                 elif kind == "updates_available":
                     self._set_refresh_badge(bool(payload))
+                elif kind == "app_update":
+                    self._show_app_update(*payload)
                 elif kind == "usenet_test_result":
                     success, msg = payload
                     if hasattr(self, "_settings_panel_ref") and self._settings_panel_ref and self._settings_panel_ref.winfo_exists():
