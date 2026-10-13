@@ -330,9 +330,9 @@ def build(log=print, cancel_evt=None, cache: dict | None = None,
     specials: list[dict] = []  # truly arc-less content (sub-cuts, fan letter, etc.)
 
     if skip_pixeldrain:
-        log(f"Arcs unchanged since last refresh — reusing cached onepace + "
-            f"muhn sources from existing index (saved ~30-60s of Pixeldrain "
-            f"calls).")
+        log("Arcs unchanged since last refresh — reusing cached onepace + "
+            "muhn sources from existing index (saved ~30-60s of Pixeldrain "
+            "calls).")
         existing = _load_existing_index()
         # Copy onepace + muhn sources back into the by_episode map so the
         # downstream merge (nyaa, usenet, spyker) layers on as usual.
@@ -419,7 +419,6 @@ def build(log=print, cancel_evt=None, cache: dict | None = None,
 
     log(f"Walking {sum(len(b['torrents']) for b in nyaa)} Nyaa torrents...")
     for bucket in nyaa:
-        bucket_arc = bucket["title"]
         for t in bucket["torrents"]:
             parsed = parse_episode(t["title"], needles)
             torrent_src = {
