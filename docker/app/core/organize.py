@@ -9,16 +9,15 @@ import xml.sax.saxutils as su
 from pathlib import Path
 
 from .downloader import episode_key, sanitize_filename
+from .seasons import season_for_arc
 
 
 # ── Helpers ───────────────────────────────────────────────────────────
 
 def arc_index_for_title(index: dict, title: str) -> int | None:
-    """0-based canonical arc index for a given arc title."""
-    for i, a in enumerate(index.get("arcs", [])):
-        if a.get("title") == title:
-            return i
-    return None
+    """Season number minus one for an arc title (see seasons.py)."""
+    season = season_for_arc(index, title)
+    return season - 1 if season else None
 
 
 def build_nfo_xml(season: int, ep_num: int, title: str, plot: str) -> str:
@@ -175,7 +174,10 @@ def retroactive_organize(media_dir: Path, index: dict, log=None) -> int:
 
     # Build lookup: sanitized_filename -> (arc_idx, ep_num, canonical, plot)
     file_map: dict[str, tuple[int, int, str, str]] = {}
-    for arc_idx, arc in enumerate(index.get("arcs", [])):
+    for arc in index.get("arcs", []):
+        arc_idx = arc_index_for_title(index, arc.get("title", ""))
+        if arc_idx is None:
+            continue
         for ep in arc.get("episodes", []):
             for src in ep.get("sources", []):
                 fn = src.get("filename")

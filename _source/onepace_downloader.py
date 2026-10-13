@@ -1111,6 +1111,49 @@ class Tooltip:
             self._tip = None
 
 
+# Plex/Jellyfin season numbers, pinned per arc. Deriving them from the arc's
+# position in the index would renumber every later season (and orphan the
+# user's existing library folders) the day One Pace adds an arc in the middle.
+# Arcs not listed here are numbered after the highest pinned season, in index
+# order.
+PINNED_SEASONS = {
+    "romancedawn": 1, "orangetown": 2, "syrupvillage": 3, "gaimon": 4,
+    "baratie": 5, "arlongpark": 6, "theadventuresofbuggyscrew": 7,
+    "loguetown": 8, "reversemountain": 9, "whiskypeak": 10,
+    "thetrialsofkobymeppo": 11, "littlegarden": 12, "drumisland": 13,
+    "alabasta": 14, "jaya": 15, "skypiea": 16, "longringlongland": 17,
+    "waterseven": 18, "enieslobby": 19, "postenieslobby": 20,
+    "thrillerbark": 21, "sabaodyarchipelago": 22, "amazonlily": 23,
+    "impeldown": 24,
+    "ifyoucouldgoanywheretheadventuresofthestrawhats": 25,
+    "marineford": 26, "postwar": 27, "returntosabaody": 28,
+    "fishmanisland": 29, "punkhazard": 30, "dressrosa": 31, "zou": 32,
+    "wholecakeisland": 33, "reverie": 34, "wano": 35, "egghead": 36,
+}
+
+
+def _arc_slug(title: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", (title or "").lower())
+
+
+def season_for_arc(index: dict, title: str) -> int | None:
+    """Plex season number for an arc title, or None if it isn't in the index."""
+    arcs = index.get("arcs", [])
+    if not any(a.get("title") == title for a in arcs):
+        return None
+    pinned = PINNED_SEASONS.get(_arc_slug(title))
+    if pinned:
+        return pinned
+    nxt = max(PINNED_SEASONS.values())
+    for a in arcs:
+        if _arc_slug(a.get("title", "")) in PINNED_SEASONS:
+            continue
+        nxt += 1
+        if a.get("title") == title:
+            return nxt
+    return None
+
+
 # Source page identity — drives which arcs/episodes are shown and how the
 # detail pane is built. Keys are internal; labels feed the tab strip.
 _SRC_LABEL = {"onepace": "One Pace", "muhn": "Muhn Pace",
@@ -1665,12 +1708,10 @@ class App(ctk.CTk):
     # --------------------------------------------- Plex / Jellyfin layout --
 
     def _arc_index_for_title(self, title: str) -> int | None:
-        """0-based canonical arc index for a given arc title (Romance Dawn=0,
-        ..., Egghead=35). Used to derive the Plex/Jellyfin Season N folder."""
-        for i, a in enumerate(self.index.get("arcs", [])):
-            if a.get("title") == title:
-                return i
-        return None
+        """Plex/Jellyfin season number minus one for an arc (Romance
+        Dawn=0, ..., Egghead=35). Pinned, see PINNED_SEASONS."""
+        season = season_for_arc(self.index, title)
+        return season - 1 if season else None
 
     @staticmethod
     def _build_nfo_xml(season: int, ep_num: int, title: str, plot: str) -> str:
@@ -1842,7 +1883,10 @@ class App(ctk.CTk):
         # Build a lookup: sanitized_filename -> (arc_idx, ep_num, canonical,
         # plot, raw_filename) from the full index.
         file_map: dict[str, tuple[int, int, str, str, str]] = {}
-        for arc_idx, arc in enumerate(self.index.get("arcs", [])):
+        for arc in self.index.get("arcs", []):
+            arc_idx = self._arc_index_for_title(arc.get("title", ""))
+            if arc_idx is None:
+                continue
             for ep in arc.get("episodes", []):
                 for src in ep.get("sources", []):
                     fn = src.get("filename")
@@ -3334,10 +3378,20 @@ class App(ctk.CTk):
                                                   "English Subtitles"),
             default_quality=self.config_data.get("default_quality", "1080p"),
             allow_subs=self.config_data.get("allow_sub_fallback", False),
+            saved_nums={ep["num"] for ep in chosen_eps
+                        if self._is_episode_saved(ep, self.selected_arc)},
         )
         self.wait_window(dlg)
         if dlg.confirmed is not True:
             return
+        if dlg.skip_saved and dlg.saved_nums:
+            chosen_eps = [ep for ep in chosen_eps
+                          if ep["num"] not in dlg.saved_nums]
+            self._log(f"Skipping {len(dlg.saved_nums)} episode(s) already "
+                      f"in your library.")
+            if not chosen_eps:
+                self._set_status("Everything you picked is already saved")
+                return
         version_pref = dlg.chosen_version
         quality_pref = dlg.chosen_quality
         allow_subs = dlg.allow_subs
@@ -3350,9 +3404,7 @@ class App(ctk.CTk):
         expected_names: dict[str, str] = {}
         total_size = 0
         skipped: list[str] = []
-        for ep in self.selected_arc["episodes"]:
-            if ep["num"] not in chosen:
-                continue
+        for ep in chosen_eps:
             src = self._best_source_for(ep, src_kind, version_pref,
                                         quality_pref, allow_subs=allow_subs)
             if not src:
@@ -4337,10 +4389,13 @@ class BatchDownloadDialog(ModalOverlay):
 
     def __init__(self, parent, *, source: str, episodes: list[dict],
                  default_version: str, default_quality: str,
-                 allow_subs: bool = False) -> None:
-        super().__init__(parent, "Confirm batch download", width=560, height=540)
+                 allow_subs: bool = False,
+                 saved_nums: set[int] | None = None) -> None:
+        super().__init__(parent, "Confirm batch download", width=560, height=580)
         self.source = source
         self.episodes = episodes
+        self.saved_nums = saved_nums or set()
+        self.skip_saved = bool(self.saved_nums)
         self.confirmed = False
         self.chosen_version = default_version
         self.chosen_quality = default_quality
@@ -4449,6 +4504,17 @@ class BatchDownloadDialog(ModalOverlay):
             fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
             command=self._update_size_preview,
         )
+        n_saved = len(self.saved_nums)
+        self.skip_saved_var = ctk.BooleanVar(value=self.skip_saved)
+        if n_saved:
+            ctk.CTkCheckBox(
+                self.card,
+                text=(f"Skip the {n_saved} episode"
+                      f"{'s' if n_saved != 1 else ''} already in your library"),
+                variable=self.skip_saved_var, font=F_SM, text_color=TEXT,
+                fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+                command=self._update_size_preview,
+            ).pack(fill="x", padx=SP_XL, pady=(SP_SM, 0))
 
         self._update_size_preview()
 
@@ -4459,7 +4525,11 @@ class BatchDownloadDialog(ModalOverlay):
         total_bytes = 0
         skipped = 0
         sub_only = 0
+        skip_saved = self.skip_saved_var.get() if hasattr(
+            self, "skip_saved_var") else False
         for ep in self.episodes:
+            if skip_saved and ep.get("num") in self.saved_nums:
+                continue
             best = App._best_source_for(ep, self.source, ver, qual)
             if best and is_dub(ver) and not is_dub(best.get("version")) \
                     and best.get("version"):
@@ -4491,6 +4561,7 @@ class BatchDownloadDialog(ModalOverlay):
         self.chosen_version = self.version_var.get()
         self.chosen_quality = self.quality_var.get()
         self.allow_subs = self.allow_subs_var.get()
+        self.skip_saved = self.skip_saved_var.get()
         self.confirmed = True
         self.destroy()
 

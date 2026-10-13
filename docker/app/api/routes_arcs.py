@@ -5,6 +5,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from ..core.episode_index import load_episode_index
+from ..core.seasons import season_for_arc
 
 router = APIRouter(prefix="/api/arcs", tags=["arcs"])
 
@@ -40,6 +41,7 @@ def list_arcs():
 
         result.append({
             "title": arc.get("title", ""),
+            "season": season_for_arc(index, arc.get("title", "")),
             "episode_count": len(episodes),
             "sources": sorted(sources),
             "versions": sorted(versions),

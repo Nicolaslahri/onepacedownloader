@@ -1187,3 +1187,16 @@ body::before {
   .ep-size { display: none; }
   .status-bar { padding: 0.45rem 1rem; }
 }
+
+/* Settings: on/off row with a description */
+.settings-toggle {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 12px;
+  cursor: pointer;
+}
+.settings-toggle input { margin-top: 3px; accent-color: var(--orange); }
+.settings-toggle span { display: flex; flex-direction: column; gap: 2px; }
+.settings-toggle strong { font-size: 13px; font-weight: 600; }
+.settings-toggle small { font-size: 12px; color: var(--muted); }

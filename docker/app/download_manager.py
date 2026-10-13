@@ -7,7 +7,7 @@ import asyncio
 import threading
 import uuid
 
-from .config import MEDIA_DIR
+from .config import MEDIA_DIR, load_config
 from .core.downloader import Downloader, DownloadCancelled
 from .core.episode_index import best_source_for
 from .core.log import log
@@ -148,6 +148,7 @@ class DownloadManager:
         job.status = "downloading"
         self._broadcast(job)
         index = job.index
+        organize = load_config().get("organize", True)
         log(f"Download started: {job.arc.get('title','?')} "
             f"({len(job.episodes)} ep, {job.source_kind} {job.quality})")
 
@@ -224,8 +225,8 @@ class DownloadManager:
                     job.warnings.append(
                         f"{name} is no longer on Pixeldrain, skipped")
 
-                # Plex organize (always on in Docker mode)
-                if downloaded_sub.exists():
+                # Plex organize (Settings → "Sort for Plex / Jellyfin")
+                if organize and downloaded_sub.exists():
                     moved = organize_for_plex(
                         downloaded_sub, file_ids, job.arc, index,
                         MEDIA_DIR, log=log,

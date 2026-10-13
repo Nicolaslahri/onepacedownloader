@@ -35,6 +35,7 @@ class DownloadStatus(BaseModel):
 class SettingsPayload(BaseModel):
     version: str | None = None
     quality: str | None = None
+    organize: bool | None = None
     # SABnzbd (Usenet hand-off)
     sabnzbd_url: str | None = None
     sabnzbd_api_key: str | None = None
