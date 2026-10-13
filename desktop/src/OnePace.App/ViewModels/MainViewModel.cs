@@ -298,7 +298,7 @@ public sealed partial class MainViewModel : ObservableObject
                 best = SourceRules.BestSource(ep, Kind, version, quality);
                 if (best != null)
                 {
-                    chip = $"{SourceRules.VersionShort(best.Version, Kind)} {best.Quality}".Trim();
+                    chip = $"{SourceRules.VersionShort(best.Version, Kind)} {QualityLabel(best.Quality)}".Trim();
                     bool dub = Kind == SourceRules.Muhn || SourceRules.IsDub(best.Version);
                     chipKind = dub ? ChipKind.Dub : ChipKind.Sub;
                     detail = SourceRules.Size(best.SizeBytes);
@@ -526,7 +526,8 @@ public sealed partial class MainViewModel : ObservableObject
         foreach (var g in byVersion)
         {
             var options = g.OrderByDescending(s => SourceRules.QualityRank(s.Quality))
-                .Select(s => new QualityOption(ep, s, $"{s.Quality ?? "—"}  ·  {SourceRules.Size(s.SizeBytes)}",
+                .Select(s => new QualityOption(ep, s,
+                                               $"{(QualityLabel(s.Quality) is { Length: > 0 } q ? q : "Download")}  ·  {SourceRules.Size(s.SizeBytes)}",
                                                ReferenceEquals(s, best),
                                                $"Download {SourceRules.VersionLong(g.Key)} {s.Quality}"))
                 .ToList();
@@ -544,7 +545,7 @@ public sealed partial class MainViewModel : ObservableObject
     {
         if (option == null || SelectedArc == null) return;
         var s = option.Source;
-        var title = $"{option.Episode.FullTitle}  ·  {SourceRules.VersionShort(s.Version, s.Kind ?? Kind)} {s.Quality}";
+        var title = $"{option.Episode.FullTitle}  ·  {SourceRules.VersionShort(s.Version, s.Kind ?? Kind)} {QualityLabel(s.Quality)}".TrimEnd();
         await RunDownloadsAsync(new[] { new PlannedEpisode(SelectedArc.Arc, option.Episode, s) }, title);
     }
 
@@ -699,6 +700,9 @@ public sealed partial class MainViewModel : ObservableObject
         d.Slow = _slowNoted;
         Status = $"[{p.FileIndex}/{p.FileCount}]  {SourceRules.Bytes(p.BytesDone)}  ·  {(p.BytesPerSecond > 0 ? SourceRules.Bytes(p.BytesPerSecond) + "/s" : "…")}";
     }
+
+    /// <summary>"1080p", or nothing for labels like Muhn Pace's "varies".</summary>
+    static string QualityLabel(string? quality) => SourceRules.QualityRank(quality) > 0 ? quality! : "";
 
     static string Eta(double seconds)
     {

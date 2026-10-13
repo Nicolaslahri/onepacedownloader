@@ -28,6 +28,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="Margin" Value="2" />
             <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="6,0" />
             <Setter Property="Appearance" Value="Secondary" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsBest}" Value="True">
@@ -120,7 +121,7 @@
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorder}" Margin="3" Padding="14,12">
                                 <StackPanel>
-                                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding Value}"
+                                    <TextBlock FontSize="16" FontWeight="SemiBold" Text="{Binding Value}" TextTrimming="CharacterEllipsis"
                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                     <TextBlock Style="{StaticResource CaptionText}" Text="{Binding Label}" />
                                 </StackPanel>
@@ -401,7 +402,7 @@
                     <!-- browse view -->
                     <Grid Visibility="{Binding SettingsOpen, Converter={StaticResource Collapsed}}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="272" />
+                            <ColumnDefinition x:Name="ArcColumn" Width="272" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
@@ -469,7 +470,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" MinWidth="260" />
+                                <ColumnDefinition Width="*" MinWidth="220" />
                                 <ColumnDefinition x:Name="DetailColumn" Width="380" />
                             </Grid.ColumnDefinitions>
 
@@ -678,7 +679,8 @@
             </Border>
         </Grid>
 
-        <ui:SnackbarPresenter x:Name="SnackbarHost" Grid.Row="1" VerticalAlignment="Bottom" Margin="0,0,0,60" />
+        <ui:SnackbarPresenter x:Name="SnackbarHost" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                              Width="520" Margin="232,0,0,60" />
         <ui:ContentDialogHost x:Name="DialogHost" Grid.Row="0" Grid.RowSpan="2" />
     </Grid>
 </ui:FluentWindow>

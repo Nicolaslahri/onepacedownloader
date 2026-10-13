@@ -54,7 +54,13 @@ public partial class MainWindow : FluentWindow, IUiHost
         Loaded += OnLoaded;
         Closing += OnClosing;
         PreviewKeyDown += OnPreviewKey;
-        SizeChanged += (_, _) => IsCompact = ActualWidth < 1180;
+        SizeChanged += (_, _) =>
+        {
+            IsCompact = ActualWidth < 1180;
+            NavColumn.Width = new GridLength(IsCompact ? 56 : 232);
+            ArcColumn.Width = new GridLength(ActualWidth < 1100 ? 224 : 272);
+            SnackbarHost.Margin = new Thickness(IsCompact ? 56 : 232, 0, 0, 60);
+        };
     }
 
     public bool IsCompact
@@ -114,7 +120,7 @@ public partial class MainWindow : FluentWindow, IUiHost
     {
         // The details pane takes a share of the space so it grows on big
         // windows instead of leaving the episode list mostly empty.
-        double want = Math.Clamp(e.NewSize.Width * 0.38, 340, 520);
+        double want = Math.Clamp(e.NewSize.Width * 0.42, IsCompact ? 300 : 380, 560);
         if (Math.Abs(DetailColumn.Width.Value - want) > 0.5) DetailColumn.Width = new GridLength(want);
     }
 

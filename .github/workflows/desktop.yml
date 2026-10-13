@@ -53,7 +53,7 @@ jobs:
             "muhn-light --theme Light --source muhn --arc `"Enies Lobby`" --ep 13 --ticks 11,12",
             "nyaa-dark --theme Dark --source nyaa --arc Alabasta --ep 1",
             "packs-light --theme Light --source nyaa --arc Wano --extra packs",
-            "usenet-dark --theme Dark --source usenet --arc Alabasta --ep 2",
+            "usenet-dark --theme Dark --source usenet --arc `"Water Seven`" --ep 2 --ticks 1,2 --extra usenet",
             "downloading-dark --theme Dark --arc Alabasta --ep 3 --ticks 1,2,3 --extra dl",
             "batch-light --theme Light --arc Alabasta --ticks 1,2,3,4 --extra batch,saved",
             "batch-dark --theme Dark --arc Wano --ticks 1,2,3 --extra batch",
