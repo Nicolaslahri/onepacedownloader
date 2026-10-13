@@ -10,13 +10,16 @@ public static class IndexStore
     public const string RemoteIndexUrl =
         "https://raw.githubusercontent.com/Nicolaslahri/onepacedownloader/data/episode_index.json";
 
-    /// <summary>The cached copy next to the .exe, else the one built into the app.</summary>
+    /// <summary>The cached copy next to the .exe or the one built into the
+    /// app, whichever is newer: an upgraded .exe can ship a newer catalog
+    /// than the one an older version cached.</summary>
     public static EpisodeIndex Load(Func<Stream?> bundled)
     {
+        EpisodeIndex? cached = null, builtIn = null;
         try
         {
             if (File.Exists(AppPaths.IndexFile))
-                return EpisodeIndex.Parse(File.ReadAllBytes(AppPaths.IndexFile));
+                cached = EpisodeIndex.Parse(File.ReadAllBytes(AppPaths.IndexFile));
         }
         catch (Exception) { /* damaged cache: fall back to the bundled copy */ }
         try
@@ -26,11 +29,14 @@ public static class IndexStore
             {
                 using var ms = new MemoryStream();
                 s.CopyTo(ms);
-                return EpisodeIndex.Parse(ms.ToArray());
+                builtIn = EpisodeIndex.Parse(ms.ToArray());
             }
         }
         catch (Exception) { }
-        return new EpisodeIndex();
+        if (cached is { Arcs.Count: > 0 } && (builtIn == null
+                || string.CompareOrdinal(cached.ScrapedAt ?? "", builtIn.ScrapedAt ?? "") >= 0))
+            return cached;
+        return builtIn ?? cached ?? new EpisodeIndex();
     }
 
     /// <summary>Cheap HEAD request: has the published catalog changed since

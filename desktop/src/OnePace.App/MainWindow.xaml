@@ -1,0 +1,684 @@
+<ui:FluentWindow
+    x:Class="OnePace.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:local="clr-namespace:OnePace.App"
+    xmlns:vm="clr-namespace:OnePace.App.ViewModels"
+    x:Name="Root"
+    Title="One Pace Downloader"
+    Width="1320" Height="840" MinWidth="980" MinHeight="600"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    FontFamily="Segoe UI Variable Text, Segoe UI"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Icon="pack://application:,,,/Assets/icon.ico">
+
+    <ui:FluentWindow.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding RefreshCommand}" />
+        <KeyBinding Key="L" Modifiers="Control" Command="{Binding ToggleLogCommand}" />
+    </ui:FluentWindow.InputBindings>
+
+    <ui:FluentWindow.Resources>
+
+        <Style x:Key="OptionButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Appearance" Value="Secondary" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsBest}" Value="True">
+                    <Setter Property="Appearance" Value="Primary" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ===================== details pane states ===================== -->
+
+        <DataTemplate DataType="{x:Type vm:WelcomeDetail}">
+            <StackPanel Margin="20,4,20,20">
+                <TextBlock Style="{StaticResource SubtitleText}" Text="Set sail through One Piece, the fast way." />
+                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,8,0,0" Text="{Binding Blurb}" />
+                <ItemsControl Margin="-3,20,-3,0" ItemsSource="{Binding Stats}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><UniformGrid Rows="1" /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardBorder}" Margin="3" Padding="14,12">
+                                <StackPanel>
+                                    <TextBlock x:Name="Value" Style="{StaticResource StatValue}" Text="{Binding Value}" />
+                                    <TextBlock Style="{StaticResource CaptionText}" Text="{Binding Label}" />
+                                </StackPanel>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Highlight}" Value="True">
+                                    <Setter TargetName="Value" Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Style="{StaticResource EyebrowText}" Margin="0,24,0,8" Text="How it works" />
+                <Border Style="{StaticResource CardBorder}" Padding="16,10">
+                    <ItemsControl ItemsSource="{Binding Steps}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,6">
+                                    <Border Width="24" Height="24" CornerRadius="12" VerticalAlignment="Top"
+                                            Background="{DynamicResource AccentFillColorDefaultBrush}">
+                                        <TextBlock Text="{Binding Value}" FontSize="12" FontWeight="SemiBold"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                                    </Border>
+                                    <TextBlock Style="{StaticResource BodyText}" Margin="12,2,0,0" TextWrapping="Wrap" Text="{Binding Label}" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <TextBlock Style="{StaticResource EyebrowText}" Margin="0,24,0,8" Text="Community" />
+                <WrapPanel>
+                    <Button Style="{StaticResource BrandButton}" Background="#5865F2" Content="Discord"
+                            Command="{Binding DataContext.OpenUrlCommand, ElementName=Root}" CommandParameter="https://discord.gg/KHn6AbevZ2" />
+                    <Button Style="{StaticResource BrandButton}" Background="#FF4500" Content="Reddit"
+                            Command="{Binding DataContext.OpenUrlCommand, ElementName=Root}" CommandParameter="https://www.reddit.com/user/nicolasenjah/" />
+                    <Button Style="{StaticResource BrandButton}" Background="#33383F" Content="GitHub"
+                            Command="{Binding DataContext.OpenUrlCommand, ElementName=Root}" CommandParameter="https://github.com/Nicolaslahri/onepacedownloader" />
+                </WrapPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ArcDetail}">
+            <StackPanel Margin="20,4,20,20">
+                <TextBlock Style="{StaticResource TitleText}" TextWrapping="Wrap" TextTrimming="None" Text="{Binding Title}" />
+                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,4,0,0" Text="{Binding Summary}" />
+
+                <Border Style="{StaticResource CardBorder}" Margin="0,20,0,0"
+                        Visibility="{Binding ShowLibrary, Converter={StaticResource Visible}}">
+                    <StackPanel>
+                        <DockPanel>
+                            <TextBlock x:Name="Count" DockPanel.Dock="Right" Style="{StaticResource BodyStrongText}"
+                                       Foreground="{DynamicResource SystemFillColorCautionBrush}" Text="{Binding LibraryText}" />
+                            <TextBlock Style="{StaticResource BodyStrongText}" Text="In your library" />
+                        </DockPanel>
+                        <ProgressBar x:Name="Bar" Margin="0,12,0,0" Minimum="0" Maximum="1" Value="{Binding LibraryFraction}" />
+                    </StackPanel>
+                </Border>
+
+                <ItemsControl Margin="-3,8,-3,0" ItemsSource="{Binding Facts}"
+                              Visibility="{Binding HasFacts, Converter={StaticResource Visible}}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><UniformGrid Rows="1" /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardBorder}" Margin="3" Padding="14,12">
+                                <StackPanel>
+                                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding Value}"
+                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    <TextBlock Style="{StaticResource CaptionText}" Text="{Binding Label}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,16,0,0" Text="{Binding Tip}" />
+            </StackPanel>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding LibraryComplete}" Value="True">
+                    <Setter TargetName="Count" Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                    <Setter TargetName="Bar" Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:EpisodeDetail}">
+            <StackPanel Margin="20,4,20,20">
+                <TextBlock Style="{StaticResource SubtitleText}" Text="{Binding Title}" />
+                <WrapPanel Margin="0,10,0,0" Visibility="{Binding HasTags, Converter={StaticResource Visible}}">
+                    <local:Chip Kind="Ok" Text="✓ In your library" Margin="0,0,6,4"
+                                Visibility="{Binding IsSaved, Converter={StaticResource Visible}}" />
+                    <local:Chip Kind="Dub" Text="Dub available" Margin="0,0,6,4"
+                                Visibility="{Binding DubAvailable, Converter={StaticResource Visible}}" />
+                    <local:Chip Kind="Sub" Text="Sub available" Margin="0,0,6,4"
+                                Visibility="{Binding SubAvailable, Converter={StaticResource Visible}}" />
+                </WrapPanel>
+                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,12,0,0" Text="{Binding Plot}"
+                           Visibility="{Binding Plot, Converter={StaticResource VisibleIfSet}}" />
+
+                <TextBlock Style="{StaticResource BodyStrongText}" Margin="0,20,0,8" Text="{Binding Heading}"
+                           Visibility="{Binding Empty, Converter={StaticResource CollapsedIfSet}}" />
+
+                <!-- One Pace / Muhn Pace: a card per version, a button per quality. -->
+                <ItemsControl ItemsSource="{Binding Versions}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardBorder}" Margin="0,0,0,8" Padding="14,12">
+                                <StackPanel>
+                                    <DockPanel Margin="2,0,2,8">
+                                        <local:Chip DockPanel.Dock="Right" Kind="{Binding ChipKind}" Text="{Binding Chip}" />
+                                        <TextBlock Style="{StaticResource BodyStrongText}" Text="{Binding Title}" VerticalAlignment="Center" />
+                                    </DockPanel>
+                                    <ItemsControl ItemsSource="{Binding Options}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate><UniformGrid Columns="2" /></ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <ui:Button Style="{StaticResource OptionButton}" Content="{Binding Text}" ToolTip="{Binding ToolTip}"
+                                                           Command="{Binding DataContext.DownloadOptionCommand, ElementName=Root}"
+                                                           CommandParameter="{Binding}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Nyaa torrents -->
+                <Border Style="{StaticResource CardBorder}" Padding="0" Visibility="{Binding HasTorrents, Converter={StaticResource Visible}}">
+                    <ItemsControl ItemsSource="{Binding Torrents}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" Padding="14,10">
+                                    <DockPanel>
+                                        <ui:Button DockPanel.Dock="Right" Appearance="Primary" Content="Magnet" VerticalAlignment="Center"
+                                                   ToolTip="Open this torrent in your torrent app"
+                                                   Command="{Binding DataContext.OpenTorrentCommand, ElementName=Root}" CommandParameter="{Binding}">
+                                            <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.Open24}" /></ui:Button.Icon>
+                                        </ui:Button>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <local:Chip Text="{Binding Quality}" />
+                                                <local:Chip Kind="Ok" Text="Official" Margin="6,0,0,0"
+                                                            ToolTip="Uploaded by Galaxy9000, the official One Pace Nyaa account."
+                                                            Visibility="{Binding IsOfficial, Converter={StaticResource Visible}}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                <TextBlock Style="{StaticResource CaptionText}" Text="{Binding Size}" />
+                                                <TextBlock Style="{StaticResource CaptionText}" Margin="10,0,0,0" Text="{Binding Seeders}"
+                                                           Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <!-- Usenet releases -->
+                <Border Style="{StaticResource CardBorder}" Padding="0" Visibility="{Binding HasNzbs, Converter={StaticResource Visible}}">
+                    <ItemsControl ItemsSource="{Binding Nzbs}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" Padding="14,10">
+                                    <DockPanel>
+                                        <ui:Button DockPanel.Dock="Right" Appearance="Primary" Content="NZB" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                   Command="{Binding DataContext.GetNzbCommand, ElementName=Root}" CommandParameter="{Binding}">
+                                            <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.ArrowDownload24}" /></ui:Button.Icon>
+                                        </ui:Button>
+                                        <TextBlock DockPanel.Dock="Right" Style="{StaticResource CaptionText}" VerticalAlignment="Center" Text="{Binding Size}" />
+                                        <local:Chip DockPanel.Dock="Left" Text="{Binding Quality}" />
+                                        <TextBlock Style="{StaticResource BodyText}" Margin="8,0" VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis" Text="{Binding Release}" ToolTip="{Binding Source.ReleaseTitle}" />
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" Margin="2,4,0,0" Visibility="{Binding ShowMirror, Converter={StaticResource Visible}}">
+                    <TextBlock Style="{StaticResource CaptionText}" VerticalAlignment="Center" Text="Pixeldrain down?" />
+                    <Button Style="{StaticResource LinkButton}" Content="Google Drive mirror ↗"
+                            Command="{Binding DataContext.OpenUrlCommand, ElementName=Root}"
+                            CommandParameter="https://drive.google.com/drive/folders/1OiT81U_kJulO9ptcBJA0wdZTSQAq83Sl" />
+                </StackPanel>
+
+                <Border Style="{StaticResource CardBorder}" Visibility="{Binding Empty, Converter={StaticResource VisibleIfSet}}">
+                    <TextBlock Style="{StaticResource SecondaryText}" Text="{Binding Empty}" />
+                </Border>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:DownloadDetail}">
+            <StackPanel Margin="16,4,16,16">
+                <Border Style="{StaticResource CardBorder}" Padding="18">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource BodyStrongText}" FontSize="16" TextWrapping="Wrap" Text="{Binding Title}" />
+                        <DockPanel Margin="0,12,0,6">
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource CaptionText}" FontSize="13"
+                                       VerticalAlignment="Bottom" Margin="0,0,0,8" Text="{Binding Speed}" />
+                            <TextBlock FontSize="40" FontWeight="SemiBold" Text="{Binding Percent}"
+                                       Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                        </DockPanel>
+                        <ProgressBar Minimum="0" Maximum="1" Value="{Binding Fraction}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Margin="0,10,0,0" TextWrapping="Wrap" FontStyle="Italic"
+                                   Visibility="{Binding Slow, Converter={StaticResource Visible}}"
+                                   Text="Pixeldrain's free servers slow down in waves. The download keeps going and switches to a faster mirror when it can." />
+                        <DockPanel Margin="0,10,0,0">
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource CaptionText}" Text="{Binding Files}" />
+                            <TextBlock Style="{StaticResource BodyText}" Text="{Binding Bytes}" />
+                        </DockPanel>
+                        <ui:Button Margin="0,16,0,0" HorizontalAlignment="Stretch" Appearance="Danger"
+                                   Command="{Binding DataContext.CancelDownloadCommand, ElementName=Root}"
+                                   IsEnabled="{Binding Cancelling, Converter={StaticResource Not}}">
+                            <ui:Button.Style>
+                                <Style TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+                                    <Setter Property="Content" Value="Cancel download" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Cancelling}" Value="True">
+                                            <Setter Property="Content" Value="Cancelling…" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:Button.Style>
+                        </ui:Button>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource CardBorder}" Margin="0,8,0,0">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource EyebrowText}" Text="Saving to" />
+                        <TextBlock Style="{StaticResource BodyText}" Margin="0,4,0,10" TextWrapping="Wrap"
+                                   FontFamily="Cascadia Mono, Consolas" FontSize="13" Text="{Binding Folder}" />
+                        <ui:Button Content="Open folder" Command="{Binding DataContext.OpenFolderCommand, ElementName=Root}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.FolderOpen24}" /></ui:Button.Icon>
+                        </ui:Button>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </DataTemplate>
+    </ui:FluentWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="One Pace Downloader">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/icon.png" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="NavColumn" Width="232" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ======================= navigation pane ======================= -->
+            <DockPanel Grid.Column="0" Margin="0,0,0,8">
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource EyebrowText}" Margin="20,8,0,6" Text="Sources"
+                           Visibility="{Binding IsCompact, ElementName=Root, Converter={StaticResource Collapsed}}" />
+
+                <StackPanel DockPanel.Dock="Bottom">
+                    <Button Style="{StaticResource NavButton}" Command="{Binding OpenAppUpdateCommand}"
+                            Visibility="{Binding AppUpdateVersion, Converter={StaticResource VisibleIfSet}}"
+                            ToolTip="A newer version is out. Opens the download page.">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.ArrowCircleUp24}" FontSize="18" Filled="True"
+                                           Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock Margin="14,0,0,0" FontWeight="SemiBold" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                       Text="{Binding AppUpdateVersion, StringFormat=Get version {0}}"
+                                       Visibility="{Binding IsCompact, ElementName=Root, Converter={StaticResource Collapsed}}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource NavButton}" Command="{Binding OpenDnsCommand}"
+                            ToolTip="Get around ISPs that block the download servers">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.GlobeShield24}" FontSize="18" />
+                            <TextBlock Margin="14,0,0,0" VerticalAlignment="Center" Text="DNS switcher"
+                                       Visibility="{Binding IsCompact, ElementName=Root, Converter={StaticResource Collapsed}}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource NavButton}" Command="{Binding RefreshCommand}"
+                            ToolTip="Check for new episodes (F5)">
+                        <DockPanel>
+                            <Ellipse DockPanel.Dock="Right" Width="8" Height="8" Fill="{DynamicResource AccentFillColorDefaultBrush}"
+                                     Visibility="{Binding IndexUpdateAvailable, Converter={StaticResource Visible}}" />
+                            <Grid Width="18" Height="18">
+                                <ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.ArrowSync24}" FontSize="18"
+                                               Visibility="{Binding Refreshing, Converter={StaticResource Collapsed}}" />
+                                <ui:ProgressRing Width="16" Height="16" IsIndeterminate="True"
+                                                 Visibility="{Binding Refreshing, Converter={StaticResource Visible}}" />
+                            </Grid>
+                            <TextBlock Margin="14,0,0,0" VerticalAlignment="Center" Text="{Binding RefreshLabel}"
+                                       Visibility="{Binding IsCompact, ElementName=Root, Converter={StaticResource Collapsed}}" />
+                        </DockPanel>
+                    </Button>
+                    <Button Style="{StaticResource NavButton}" Command="{Binding OpenSettingsCommand}"
+                            Tag="{Binding SettingsOpen, Converter={StaticResource SelectedTag}}">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.Settings24}" FontSize="18" />
+                            <TextBlock Margin="14,0,0,0" VerticalAlignment="Center" Text="Settings"
+                                       Visibility="{Binding IsCompact, ElementName=Root, Converter={StaticResource Collapsed}}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <ListBox x:Name="SourceList" Style="{StaticResource NavList}" ItemsSource="{Binding Sources}"
+                         SelectionChanged="OnSourceSelected" PreviewMouseLeftButtonUp="OnSourceClicked"
+                         AutomationProperties.Name="Sources">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel ToolTip="{Binding Label}">
+                                <TextBlock DockPanel.Dock="Right" Style="{StaticResource TertiaryCaption}" VerticalAlignment="Center"
+                                           Text="{Binding Count}"
+                                           Visibility="{Binding IsCompact, ElementName=Root, Converter={StaticResource Collapsed}}" />
+                                <ui:SymbolIcon Symbol="{Binding Icon}" FontSize="18" />
+                                <TextBlock Margin="14,0,0,0" VerticalAlignment="Center" Text="{Binding Label}"
+                                           Visibility="{Binding IsCompact, ElementName=Root, Converter={StaticResource Collapsed}}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+
+            <!-- ==================== content layer ==================== -->
+            <Border Grid.Column="1" CornerRadius="8,0,0,0" BorderThickness="1,1,0,0"
+                    Background="{DynamicResource LayerFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- browse view -->
+                    <Grid Visibility="{Binding SettingsOpen, Converter={StaticResource Collapsed}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="272" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- arcs -->
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20,20,20,0">
+                                <TextBlock Style="{StaticResource SubtitleText}" Text="Arcs" />
+                                <TextBlock Style="{StaticResource TertiaryCaption}" Margin="8,0,0,3" VerticalAlignment="Bottom" Text="{Binding ArcCount}" />
+                            </StackPanel>
+                            <TextBlock Grid.Row="1" Style="{StaticResource CaptionText}" Margin="20,4,20,12" TextWrapping="Wrap" Text="{Binding SourceBlurb}" />
+                            <ui:TextBox x:Name="SearchBox" Grid.Row="2" Margin="16,0,16,8" PlaceholderText="Search arcs  (Ctrl+F)"
+                                        ClearButtonEnabled="True" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                        AutomationProperties.Name="Search arcs">
+                                <ui:TextBox.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.Search24}" /></ui:TextBox.Icon>
+                            </ui:TextBox>
+                            <ListBox x:Name="ArcList" Grid.Row="3" Style="{StaticResource NavList}" Margin="4,0,4,8"
+                                     ItemsSource="{Binding ArcsView}" SelectedItem="{Binding SelectedArc}"
+                                     AutomationProperties.Name="Arcs">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ToolTip="{Binding Title}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="24" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{StaticResource TertiaryCaption}" VerticalAlignment="Center" Text="{Binding Number}" />
+                                            <TextBlock x:Name="ArcTitle" Grid.Column="1" Style="{StaticResource BodyText}" VerticalAlignment="Center"
+                                                       TextTrimming="CharacterEllipsis" Text="{Binding Title}" />
+                                            <TextBlock x:Name="Meta" Grid.Column="2" Style="{StaticResource TertiaryCaption}" Margin="8,0,0,0"
+                                                       VerticalAlignment="Center" Text="{Binding Meta}" />
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                <Setter TargetName="ArcTitle" Property="FontWeight" Value="SemiBold" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Tone}" Value="Partial">
+                                                <Setter TargetName="Meta" Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Tone}" Value="Complete">
+                                                <Setter TargetName="Meta" Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <TextBlock Grid.Row="3" Style="{StaticResource SecondaryText}" Margin="24,12" TextAlignment="Center"
+                                       Text="{Binding NoArcsText}" Visibility="{Binding NoArcsText, Converter={StaticResource VisibleIfSet}}" />
+                        </Grid>
+
+                        <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource DividerStrokeColorDefaultBrush}" />
+
+                        <!-- episodes + details -->
+                        <Grid x:Name="MainArea" Grid.Column="2" SizeChanged="OnMainAreaSizeChanged">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" MinWidth="260" />
+                                <ColumnDefinition x:Name="DetailColumn" Width="380" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="28,18,28,0">
+                                <TextBlock Style="{StaticResource TitleText}" Text="{Binding EpisodesTitle}" />
+                                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,2,0,0" TextTrimming="CharacterEllipsis"
+                                           TextWrapping="NoWrap" Text="{Binding EpisodesSubtitle}" />
+                            </StackPanel>
+
+                            <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="28,14,28,12" LastChildFill="False">
+                                <ui:Button DockPanel.Dock="Left" Content="{Binding SelectAllText}" Command="{Binding ToggleSelectAllCommand}"
+                                           Visibility="{Binding HasEpisodes, Converter={StaticResource Visible}}" ToolTip="Ctrl+A">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.SelectAllOn24}" /></ui:Button.Icon>
+                                </ui:Button>
+                                <Border DockPanel.Dock="Left" Margin="12,0,0,0" CornerRadius="4" Padding="2"
+                                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1"
+                                        Visibility="{Binding IsNyaa, Converter={StaticResource Visible}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton GroupName="NyaaView" Content="Individual" MinWidth="96" Padding="12,4"
+                                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                                     IsChecked="{Binding ShowPacks, Converter={StaticResource Not}}" />
+                                        <RadioButton GroupName="NyaaView" Content="Packs" MinWidth="96" Padding="12,4" Margin="2,0,0,0"
+                                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                                     IsChecked="{Binding ShowPacks}" />
+                                    </StackPanel>
+                                </Border>
+                                <ui:Button DockPanel.Dock="Right" Appearance="Primary" Content="{Binding DownloadText}"
+                                           Command="{Binding DownloadSelectedCommand}" IsEnabled="{Binding HasChecked}"
+                                           Visibility="{Binding HasEpisodes, Converter={StaticResource Visible}}">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.ArrowDownload24}" /></ui:Button.Icon>
+                                </ui:Button>
+                                <TextBlock DockPanel.Dock="Right" Style="{StaticResource SecondaryText}" Margin="0,0,12,0"
+                                           VerticalAlignment="Center" Text="{Binding SelectionText}" />
+                            </DockPanel>
+
+                            <!-- episodes card -->
+                            <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource CardBorder}" Padding="0,4" Margin="28,0,6,16">
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Top" Margin="10,6,10,6" Padding="12,10" CornerRadius="6"
+                                            Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                                            Visibility="{Binding Coverage, Converter={StaticResource VisibleIfSet}}">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="8" Height="8" VerticalAlignment="Center">
+                                                    <Ellipse.Style>
+                                                        <Style TargetType="Ellipse">
+                                                            <Setter Property="Fill" Value="{DynamicResource SystemFillColorCautionBrush}" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Coverage.Good}" Value="True">
+                                                                    <Setter Property="Fill" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Ellipse.Style>
+                                                </Ellipse>
+                                                <TextBlock Style="{StaticResource BodyStrongText}" Margin="8,0,0,0" Text="{Binding Coverage.Heading}" />
+                                            </StackPanel>
+                                            <TextBlock Style="{StaticResource SecondaryText}" Margin="16,2,0,0" Text="{Binding Coverage.Body}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Grid>
+                                        <ListBox x:Name="EpisodeList" Style="{StaticResource NavList}" ItemsSource="{Binding Episodes}"
+                                                 SelectedItem="{Binding SelectedEpisode}" MouseDoubleClick="OnEpisodeDoubleClick"
+                                                 Visibility="{Binding ShowPacks, Converter={StaticResource Collapsed}}"
+                                                 AutomationProperties.Name="Episodes">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem" BasedOn="{StaticResource NavListItem}">
+                                                    <Setter Property="Padding" Value="8,0,10,0" />
+                                                    <Setter Property="MinHeight" Value="40" />
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid ToolTip="{Binding FullTitle}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="30" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <CheckBox IsChecked="{Binding IsChecked}" MinWidth="0" Padding="0" Margin="0,0,8,0"
+                                                                  VerticalAlignment="Center" Focusable="False"
+                                                                  PreviewMouseLeftButtonDown="OnEpisodeCheckClick"
+                                                                  AutomationProperties.Name="{Binding Title}" />
+                                                        <TextBlock Grid.Column="1" Style="{StaticResource TertiaryCaption}" FontSize="13"
+                                                                   VerticalAlignment="Center" Text="{Binding NumText}" />
+                                                        <TextBlock x:Name="EpTitle" Grid.Column="2" Style="{StaticResource BodyText}" VerticalAlignment="Center"
+                                                                   TextTrimming="CharacterEllipsis" Text="{Binding Title}" />
+                                                        <local:Chip Grid.Column="3" Kind="Dub" Text="Dub" Margin="8,0,0,0"
+                                                                    ToolTip="An English dub is available for this episode"
+                                                                    Visibility="{Binding AlsoDub, Converter={StaticResource Visible}}" />
+                                                        <local:Chip Grid.Column="4" Kind="{Binding ChipKind}" Text="{Binding ChipText}" Margin="6,0,0,0" />
+                                                        <TextBlock Grid.Column="5" Style="{StaticResource TertiaryCaption}" MinWidth="64" TextAlignment="Right"
+                                                                   Margin="8,0,0,0" VerticalAlignment="Center" Text="{Binding Detail}" />
+                                                        <local:Chip Grid.Column="6" Kind="Ok" Text="✓ Saved" Margin="8,0,0,0"
+                                                                    Visibility="{Binding IsSaved, Converter={StaticResource Visible}}" />
+                                                    </Grid>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                            <Setter TargetName="EpTitle" Property="FontWeight" Value="SemiBold" />
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                                      Visibility="{Binding ShowPacks, Converter={StaticResource Visible}}">
+                                            <ItemsControl ItemsSource="{Binding Packs}" Margin="10,4">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Margin="0,0,0,8" Padding="14,12" CornerRadius="6"
+                                                                Background="{DynamicResource SubtleFillColorSecondaryBrush}">
+                                                            <StackPanel>
+                                                                <TextBlock Style="{StaticResource BodyText}" TextWrapping="Wrap" Text="{Binding Title}" />
+                                                                <DockPanel Margin="0,10,0,0">
+                                                                    <ui:Button DockPanel.Dock="Right" Appearance="Primary" Content="Open magnet"
+                                                                               Command="{Binding DataContext.OpenTorrentCommand, ElementName=Root}" CommandParameter="{Binding}">
+                                                                        <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.Open24}" /></ui:Button.Icon>
+                                                                    </ui:Button>
+                                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                        <local:Chip Kind="Ok" Text="✓ Official" Margin="0,0,8,0"
+                                                                                    ToolTip="Uploaded by Galaxy9000, the official One Pace Nyaa account."
+                                                                                    Visibility="{Binding IsOfficial, Converter={StaticResource Visible}}" />
+                                                                        <TextBlock Style="{StaticResource BodyStrongText}" FontSize="12" Text="{Binding Size}" VerticalAlignment="Center" />
+                                                                        <TextBlock Style="{StaticResource CaptionText}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                                                                   Foreground="{DynamicResource SystemFillColorSuccessBrush}" Text="{Binding Seeders}" />
+                                                                    </StackPanel>
+                                                                </DockPanel>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="320" Margin="24"
+                                                    Visibility="{Binding ShowEmpty, Converter={StaticResource Visible}}">
+                                            <ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.MoviesAndTv24}" FontSize="44"
+                                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                            <TextBlock Style="{StaticResource BodyStrongText}" FontSize="16" Margin="0,12,0,4"
+                                                       HorizontalAlignment="Center" Text="{Binding EmptyTitle}" />
+                                            <TextBlock Style="{StaticResource SecondaryText}" TextAlignment="Center" Text="{Binding EmptyBody}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </DockPanel>
+                            </Border>
+
+                            <!-- details card -->
+                            <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource CardBorder}" Padding="0" Margin="6,0,28,16">
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Top" Margin="20,16,20,8" FontSize="12" FontWeight="SemiBold"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Text="{Binding DetailHeader}" />
+                                    <ScrollViewer x:Name="DetailScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                        <ContentControl Content="{Binding Detail}" Focusable="False" />
+                                    </ScrollViewer>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+
+                    <!-- settings page -->
+                    <local:SettingsPage Grid.Row="0" DataContext="{Binding SettingsPage}"
+                                        Visibility="{Binding DataContext.SettingsOpen, ElementName=Root, Converter={StaticResource Visible}}" />
+
+                    <!-- log -->
+                    <Border Grid.Row="1" Height="170" Padding="16,0,16,12" Visibility="{Binding LogVisible, Converter={StaticResource Visible}}">
+                        <ui:TextBox x:Name="LogBox" IsReadOnly="True" Text="{Binding LogText, Mode=OneWay}" TextWrapping="NoWrap"
+                                    FontFamily="Cascadia Mono, Consolas" FontSize="12" VerticalContentAlignment="Top"
+                                    VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                    ClearButtonEnabled="False" TextChanged="OnLogChanged" />
+                    </Border>
+
+                    <!-- status bar -->
+                    <Border Grid.Row="2" Height="52" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource DividerStrokeColorDefaultBrush}">
+                        <DockPanel Margin="12,0,16,0">
+                            <ui:Button DockPanel.Dock="Left" Appearance="Transparent" Command="{Binding PickFolderCommand}" MaxWidth="420"
+                                       ToolTip="Where downloads are saved. Click to change.">
+                                <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.Folder24}" /></ui:Button.Icon>
+                                <TextBlock Text="{Binding SaveFolder}" TextTrimming="CharacterEllipsis" />
+                            </ui:Button>
+                            <Button DockPanel.Dock="Left" Style="{StaticResource LinkButton}" Content="Open" Command="{Binding OpenFolderCommand}" />
+
+                            <ui:Button DockPanel.Dock="Right" Appearance="Transparent" Content="Log" Command="{Binding ToggleLogCommand}" ToolTip="Ctrl+L">
+                                <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.TextBulletListSquare24}" /></ui:Button.Icon>
+                            </ui:Button>
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="0,0,8,0"
+                                        Visibility="{Binding IsDownloading, Converter={StaticResource Visible}}">
+                                <ProgressBar Width="140" VerticalAlignment="Center" Minimum="0" Maximum="1" Value="{Binding Download.Fraction, Mode=OneWay}" />
+                                <ui:Button Margin="10,0,0,0" Appearance="Transparent" Content="Progress" Command="{Binding ShowDownloadCommand}"
+                                           ToolTip="Show the download" />
+                                <ui:Button Margin="4,0,0,0" Content="Cancel" Command="{Binding CancelDownloadCommand}">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="{x:Static ui:SymbolRegular.Dismiss24}" /></ui:Button.Icon>
+                                </ui:Button>
+                            </StackPanel>
+                            <TextBlock Style="{StaticResource CaptionText}" FontSize="13" Margin="16,0,8,0" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" Text="{Binding Status}" />
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <ui:SnackbarPresenter x:Name="SnackbarHost" Grid.Row="1" VerticalAlignment="Bottom" Margin="0,0,0,60" />
+        <ui:ContentDialogHost x:Name="DialogHost" Grid.Row="0" Grid.RowSpan="2" />
+    </Grid>
+</ui:FluentWindow>

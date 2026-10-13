@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>OnePaceDownloader</AssemblyName>
+    <RootNamespace>OnePace.App</RootNamespace>
+    <ApplicationIcon>..\..\..\assets\icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Product>One Pace Downloader</Product>
+    <AssemblyTitle>One Pace Downloader</AssemblyTitle>
+    <Copyright>MIT licensed</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WPF-UI" Version="4.2.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnePace.Core\OnePace.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\_source\episode_index.json" LogicalName="episode_index.json" />
+    <Resource Include="..\..\..\assets\icon.png" Link="Assets\icon.png" />
+    <Resource Include="..\..\..\assets\icon.ico" Link="Assets\icon.ico" />
+  </ItemGroup>
+
+</Project>
