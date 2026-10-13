@@ -16,6 +16,7 @@
     <local:BoolToVisibility x:Key="Collapsed" Invert="True" />
     <local:InverseBool x:Key="Not" />
     <local:SelectedTag x:Key="SelectedTag" />
+    <local:AtMostTwo x:Key="AtMostTwo" />
     <local:NullToVisibility x:Key="VisibleIfSet" />
     <local:NullToVisibility x:Key="CollapsedIfSet" Invert="True" />
 

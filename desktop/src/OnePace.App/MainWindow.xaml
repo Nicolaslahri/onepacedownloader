@@ -169,7 +169,7 @@
                                     </DockPanel>
                                     <ItemsControl ItemsSource="{Binding Options}">
                                         <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate><UniformGrid Columns="2" /></ItemsPanelTemplate>
+                                            <ItemsPanelTemplate><UniformGrid Columns="{Binding Options.Count, Converter={StaticResource AtMostTwo}}" /></ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>

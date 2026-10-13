@@ -33,7 +33,7 @@
 Downloading arcs from onepace.net by hand is a pain — every arc is split across separate links with a daily limit that turns long arcs like Wano into a multi-day project. This grabs them in one go.
 
 > Double-click the `.exe` and you're in. Nothing to install.
-> Source is in [`_source/`](_source/onepace_downloader.py) under MIT if you'd rather read or run it yourself.
+> It's a native Windows 11 app (C# / WPF with the Fluent look), so it opens instantly and stays snappy even on long arcs like Wano. Source is in [`desktop/`](desktop/) under MIT.
 
 ---
 
@@ -52,6 +52,8 @@ Downloading arcs from onepace.net by hand is a pain — every arc is split acros
 - **Resume downloads** &mdash; close mid-download, next launch picks up where it stopped
 - **Saved tracking** &mdash; green **Saved** chips per episode, per-arc progress counts (`12/35`)
 - **Built-in DNS fix** &mdash; one-click Cloudflare/Google DNS switcher for ISPs that block the CDN
+- **Mirror fallback + CRC check** &mdash; if Pixeldrain stalls it switches to the mirror, and every file is checked against its CRC32 when it finishes
+- **Checked every week** &mdash; an automatic job walks all 36 arcs and makes sure every episode file is still downloadable
 
 ---
 
@@ -63,7 +65,7 @@ Downloading arcs from onepace.net by hand is a pain — every arc is split acros
 
 **1.** Open the `.exe`
 **2.** Pick a save folder (or keep the default)
-**3.** Click an arc &rarr; tick episodes &rarr; **Download selected**
+**3.** Click an arc &rarr; tick episodes &rarr; **Download**
 **4.** Confirm version (Sub / Dub / Dub-CC) and quality (1080p / 720p / 480p)
 
 </td>
@@ -121,7 +123,7 @@ Full setup (Docker Compose, Portainer instructions, environment variables, volum
 
 ## Plex / Jellyfin Setup
 
-Open **Settings &rarr; Output organization** and tick **Organize for Plex / Jellyfin**.
+Open **Settings &rarr; Library** and turn on **Organize for Plex / Jellyfin**.
 
 Every download is automatically renamed and sorted:
 
@@ -157,12 +159,11 @@ Skip this if you don't use Usenet &mdash; Pixeldrain (One Pace) and Nyaa (torren
 
 ### In the app
 
-1. **Settings** &rarr; scroll to the **Usenet** card
-2. Paste `https://api.nzbgeek.info` into *Indexer URL* (it's the default)
-3. Paste your NZBGeek API key (*[find it here](https://nzbgeek.info/dashboard.php?myaccount)*)
-4. **Save & close**
+1. **Settings** &rarr; **Network** &rarr; open the **Usenet** card
+2. Keep `https://api.nzbgeek.info` as the *Indexer URL* (it's the default)
+3. Paste your NZBGeek API key (*[find it here](https://nzbgeek.info/dashboard.php?myaccount)*) and hit **Test**
 
-Then switch the source dropdown to **Usenet**, pick an arc, tick episodes, and hit **Download selected**.
+Changes save on their own. Then pick **Usenet** in the sidebar, choose an arc, tick episodes, and hit **Get**.
 
 ### Good to know
 
@@ -185,7 +186,7 @@ Some ISPs block the CDN &mdash; the app opens but downloads never begin.
 
 **Manual:** Settings &rarr; Network & Internet &rarr; your connection &rarr; DNS server assignment &rarr; **Edit** &rarr; Manual &rarr; IPv4 on &rarr; Preferred `1.1.1.1`, Alternate `1.0.0.1` &rarr; Save.
 
-**Or use the built-in DNS switcher:** top-right corner &rarr; **DNS** &rarr; pick Cloudflare or Google. UAC prompt, done. Revert from the same panel.
+**Or use the built-in DNS switcher:** **DNS switcher** at the bottom of the sidebar &rarr; pick Cloudflare or Google. UAC prompt, done. Revert from the same panel.
 
 <div align="center">
 <img src="assets/screenshot_dns.png" width="500" alt="DNS switcher" />
@@ -211,9 +212,9 @@ Fair question. Verify yourself.
 
 </div>
 
-Most engines clean &mdash; Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender all pass. A handful of heuristic scanners (APEX, Bkav, Cylance, SentinelOne, Yandex) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior &mdash; a common false-positive for unsigned solo-dev tools.
+Most engines clean &mdash; Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender all pass. A handful of heuristic scanners sometimes flag self-extracting single-file builds based on packed-binary patterns rather than actual malicious behavior &mdash; a common false-positive for unsigned solo-dev tools.
 
-> Don't trust the badge? Drop the `.exe` onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) &mdash; one main file, MIT.
+> Don't trust the badge? Drop the `.exe` onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full source](desktop/) &mdash; MIT.
 
 ---
 

@@ -61,6 +61,13 @@ public sealed class SelectedTag : IValueConverter
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
 }
 
+/// <summary>Grid columns for quality buttons: one per option, two at most.</summary>
+public sealed class AtMostTwo : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is int n ? Math.Clamp(n, 1, 2) : 2;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
+}
+
 /// <summary>Colours WPF-UI has no token for, kept in step with the theme and
 /// the Windows accent colour.</summary>
 public static class ThemeBrushes
@@ -75,11 +82,14 @@ public static class ThemeBrushes
         var dark2 = res["SystemAccentColorDark2"] is Color d2 ? d2 : accent;
 
         Set("SelectionPillBrush", dark ? light2 : dark1);
-        Set("ChipSubBackground", dark ? Color.FromArgb(0x40, light1.R, light1.G, light1.B)
+        Set("ChipSubBackground", dark ? Color.FromArgb(0x55, light1.R, light1.G, light1.B)
                                       : Color.FromArgb(0x26, accent.R, accent.G, accent.B));
-        Set("ChipSubForeground", dark ? light2 : dark2);
+        Set("ChipSubForeground", dark ? Mix(light2, Colors.White, 0.55) : dark2);
         Set("ChipDubBackground", dark ? Color.FromRgb(0x3D, 0x2F, 0x57) : Color.FromRgb(0xEE, 0xE5, 0xFA));
         Set("ChipDubForeground", dark ? Color.FromRgb(0xD7, 0xB8, 0xFF) : Color.FromRgb(0x6B, 0x3F, 0xA0));
+
+        static Color Mix(Color a, Color b, double t) => Color.FromRgb(
+            (byte)(a.R + (b.R - a.R) * t), (byte)(a.G + (b.G - a.G) * t), (byte)(a.B + (b.B - a.B) * t));
 
         void Set(string key, Color color)
         {
