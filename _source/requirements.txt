@@ -1,5 +1,8 @@
 customtkinter==5.2.2
 
+# Renders the Windows Fluent icons that sit next to button labels.
+pillow>=10.0
+
 # Mozilla's CA bundle. The app trusts this first and falls back to the OS
 # certificate store — see tls_trust.py. Without it, users whose Windows root
 # store predates ISRG Root X2 can't reach pixeldrain at all.

@@ -1,0 +1,36 @@
+name: UI preview
+
+# Screenshots of the Windows app on a real Windows machine, attached to the
+# run as an artifact. Runs on PRs that touch the desktop app.
+on:
+  pull_request:
+    paths:
+      - "_source/onepace_downloader.py"
+      - ".github/scripts/ui_preview.py"
+  workflow_dispatch:
+
+jobs:
+  preview:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: pip install customtkinter==5.2.2 pillow "certifi>=2026.7.22"
+
+      - name: Bigger screen
+        shell: pwsh
+        continue-on-error: true
+        run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
+
+      - name: Screenshots
+        run: python .github/scripts/ui_preview.py previews
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ui-previews
+          path: previews

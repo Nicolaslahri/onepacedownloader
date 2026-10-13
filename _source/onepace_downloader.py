@@ -127,61 +127,89 @@ SOURCE_INFO = {
 DUB_GUIDE_URL = "https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/"
 
 # ============================================================ DESIGN TOKENS
-# Brand: "Straw Hat" — deep night-sea navy, straw gold for selection and
-# focus, ribbon red for the one thing you came to do (download). Every
-# body colour is a (light, dark) pair; the header band is always dark.
-HEADER_BG = "#0A0F1C"        # night sea
-HEADER_BG_2 = "#0E1526"      # tab band under the title bar
-HEADER_FG = "#F4F1E8"        # cream
-HEADER_MUTED = "#8B94AA"
-HEADER_LINE = "#1B2540"
-HEADER_HOVER = "#18213A"
-HEADER_ACCENT = "#F2C14E"    # straw gold
-HEADER_ACCENT_DEEP = "#C99A2E"
-PRIMARY = "#E23B3F"          # ribbon red — download actions only
-PRIMARY_HOVER = "#C42E33"
-PRIMARY_BG = ("#FDECEC", "#3A1A1D")
-MUTED = "#7B8597"
-GOLD = ("#B7841A", "#F2C14E")   # gold that stays readable on white
+# Windows 11 "Fluent" look: the window base matches the title bar, content
+# sits on a slightly raised layer, cards on that, and the one colour is the
+# user's own Windows accent. Every colour is a (light, dark) pair.
 
-# Surfaces, darkest to most raised. Columns are cards on the window;
-# rows inside them tint on hover and turn warm when selected.
-SURFACE_PANEL = ("#EDEFF4", "#080C18")   # window
-SURFACE_CARD  = ("#FFFFFF", "#111829")   # columns, dialogs
-SURFACE_INNER = ("#F6F7FB", "#172036")   # cards inside a column
-SURFACE_ROW   = ("#F2F4F8", "#18223A")
-SURFACE_HOVER = ("#F1F3F8", "#19233B")
-SURFACE_SEL   = ("#FFF5DC", "#1F2A46")   # selected arc / episode
-BORDER        = ("#E3E6ED", "#1C2640")
-BORDER_STRONG = ("#C8CDD8", "#2C395A")
+
+def _system_accent() -> tuple[str, str]:
+    """(accent for light theme, accent for dark theme) from the user's
+    Windows accent palette, falling back to the default Windows blue."""
+    try:
+        import winreg
+        with winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER,
+                r"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent"
+        ) as k:
+            pal, _ = winreg.QueryValueEx(k, "AccentPalette")
+        # 8 RGBA entries: light3, light2, light1, accent, dark1, dark2, ...
+        def entry(i):
+            r, g, b = pal[i * 4], pal[i * 4 + 1], pal[i * 4 + 2]
+            return f"#{r:02X}{g:02X}{b:02X}"
+        return entry(4), entry(1)
+    except Exception:
+        return "#005FB8", "#60CDFF"
+
+
+def _mix(c1: str, c2: str, t: float) -> str:
+    a = [int(c1[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(c2[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{round(x + (y - x) * t):02X}" for x, y in zip(a, b))
+
+
+_ACC_L, _ACC_D = _system_accent()
+ACCENT = (_ACC_L, _ACC_D)
+ACCENT_HOVER = (_mix(_ACC_L, "#FFFFFF", 0.1), _mix(_ACC_D, "#202020", 0.1))
+ON_ACCENT = ("#FFFFFF", "#000000")         # text on an accent fill
+ACCENT_TEXT = (_mix(_ACC_L, "#000000", 0.15), _mix(_ACC_D, "#FFFFFF", 0.25))
+
+# Surfaces: window base (= title bar) → content layer → card.
+SURFACE_PANEL = ("#F3F3F3", "#202020")
+SURFACE_CARD  = ("#F9F9F9", "#272727")
+SURFACE_INNER = ("#FFFFFF", "#2D2D2D")
+SURFACE_ROW   = SURFACE_INNER
+SURFACE_HOVER = ("#EFEFEF", "#323232")
+SURFACE_SEL   = ("#EAEAEA", "#383838")
+NAV_HOVER     = ("#EAEAEA", "#2D2D2D")      # list items on the base
+NAV_SEL       = ("#E5E5E5", "#2F2F2F")
+BORDER        = ("#E5E5E5", "#1C1C1C")
+BORDER_STRONG = ("#D4D4D4", "#3A3A3A")
+CONTROL_FILL  = ("#FDFDFD", "#353535")      # standard button
+CONTROL_HOVER = ("#F6F6F6", "#3C3C3C")
+CONTROL_STROKE = ("#E1E1E1", "#404040")
+CHECK_STROKE  = ("#8A8A8A", "#9E9E9E")
+SMOKE         = ("#CFCFCF", "#121212")      # behind dialogs
 
 # Text
-TEXT          = ("#131826", "#E8ECF5")
-TEXT_MUTED    = ("#5A6377", "#929FBB")
-TEXT_DIM      = ("#9AA1B1", "#5B6785")
-LINK          = GOLD
+TEXT          = ("#1A1A1A", "#FFFFFF")
+TEXT_MUTED    = ("#5F5F5F", "#C5C5C5")
+TEXT_DIM      = ("#8A8A8A", "#9D9D9D")
+LINK          = ACCENT_TEXT
 
-# Semantic — every accent is theme-aware (light, dark) so dark mode pops too
-OK            = ("#1D7A45", "#4FCB8B")
-WARN          = ("#A86A00", "#E8A93A")
-DANGER        = ("#C42E33", "#E0484C")
-DANGER_HOVER  = ("#9F2428", "#B8363A")
-INFO          = ("#3563C9", "#4C7BE0")   # magnets / NZBs
-INFO_HOVER    = ("#2A4FA3", "#3C66C4")
-SECONDARY     = ("#2B3A5E", "#24304F")   # neutral filled button (white text)
-SECONDARY_HOVER = ("#22304F", "#2D3B60")
-OFFICIAL_BG   = ("#E9F7EF", "#122A21")   # Galaxy9000 row background
-UNOFFICIAL_BG = ("#FFF8E6", "#262111")   # other Nyaa pack row background
-OFFICIAL_CHIP = ("#1D7A45", "#2E9E63")
+# Legacy names, mapped onto the Fluent palette.
+PRIMARY = ACCENT
+PRIMARY_HOVER = ACCENT_HOVER
+GOLD = ACCENT_TEXT
+SECONDARY = CONTROL_FILL
+SECONDARY_HOVER = CONTROL_HOVER
+INFO = ACCENT
+INFO_HOVER = ACCENT_HOVER
 
-# Chips: (background, text) pairs
-CHIP_NEUTRAL = (("#EEF0F5", "#1C2640"), ("#5A6377", "#A3AEC8"))
-CHIP_SUB     = (("#E8EEFF", "#17264A"), ("#2F58C4", "#8DB0FF"))
-CHIP_DUB     = (("#F3EAFF", "#271B45"), ("#7A3EC8", "#C7A6FF"))
-CHIP_OK      = (("#E3F6EA", "#11302A"), ("#1D7A45", "#5ED39A"))
-CHIP_GOLD    = (("#FFF3D6", "#2E2610"), ("#8A6110", "#F2C14E"))
+# Semantic
+OK            = ("#0F7B0F", "#6CCB5F")
+WARN          = ("#9D5D00", "#FCE100")
+DANGER        = ("#C42B1C", "#FF99A4")
+DANGER_HOVER  = ("#A32416", "#FFB3BB")
+OFFICIAL_CHIP = ("#0F7B0F", "#3C8A33")
 
-# Spacing — 4px base unit. Always use these constants, never raw numbers.
+# Tags: (background, text) pairs
+CHIP_NEUTRAL = (("#EDEDED", "#383838"), TEXT_MUTED)
+CHIP_SUB     = (("#E3EEFA", "#263544"), ACCENT_TEXT)
+CHIP_DUB     = (("#F1E6FA", "#3A2E44"), ("#7A2EA8", "#D9B8F5"))
+CHIP_OK      = (("#DFF6DD", "#283A27"), OK)
+CHIP_GOLD    = (("#FFF4CE", "#433519"), ("#8A5300", "#FCE100"))
+
+# Spacing — 4px base unit.
 SP_XS = 4
 SP_SM = 8
 SP_MD = 12
@@ -189,35 +217,196 @@ SP_LG = 16
 SP_XL = 20
 SP_XXL = 24
 
-# Corner radius
-RADIUS_SM = 8    # rows, chips, small buttons
-RADIUS_LG = 14   # cards, modals, columns
+# Corner radius: 4 for controls, 8 for cards and dialogs.
+RADIUS_SM = 4
+RADIUS_LG = 8
 
-# Typography
+# Typography — pixel sizes on the Fluent type ramp. _init_fonts() swaps in
+# Segoe UI Variable / Fluent icons once Tk can tell what's installed.
 FAMILY = "Segoe UI"
+FAMILY_SEMI = FAMILY
+FAMILY_DISPLAY = FAMILY
 FAMILY_MONO = "Consolas"
-F_XS    = (FAMILY, 9)
-F_SM    = (FAMILY, 10)
-F_BASE  = (FAMILY, 11)
-F_LG    = (FAMILY, 13)
-F_XL    = (FAMILY, 16)
-F_HERO  = (FAMILY, 22)
-F_BOLD_XS   = (FAMILY, 9, "bold")
-F_BOLD_SM   = (FAMILY, 10, "bold")
-F_BOLD_BASE = (FAMILY, 11, "bold")
-F_BOLD_LG   = (FAMILY, 13, "bold")
-F_BOLD_XL   = (FAMILY, 16, "bold")
-F_TITLE     = (FAMILY, 19, "bold")
-F_HERO_BOLD = (FAMILY, 30, "bold")
-F_EYEBROW   = (FAMILY, 8, "bold")
-F_ITALIC_XS = (FAMILY, 9, "italic")
-F_MONO_XS   = (FAMILY_MONO, 9)
-F_MONO_SM   = (FAMILY_MONO, 10)
-F_MONO_BASE = (FAMILY_MONO, 11)
-# Button heights
-H_SM = 30
-H_MD = 36
-H_LG = 42
+ICON_FONT = None
+_SEMI_WEIGHT = "bold"
+
+
+def _build_fonts() -> None:
+    global F_XS, F_SM, F_BASE, F_LG, F_XL, F_HERO
+    global F_BOLD_XS, F_BOLD_SM, F_BOLD_BASE, F_BOLD_LG, F_BOLD_XL
+    global F_TITLE, F_HERO_BOLD, F_EYEBROW, F_ITALIC_XS
+    global F_MONO_XS, F_MONO_SM, F_MONO_BASE
+    if _SEMI_WEIGHT == "normal":       # a real Semibold face is installed
+        semi, disp, w = FAMILY_SEMI, FAMILY_DISPLAY, ()
+    else:
+        semi, disp, w = FAMILY, FAMILY, ("bold",)
+    F_XS, F_SM, F_BASE = (FAMILY, 12), (FAMILY, 13), (FAMILY, 14)
+    F_LG, F_XL, F_HERO = (FAMILY, 16), (FAMILY, 20), (FAMILY_DISPLAY, 28)
+    F_BOLD_XS, F_BOLD_SM = (semi, 12) + w, (semi, 13) + w
+    F_BOLD_BASE, F_BOLD_LG = (semi, 14) + w, (semi, 16) + w
+    F_BOLD_XL, F_TITLE = (disp, 20) + w, (disp, 28) + w
+    F_HERO_BOLD, F_EYEBROW = (disp, 40) + w, (semi, 12) + w
+    F_ITALIC_XS = (FAMILY, 12, "italic")
+    F_MONO_XS, F_MONO_SM = (FAMILY_MONO, 12), (FAMILY_MONO, 13)
+    F_MONO_BASE = (FAMILY_MONO, 14)
+
+
+def _init_fonts(root) -> None:
+    """Pick the best installed Windows fonts. Needs a Tk root."""
+    global FAMILY, FAMILY_SEMI, FAMILY_DISPLAY, ICON_FONT, _SEMI_WEIGHT
+    try:
+        from tkinter import font as tkfont
+        have = set(tkfont.families(root))
+    except Exception:
+        have = set()
+
+    def first(*names):
+        return next((n for n in names if n in have), None)
+
+    FAMILY = first("Segoe UI Variable Text", "Segoe UI") or FAMILY
+    FAMILY_DISPLAY = first("Segoe UI Variable Display", FAMILY) or FAMILY
+    semi = first("Segoe UI Variable Text Semibold", "Segoe UI Semibold")
+    if semi:
+        FAMILY_SEMI, _SEMI_WEIGHT = semi, "normal"
+        FAMILY_DISPLAY = first("Segoe UI Variable Display Semib",
+                               "Segoe UI Variable Display Semibold") or semi
+    ICON_FONT = first("Segoe Fluent Icons", "Segoe MDL2 Assets")
+    _build_fonts()
+
+
+_build_fonts()
+
+# Fluent icon glyphs, with a plain-text stand-in when the icon font is
+# missing (Windows 10 without MDL2, or a dev box).
+_ICONS = {
+    "onepace":  ("", "▶"),
+    "muhn":     ("", "♪"),
+    "nyaa":     ("", "⇩"),
+    "usenet":   ("", "☁"),
+    "dns":      ("", "◎"),
+    "refresh":  ("", "⟳"),
+    "settings": ("", "⚙"),
+    "download": ("", "⇩"),
+    "folder":   ("", "▤"),
+    "search":   ("", "⌕"),
+    "log":      ("", "≡"),
+    "cancel":   ("", "✕"),
+    "check":    ("", "✓"),
+    "update":   ("", "↑"),
+    "select":   ("", "☑"),
+    "open":     ("", "↗"),
+}
+
+
+def icon(name: str) -> str:
+    glyph, fallback = _ICONS.get(name, ("", ""))
+    return glyph if ICON_FONT else fallback
+
+
+def icon_font(size: int = 16):
+    return (ICON_FONT, size) if ICON_FONT else (FAMILY, size)
+
+
+
+def fit_label(label, text: str) -> None:
+    """Keep a CTkLabel's text to the width it is given, ending in "…" when
+    it doesn't fit. Re-fits whenever the label is resized."""
+    from tkinter import font as tkfont
+
+    def apply(_e=None):
+        try:
+            avail = label.winfo_width() - 4
+            if avail <= 4:
+                return
+            f = tkfont.Font(font=label._label.cget("font"))
+            shown = text
+            if f.measure(text) > avail:
+                lo, hi = 0, len(text)
+                while lo < hi:
+                    mid = (lo + hi + 1) // 2
+                    if f.measure(text[:mid].rstrip() + "…") <= avail:
+                        lo = mid
+                    else:
+                        hi = mid - 1
+                shown = text[:lo].rstrip() + "…"
+            if label.cget("text") != shown:
+                label.configure(text=shown)
+        except Exception:
+            pass
+    label.bind("<Configure>", apply, add="+")
+
+
+_GLYPH_CACHE: dict = {}
+
+
+def _icon_font_file() -> str | None:
+    fonts = Path(os.environ.get("WINDIR", r"C:\Windows")) / "Fonts"
+    for name in ("SegoeIcons.ttf", "segmdl2.ttf"):
+        if (fonts / name).exists():
+            return str(fonts / name)
+    return None
+
+
+def glyph_image(name: str, size: int = 16, color=None):
+    """A Fluent icon as a CTkImage (light + dark), for buttons that pair an
+    icon with text. None when Pillow or the Windows icon font is missing."""
+    color = color or TEXT
+    key = (name, size, tuple(color) if isinstance(color, (list, tuple))
+           else color)
+    if key in _GLYPH_CACHE:
+        return _GLYPH_CACHE[key]
+    img = None
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+        path = _icon_font_file()
+        glyph = _ICONS.get(name, ("",))[0]
+        if path and glyph:
+            scale = 2
+            font = ImageFont.truetype(path, size * scale)
+            pair = color if isinstance(color, (list, tuple)) else (color, color)
+            imgs = []
+            for c in pair:
+                im = Image.new("RGBA", (size * scale, size * scale), (0, 0, 0, 0))
+                ImageDraw.Draw(im).text((size * scale / 2, size * scale / 2),
+                                        glyph, font=font, fill=c, anchor="mm")
+                imgs.append(im)
+            img = ctk.CTkImage(light_image=imgs[0], dark_image=imgs[1],
+                               size=(size, size))
+    except Exception:
+        img = None
+    _GLYPH_CACHE[key] = img
+    return img
+
+
+def _set_native_titlebar(window, dark: bool) -> None:
+    """Make the Windows 11 title bar match the window: dark/light mode,
+    caption colour = window base, and the Mica backdrop. No-op elsewhere."""
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+        hwnd = ctypes.windll.user32.GetParent(window.winfo_id())
+        dwm = ctypes.windll.dwmapi
+
+        def setattr_(attr, value):
+            v = ctypes.c_int(value)
+            dwm.DwmSetWindowAttribute(hwnd, attr, ctypes.byref(v),
+                                      ctypes.sizeof(v))
+
+        setattr_(20, 1 if dark else 0)          # DWMWA_USE_IMMERSIVE_DARK_MODE
+        base = SURFACE_PANEL[1 if dark else 0]
+        r, g, b = (int(base[i:i + 2], 16) for i in (1, 3, 5))
+        setattr_(35, r | (g << 8) | (b << 16))  # DWMWA_CAPTION_COLOR
+        setattr_(34, 0xFFFFFFFE)                # DWMWA_BORDER_COLOR: default
+        setattr_(38, 2)                         # DWMWA_SYSTEMBACKDROP_TYPE: Mica
+    except Exception:
+        pass
+
+
+# Control heights (Fluent standard is 32)
+H_SM = 32
+H_MD = 32
+H_LG = 40
 
 ONEPACE_URL = "https://onepace.net/en/watch"
 PIXELDRAIN_API = "https://pixeldrain.com/api/list/{album_id}"
@@ -1220,6 +1409,7 @@ class App(ctk.CTk):
 
     def __init__(self) -> None:
         super().__init__()
+        _init_fonts(self)
         ctk.set_appearance_mode("system")
         ctk.set_default_color_theme("blue")
         self.title(f"One Pace Downloader v{APP_VERSION}")
@@ -1228,14 +1418,16 @@ class App(ctk.CTk):
         
         # Load saved window position/geometry
         geom = self.config_data.get("geometry")
+        sw, sh = self.winfo_screenwidth(), self.winfo_screenheight()
+        default_geom = f"{min(1320, sw - 40)}x{min(840, sh - 80)}"
         if geom:
             try:
                 self.geometry(geom)
             except Exception:
-                self.geometry("1180x780")
+                self.geometry(default_geom)
         else:
-            self.geometry("1180x780")
-        self.minsize(960, 560)
+            self.geometry(default_geom)
+        self.minsize(980, 600)
         
         maximized = self.config_data.get("maximized", False)
         if maximized:
@@ -1320,6 +1512,8 @@ class App(ctk.CTk):
         self.protocol("WM_DELETE_WINDOW", self._on_close)
 
         self._build_ui()
+        self.after(50, lambda: _set_native_titlebar(
+            self, ctk.get_appearance_mode() == "Dark"))
         self._refresh_nyaa_view_toggle()
         # Initial scan of the save folder so the first arc click already
         # shows Saved badges where files exist.
@@ -1343,6 +1537,17 @@ class App(ctk.CTk):
     def _set_status(self, text: str) -> None:
         self.status_var.set(text)
 
+    def _set_appearance_mode(self, mode_string: str) -> None:
+        super()._set_appearance_mode(mode_string)
+        dark = mode_string.lower() == "dark"
+        self.after(20, lambda: _set_native_titlebar(self, dark))
+        img = getattr(self, "_brand_img", None)
+        if img is not None:
+            try:
+                img.configure(bg=SURFACE_PANEL[1 if dark else 0])
+            except tk.TclError:
+                pass
+
     def _apply_icon(self) -> None:
         """Apply window icon. Skips silently if assets are missing (dev runs)."""
         if BUNDLED_ICON_ICO.exists():
@@ -1363,165 +1568,162 @@ class App(ctk.CTk):
     def _build_ui(self) -> None:
         self.configure(fg_color=SURFACE_PANEL)
 
-        # ---- HEADER: brand bar + source tabs, one dark band ----
-        header = ctk.CTkFrame(self, corner_radius=0, fg_color=HEADER_BG)
-        header.pack(fill="x", side="top")
+        # ---- NAVIGATION PANE (left, on the window base) ----
+        self._nav_compact = False
+        nav = ctk.CTkFrame(self, fg_color="transparent", corner_radius=0,
+                           width=self.NAV_WIDTH)
+        nav.pack(side="left", fill="y")
+        nav.pack_propagate(False)
+        self._nav = nav
 
-        top = ctk.CTkFrame(header, fg_color="transparent", height=60)
-        top.pack(fill="x", padx=SP_XL)
-        top.pack_propagate(False)
-
+        brand = ctk.CTkFrame(nav, fg_color="transparent", height=56)
+        brand.pack(fill="x", padx=SP_SM, pady=(SP_SM, SP_XS))
+        brand.pack_propagate(False)
+        self._brand_text = ctk.CTkFrame(brand, fg_color="transparent")
         if self._app_icon is not None:
             try:
-                hdr_img = self._app_icon.subsample(8, 8)
-                self._hdr_img_ref = hdr_img
-                tk.Label(top, image=hdr_img, bg=HEADER_BG, bd=0).pack(
-                    side="left", padx=(0, SP_MD))
+                img = self._app_icon.subsample(
+                    max(1, self._app_icon.width() // 28))
+                self._hdr_img_ref = img
+                self._brand_img = tk.Label(brand, image=img, bd=0,
+                                           bg=self._resolve(SURFACE_PANEL))
+                self._brand_img.pack(side="left", padx=(SP_SM, SP_MD))
             except tk.TclError:
-                pass
-        brand = ctk.CTkFrame(top, fg_color="transparent")
-        brand.pack(side="left")
-        ctk.CTkLabel(brand, text="One Pace", font=(FAMILY, 17, "bold"),
-                     text_color=HEADER_FG).pack(side="left")
-        ctk.CTkLabel(brand, text=" Downloader", font=(FAMILY, 17),
-                     text_color=HEADER_MUTED).pack(side="left")
-        ctk.CTkLabel(brand, text=f"  v{APP_VERSION}", font=F_XS,
-                     text_color=TEXT_DIM[1]).pack(side="left", pady=(4, 0))
+                self._brand_img = None
+        self._brand_text.pack(side="left", fill="x", expand=True)
+        ctk.CTkLabel(self._brand_text, text="One Pace", font=F_BOLD_BASE,
+                     text_color=TEXT, anchor="w", height=18).pack(fill="x")
+        ctk.CTkLabel(self._brand_text, text=f"Downloader  ·  v{APP_VERSION}",
+                     font=F_XS, text_color=TEXT_DIM, anchor="w",
+                     height=16).pack(fill="x")
 
-        btn_box = ctk.CTkFrame(top, fg_color="transparent")
-        btn_box.pack(side="right")
-        self._header_btn_box = btn_box
-
-        def header_btn(text, command, width=96):
-            return ctk.CTkButton(
-                btn_box, text=text, width=width, height=H_SM,
-                corner_radius=RADIUS_SM,
-                fg_color="transparent", hover_color=HEADER_HOVER,
-                border_width=1, border_color=HEADER_LINE,
-                text_color=HEADER_FG, font=F_SM, command=command)
-
-        header_btn("DNS", self._open_dns_panel, width=64).pack(
-            side="left", padx=(0, SP_SM))
-        # Held by reference so the background update check can restyle it
-        # when new content is detected (see _set_refresh_badge).
-        self._refresh_btn = header_btn("⟳  Refresh", self._refresh_all)
-        self._refresh_btn.pack(side="left", padx=(0, SP_SM))
-        header_btn("⚙  Settings", self._open_settings_panel).pack(side="left")
-
-        # Source tabs: text tabs with a gold underline on the active one.
-        tabs = ctk.CTkFrame(header, fg_color="transparent")
-        tabs.pack(fill="x", padx=SP_LG)
-        self._tab_widgets: dict[str, dict] = {}
+        self._nav_items: dict[str, dict] = {}
         self._tab_labels = self._compute_tab_labels()
         self._tab_key_by_label = {v: k for k, v in self._tab_labels.items()}
+        self._nav_section = ctk.CTkLabel(
+            nav, text="Sources", font=F_BOLD_XS, text_color=TEXT_DIM,
+            anchor="w", height=28)
+        self._nav_section.pack(fill="x", padx=SP_LG + SP_XS, pady=(SP_SM, 0))
         for key in _SRC_LABEL:
-            self._build_source_tab(tabs, key)
-        self.source_info = ctk.CTkLabel(
-            tabs, text="", anchor="e", font=F_SM,
-            text_color=HEADER_MUTED)
-        self.source_info.pack(side="right", padx=(SP_LG, SP_XS))
-        ctk.CTkFrame(header, height=1, corner_radius=0,
-                     fg_color=HEADER_LINE).pack(fill="x")
+            self._nav_items[key] = self._nav_item(
+                nav, key, _SRC_LABEL[key],
+                lambda k=key: self._on_source_change(
+                    self._tab_labels.get(k, _SRC_LABEL[k])))
+
+        # Footer items. Held as the "header button box" so the new-version
+        # notice can add itself here (see _show_app_update).
+        nav_foot = ctk.CTkFrame(nav, fg_color="transparent")
+        nav_foot.pack(side="bottom", fill="x", pady=(0, SP_SM))
+        self._header_btn_box = nav_foot
+        self._nav_items["dns"] = self._nav_item(
+            nav_foot, "dns", "DNS switcher", self._open_dns_panel)
+        # The background update check restyles this (see _set_refresh_badge).
+        self._nav_items["refresh"] = self._nav_item(
+            nav_foot, "refresh", "Refresh", self._refresh_all)
+        self._refresh_btn = self._nav_items["refresh"]
+        self._nav_items["settings"] = self._nav_item(
+            nav_foot, "settings", "Settings", self._open_settings_panel)
         self._paint_source_tabs()
 
-        # ---- FOOTER (packed before the body so it keeps its height) ----
-        footer = ctk.CTkFrame(self, corner_radius=0, fg_color=SURFACE_CARD,
-                              border_width=0)
-        footer.pack(fill="x", side="bottom")
-        self.progress = ctk.CTkProgressBar(
-            footer, height=3, corner_radius=0,
-            progress_color=PRIMARY, fg_color=SURFACE_CARD, border_width=0)
-        self.progress.set(0)
-        self.progress.pack(fill="x")
-        bar = ctk.CTkFrame(footer, fg_color="transparent", height=44)
-        bar.pack(fill="x", padx=SP_LG)
-        self._footer_bar = bar
-        bar.pack_propagate(False)
+        # ---- CONTENT LAYER (raised, rounded top-left, runs off the edges) ----
+        host = ctk.CTkFrame(self, fg_color="transparent", corner_radius=0)
+        host.pack(side="left", fill="both", expand=True)
+        self._layer_host = host
+        layer = ctk.CTkFrame(host, fg_color=SURFACE_CARD,
+                             corner_radius=RADIUS_LG,
+                             border_width=1, border_color=BORDER)
+        # Oversize by the corner radius so only the top-left corner shows.
+        # (tk's own place: CTk refuses width/height offsets there)
+        tk.Place.place_configure(layer, x=0, y=0, relwidth=1, relheight=1,
+                                 width=RADIUS_LG * 2, height=RADIUS_LG * 2)
+        inner = ctk.CTkFrame(layer, fg_color="transparent", corner_radius=0)
+        inner.pack(fill="both", expand=True, padx=(1, RADIUS_LG * 2 + 1),
+                   pady=(1, RADIUS_LG * 2 + 1))
+        inner.grid_columnconfigure(0, weight=0, minsize=self.ARC_WIDTH)
+        inner.grid_columnconfigure(1, weight=0, minsize=1)
+        inner.grid_columnconfigure(2, weight=1)
+        inner.grid_rowconfigure(0, weight=1)
 
-        self._folder_btn = ctk.CTkButton(
-            bar, text="", height=H_SM - 2, anchor="w",
-            corner_radius=RADIUS_SM,
-            fg_color=SURFACE_INNER, hover_color=SURFACE_HOVER,
-            border_width=1, border_color=BORDER,
-            text_color=TEXT, font=F_SM,
-            command=self._pick_folder)
+        # Status bar along the bottom of the layer.
+        status = ctk.CTkFrame(inner, fg_color="transparent", height=48,
+                              corner_radius=0)
+        status.grid(row=2, column=0, columnspan=3, sticky="ew")
+        status.pack_propagate(False)
+        ctk.CTkFrame(inner, height=1, corner_radius=0, fg_color=BORDER).grid(
+            row=1, column=0, columnspan=3, sticky="ew")
+        bar = ctk.CTkFrame(status, fg_color="transparent")
+        bar.pack(fill="both", expand=True, padx=SP_LG)
+        self._footer_bar = bar
+
+        self._folder_btn = self._button(
+            bar, "", self._pick_folder, style="subtle", glyph="folder",
+            anchor="w")
         self._folder_btn.pack(side="left")
         Tooltip(self._folder_btn, "Where downloads are saved — click to change")
-        ctk.CTkButton(
-            bar, text="Open", width=58, height=H_SM - 2,
-            corner_radius=RADIUS_SM,
-            fg_color="transparent", hover_color=SURFACE_HOVER,
-            text_color=LINK, font=F_BOLD_SM,
-            command=self._open_folder,
-        ).pack(side="left", padx=(SP_XS, 0))
+        self._button(bar, "Open", self._open_folder, style="link").pack(
+            side="left", padx=(SP_XS, 0))
         self.save_dir.trace_add("write", lambda *_: self._paint_folder_btn())
         self._paint_folder_btn()
 
-        ctk.CTkButton(
-            bar, text="Log", width=56, height=H_SM - 2,
-            corner_radius=RADIUS_SM,
-            fg_color="transparent", hover_color=SURFACE_HOVER,
-            text_color=TEXT_MUTED, font=F_SM,
-            command=self._toggle_log,
-        ).pack(side="right")
-        self.cancel_btn = ctk.CTkButton(
-            bar, text="Cancel", width=80, height=H_SM - 2,
-            corner_radius=RADIUS_SM, font=F_BOLD_SM,
-            fg_color=DANGER, hover_color=DANGER_HOVER,
-            command=self._cancel)
+        self._log_btn = self._button(bar, "Log", self._toggle_log,
+                                     style="subtle", glyph="log")
+        self._log_btn.pack(side="right")
+        self.cancel_btn = self._button(bar, "Cancel", self._cancel,
+                                       glyph="cancel")
         self._cancel_btn_parent = bar
+        self.progress = ctk.CTkProgressBar(
+            bar, height=3, width=160, corner_radius=2,
+            progress_color=ACCENT, fg_color=BORDER_STRONG, border_width=0)
+        self.progress.set(0)
         ctk.CTkLabel(bar, textvariable=self.status_var, font=F_SM,
                      anchor="w", text_color=TEXT_MUTED).pack(
             side="left", fill="x", expand=True, padx=(SP_LG, SP_SM))
 
-        # Collapsible log panel (hidden by default; toggled by Log button)
-        self.log_panel = ctk.CTkFrame(self, height=150, fg_color=SURFACE_CARD,
-                                      corner_radius=RADIUS_LG)
+        # Collapsible log (shown above the status bar by the Log button)
+        self.log_panel = ctk.CTkFrame(inner, height=160,
+                                      fg_color="transparent", corner_radius=0)
         self.log_textbox = ctk.CTkTextbox(
-            self.log_panel, height=130, font=F_MONO_XS,
+            self.log_panel, height=140, font=F_MONO_XS,
             fg_color=SURFACE_INNER, text_color=TEXT_MUTED,
-            corner_radius=RADIUS_SM)
-        self.log_textbox.pack(fill="both", expand=True, padx=SP_SM, pady=SP_SM)
+            border_width=1, border_color=BORDER, corner_radius=RADIUS_LG)
+        self.log_textbox.pack(fill="both", expand=True,
+                              padx=SP_LG, pady=(0, SP_MD))
         self.log_textbox.configure(state="disabled")
+        self._log_inner = inner
 
-        # ---- BODY: three cards on the window background ----
-        body = ctk.CTkFrame(self, fg_color="transparent")
-        body.pack(fill="both", expand=True, padx=SP_MD, pady=SP_MD)
-        body.grid_columnconfigure(0, weight=0, minsize=270)
-        body.grid_columnconfigure(1, weight=5, minsize=380, uniform="main")
-        body.grid_columnconfigure(2, weight=4, minsize=340, uniform="main")
-        body.grid_rowconfigure(0, weight=1)
-
-        def column(col, padx):
-            card = ctk.CTkFrame(body, fg_color=SURFACE_CARD,
-                                corner_radius=RADIUS_LG,
-                                border_width=1, border_color=BORDER)
-            card.grid(row=0, column=col, sticky="nsew", padx=padx)
-            card.grid_columnconfigure(0, weight=1)
-            return card
-
-        # Column 1: arcs
-        col1 = column(0, (0, SP_SM))
-        col1.grid_rowconfigure(2, weight=1)
+        # ---- Column 1: arcs list ----
+        col1 = ctk.CTkFrame(inner, fg_color="transparent", corner_radius=0)
+        col1.grid(row=0, column=0, sticky="nsew")
+        col1.grid_columnconfigure(0, weight=1)
+        col1.grid_rowconfigure(3, weight=1)
         head1 = ctk.CTkFrame(col1, fg_color="transparent")
         head1.grid(row=0, column=0, sticky="ew",
-                   padx=SP_LG, pady=(SP_LG, SP_SM))
-        ctk.CTkLabel(head1, text="Arcs", font=F_BOLD_LG,
+                   padx=SP_XL, pady=(SP_XL, 0))
+        ctk.CTkLabel(head1, text="Arcs", font=F_BOLD_XL,
                      text_color=TEXT).pack(side="left")
         self._arc_count_lbl = ctk.CTkLabel(head1, text="", font=F_SM,
                                            text_color=TEXT_DIM)
-        self._arc_count_lbl.pack(side="left", padx=(SP_SM, 0), pady=(2, 0))
+        self._arc_count_lbl.pack(side="left", padx=(SP_SM, 0), pady=(4, 0))
+        self.source_info = ctk.CTkLabel(
+            col1, text="", anchor="w", justify="left", font=F_XS,
+            text_color=TEXT_DIM, wraplength=self.ARC_WIDTH - 2 * SP_XL)
+        self.source_info.grid(row=1, column=0, sticky="ew",
+                              padx=SP_XL, pady=(SP_XS, SP_MD))
         # No textvariable: CTkEntry hides its placeholder when one is set.
         search_entry = ctk.CTkEntry(
-            col1, placeholder_text="⌕  Search arcs",
-            height=H_SM, font=F_SM, corner_radius=RADIUS_SM,
-            fg_color=SURFACE_INNER, border_color=BORDER, border_width=1,
+            col1, placeholder_text="Search arcs",
+            height=H_SM, font=F_BASE, corner_radius=RADIUS_SM,
+            fg_color=CONTROL_FILL, border_color=CONTROL_STROKE, border_width=1,
             text_color=TEXT, placeholder_text_color=TEXT_DIM)
-        search_entry.grid(row=1, column=0, sticky="ew",
-                          padx=SP_MD, pady=(0, SP_SM))
+        search_entry.grid(row=2, column=0, sticky="ew",
+                          padx=(SP_LG, SP_LG), pady=(0, SP_SM))
         search_entry.bind(
             "<KeyRelease>",
             lambda _e: self.search_var.set(search_entry.get()))
+        search_entry.bind("<FocusIn>", lambda _e: search_entry.configure(
+            border_color=ACCENT))
+        search_entry.bind("<FocusOut>", lambda _e: search_entry.configure(
+            border_color=CONTROL_STROKE))
 
         def clear_search(_e=None):
             search_entry.delete(0, "end")
@@ -1529,18 +1731,26 @@ class App(ctk.CTk):
             self.focus_set()
         search_entry.bind("<Escape>", clear_search)
         self.arc_scroll = ctk.CTkScrollableFrame(
-            col1, label_text="", fg_color="transparent",
-            scrollbar_button_color=BORDER,
+            col1, label_text="", fg_color="transparent", corner_radius=0,
+            scrollbar_button_color=SURFACE_CARD,
             scrollbar_button_hover_color=BORDER_STRONG)
-        self.arc_scroll.grid(row=2, column=0, sticky="nsew",
-                             padx=(SP_XS, 0), pady=(0, SP_SM))
+        self.arc_scroll.grid(row=3, column=0, sticky="nsew",
+                             padx=(SP_SM, 0), pady=(0, SP_SM))
+        self._autohide_scrollbar(self.arc_scroll)
 
-        # Column 2: episodes
-        col2 = column(1, SP_XS)
-        col2.grid_rowconfigure(3, weight=1)
-        head2 = ctk.CTkFrame(col2, fg_color="transparent")
-        head2.grid(row=0, column=0, sticky="ew",
-                   padx=SP_LG, pady=(SP_LG, 0))
+        ctk.CTkFrame(inner, width=1, corner_radius=0, fg_color=BORDER).grid(
+            row=0, column=1, sticky="ns")
+
+        # ---- Column 2: page header + episodes card + details card ----
+        main = ctk.CTkFrame(inner, fg_color="transparent", corner_radius=0)
+        main.grid(row=0, column=2, sticky="nsew")
+        main.grid_columnconfigure(0, weight=1)
+        main.grid_columnconfigure(1, weight=0, minsize=self.DETAIL_WIDTH)
+        main.grid_rowconfigure(2, weight=1)
+
+        head2 = ctk.CTkFrame(main, fg_color="transparent")
+        head2.grid(row=0, column=0, columnspan=2, sticky="ew",
+                   padx=SP_XXL, pady=(SP_XL, 0))
         self.episodes_header = ctk.CTkLabel(
             head2, text="Episodes", anchor="w", font=F_TITLE,
             text_color=TEXT)
@@ -1548,65 +1758,73 @@ class App(ctk.CTk):
         self.episodes_sub = ctk.CTkLabel(
             head2, text="", anchor="w", font=F_SM, text_color=TEXT_MUTED)
         self.episodes_sub.pack(fill="x")
-        ep_tools = ctk.CTkFrame(col2, fg_color="transparent")
-        ep_tools.grid(row=1, column=0, sticky="ew",
-                      padx=SP_LG, pady=(SP_MD, SP_SM))
-        self.select_all_btn = ctk.CTkButton(
-            ep_tools, text="Select all", width=110, height=H_SM,
-            corner_radius=RADIUS_SM,
-            fg_color=SURFACE_INNER, hover_color=SURFACE_HOVER,
-            border_width=1, border_color=BORDER,
-            text_color=TEXT, font=F_SM,
-            command=self._toggle_select_all)
+
+        ep_tools = ctk.CTkFrame(main, fg_color="transparent")
+        ep_tools.grid(row=1, column=0, columnspan=2, sticky="ew",
+                      padx=SP_XXL, pady=(SP_MD, SP_MD))
+        self.select_all_btn = self._button(
+            ep_tools, "Select all", self._toggle_select_all, glyph="select")
         self.select_all_btn.pack(side="left")
         self.nyaa_view_toggle = ctk.CTkSegmentedButton(
             ep_tools,
             values=["Individual", "Packs"],
             command=self._on_nyaa_view_change,
             height=H_SM, font=F_SM, corner_radius=RADIUS_SM,
-            fg_color=SURFACE_INNER,
-            selected_color=("#FFFFFF", "#2B3A5E"),
-            selected_hover_color=("#FFFFFF", "#33446C"),
-            unselected_color=SURFACE_INNER,
-            unselected_hover_color=SURFACE_HOVER,
-            text_color=TEXT,
+            fg_color=CONTROL_STROKE,
+            selected_color=ACCENT, selected_hover_color=ACCENT_HOVER,
+            unselected_color=CONTROL_FILL,
+            unselected_hover_color=CONTROL_HOVER,
+            text_color=TEXT, text_color_disabled=TEXT_DIM,
         )
-        self.download_selected_btn = ctk.CTkButton(
-            ep_tools, text="Download selected", height=H_SM, width=150,
-            corner_radius=RADIUS_SM, font=F_BOLD_SM,
-            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-            text_color="white",
-            command=self._download_selected_episodes)
+        self.download_selected_btn = self._button(
+            ep_tools, "Download selected", self._download_selected_episodes,
+            style="accent", glyph="download")
         self.download_selected_btn.pack(side="right")
         self.selection_size_lbl = ctk.CTkLabel(
             ep_tools, text="", font=F_SM, text_color=TEXT_MUTED)
         self.selection_size_lbl.pack(side="right", padx=(0, SP_MD))
-        ctk.CTkFrame(col2, height=1, corner_radius=0,
-                     fg_color=BORDER).grid(row=2, column=0, sticky="ew")
-        self.episode_scroll = ctk.CTkScrollableFrame(
-            col2, label_text="", fg_color="transparent",
-            scrollbar_button_color=BORDER,
-            scrollbar_button_hover_color=BORDER_STRONG)
-        self.episode_scroll.grid(row=3, column=0, sticky="nsew",
-                                 padx=(SP_XS, 0), pady=SP_SM)
 
-        # Column 3: episode details / download / welcome
-        col3 = column(2, (SP_SM, 0))
-        col3.grid_rowconfigure(1, weight=1)
-        self.source_header = ctk.CTkLabel(
-            col3, text="", anchor="w", font=F_EYEBROW, text_color=GOLD)
-        self.source_header.grid(row=0, column=0, sticky="ew",
-                                padx=SP_XL, pady=(SP_LG, 0))
-        self.source_scroll = ctk.CTkScrollableFrame(
-            col3, label_text="", fg_color="transparent",
-            scrollbar_button_color=BORDER,
+        ep_card = ctk.CTkFrame(main, fg_color=SURFACE_INNER,
+                               corner_radius=RADIUS_LG,
+                               border_width=1, border_color=BORDER)
+        ep_card.grid(row=2, column=0, sticky="nsew",
+                     padx=(SP_XXL, SP_SM), pady=(0, SP_LG))
+        self.episode_scroll = ctk.CTkScrollableFrame(
+            ep_card, label_text="", fg_color="transparent", corner_radius=0,
+            scrollbar_button_color=SURFACE_INNER,
             scrollbar_button_hover_color=BORDER_STRONG)
-        self.source_scroll.grid(row=1, column=0, sticky="nsew",
-                                padx=(SP_XS, 0), pady=(0, SP_SM))
+        self.episode_scroll.pack(fill="both", expand=True,
+                                 padx=(SP_XS, 2), pady=SP_XS)
+        self._autohide_scrollbar(self.episode_scroll)
+
+        det_card = ctk.CTkFrame(main, fg_color=SURFACE_INNER,
+                                corner_radius=RADIUS_LG,
+                                border_width=1, border_color=BORDER)
+        det_card.grid(row=2, column=1, sticky="nsew",
+                      padx=(SP_SM, SP_XXL), pady=(0, SP_LG))
+        self.source_header = ctk.CTkLabel(
+            det_card, text="", anchor="w", font=F_BOLD_XS,
+            text_color=ACCENT_TEXT)
+        self.source_header.pack(fill="x", padx=SP_XL, pady=(SP_LG, 0))
+        self.source_scroll = ctk.CTkScrollableFrame(
+            det_card, label_text="", fg_color="transparent", corner_radius=0,
+            scrollbar_button_color=SURFACE_INNER,
+            scrollbar_button_hover_color=BORDER_STRONG)
+        self.source_scroll.pack(fill="both", expand=True,
+                                padx=(SP_XS, 2), pady=(0, SP_SM))
+        self._autohide_scrollbar(self.source_scroll)
 
         # Faster wheel scrolling in the columns
         for sf in (self.arc_scroll, self.episode_scroll, self.source_scroll):
             sf._on_mousewheel = lambda event, f=sf: f._canvas.yview_scroll(int(-3 * (event.delta / 120)), "units")
+
+        # Collapse the navigation pane to icons on narrow windows.
+        self.bind("<Configure>", self._on_window_resize, add="+")
+
+    NAV_WIDTH = 220
+    NAV_COMPACT_WIDTH = 56
+    ARC_WIDTH = 260
+    DETAIL_WIDTH = 360
 
     # ----------------------------------------------------- source switch ---
 
@@ -2149,26 +2367,25 @@ class App(ctk.CTk):
 
         row = ctk.CTkFrame(self.arc_scroll,
                            fg_color=SURFACE_SEL if is_selected else "transparent",
-                           corner_radius=RADIUS_SM, height=38)
+                           corner_radius=RADIUS_SM, height=36)
         row.pack(fill="x", padx=(SP_XS, SP_SM), pady=1)
         row.pack_propagate(False)
 
-        bar = ctk.CTkFrame(row, width=3, height=18, corner_radius=2,
-                           fg_color=GOLD if is_selected else "transparent")
-        bar.pack(side="left", padx=(SP_XS, 0))
+        bar = ctk.CTkFrame(row, width=3, height=16, corner_radius=2,
+                           fg_color=ACCENT if is_selected else "transparent")
+        bar.place(x=0, rely=0.5, anchor="w")
         num_lbl = ctk.CTkLabel(
-            row, text=f"{idx + 1:02d}" if idx is not None else "",
-            width=24, font=F_MONO_XS,
-            text_color=GOLD if is_selected else TEXT_DIM)
-        num_lbl.pack(side="left", padx=(SP_SM, SP_XS))
+            row, text=f"{idx + 1}" if idx is not None else "",
+            width=22, font=F_XS, anchor="e", text_color=TEXT_DIM)
+        num_lbl.pack(side="left", padx=(SP_SM, SP_SM))
         meta_lbl = ctk.CTkLabel(row, text=meta, anchor="e", font=F_XS,
                                 text_color=meta_color)
         meta_lbl.pack(side="right", padx=(SP_XS, SP_MD))
-        shown = title if len(title) <= 26 else title[:25].rstrip() + "…"
         title_lbl = ctk.CTkLabel(
-            row, text=shown, anchor="w",
+            row, text=title, anchor="w", width=20,
             font=F_BOLD_BASE if is_selected else F_BASE, text_color=TEXT)
         title_lbl.pack(side="left", fill="x", expand=True)
+        fit_label(title_lbl, title)
 
         # Stash refs so _update_arc_selection can mutate this row in place
         # instead of triggering a full list re-render on every click.
@@ -2195,9 +2412,8 @@ class App(ctk.CTk):
             w.bind("<Button-1>", _click)
             w.bind("<Enter>", _enter)
             w.bind("<Leave>", _leave)
-            w.configure(cursor="hand2")
 
-        if shown != title:
+        if len(title) > 20:
             Tooltip(title_lbl, title)
 
     def _on_arc_selected(self, arc: dict) -> None:
@@ -2230,9 +2446,7 @@ class App(ctk.CTk):
             widgets["row"].configure(
                 fg_color=SURFACE_SEL if is_sel else "transparent")
             widgets["bar"].configure(
-                fg_color=GOLD if is_sel else "transparent")
-            widgets["num_lbl"].configure(
-                text_color=GOLD if is_sel else TEXT_DIM)
+                fg_color=ACCENT if is_sel else "transparent")
             widgets["title_lbl"].configure(
                 font=F_BOLD_BASE if is_sel else F_BASE)
 
@@ -2354,18 +2568,21 @@ class App(ctk.CTk):
             fg_color=SURFACE_SEL if is_active else "transparent",
             corner_radius=RADIUS_SM, height=40,
         )
-        row.pack(fill="x", padx=(SP_XS, SP_SM), pady=1)
+        row.pack(fill="x", padx=(SP_XS, SP_XS), pady=1)
         row.pack_propagate(False)
+        pill = ctk.CTkFrame(row, width=3, height=16, corner_radius=2,
+                            fg_color=ACCENT if is_active else "transparent")
+        pill.place(x=0, rely=0.5, anchor="w")
         var = ctk.BooleanVar(value=False)
         var.trace_add("write", lambda *_: not getattr(self, "_updating_checks", False) and self._refresh_selection_buttons())
         cb = ctk.CTkCheckBox(
-            row, text="", variable=var, width=22,
-            checkbox_width=18, checkbox_height=18,
-            corner_radius=5, border_width=2,
-            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-            border_color=BORDER_STRONG, checkmark_color="white",
+            row, text="", variable=var, width=20,
+            checkbox_width=20, checkbox_height=20,
+            corner_radius=RADIUS_SM, border_width=1,
+            fg_color=ACCENT, hover_color=ACCENT_HOVER,
+            border_color=CHECK_STROKE, checkmark_color=ON_ACCENT,
         )
-        cb.pack(side="left", padx=(SP_MD, SP_XS))
+        cb.pack(side="left", padx=(SP_MD, SP_SM))
         cb._canvas.bind("<Button-1>", lambda event, num=ep["num"]: self._on_checkbox_clicked(event, num), add="+")
         self.ep_check_vars[ep["num"]] = var
 
@@ -2420,36 +2637,35 @@ class App(ctk.CTk):
 
         is_saved = self._is_episode_saved(ep, self.selected_arc)
         full_title = episode_title(ep)
-        # Strip the leading "Arc NN" the display title may carry — the arc is
-        # already the column heading, the number has its own slot.
         name = ep.get("canonical_title") or full_title
-        row_title = name if len(name) <= 38 else name[:37].rstrip() + "…"
+        row_title = name
 
         # Right side first so it claims its width before the title.
         if is_saved:
             self._chip(click_row, "✓ Saved", style=CHIP_OK).pack(
                 side="right", padx=(SP_XS, SP_SM))
         detail_lbl = ctk.CTkLabel(click_row, text=detail, anchor="e",
-                                  font=F_XS, text_color=TEXT_DIM, width=58)
+                                  font=F_XS, text_color=TEXT_DIM, width=64)
         detail_lbl.pack(side="right", padx=(SP_XS, SP_SM if not is_saved else 0))
         widgets_extra = [detail_lbl]
         if chip_text:
             chip = self._chip(click_row, chip_text, style=chip_style)
-            chip.pack(side="right")
+            chip.pack(side="right", padx=(0, SP_XS))
             widgets_extra.append(chip)
         num_lbl = ctk.CTkLabel(click_row, text=f"{ep['num']:02d}", width=26,
-                               font=F_MONO_SM, text_color=TEXT_DIM, anchor="w")
-        num_lbl.pack(side="left", padx=(SP_XS, SP_XS))
+                               font=F_SM, text_color=TEXT_DIM, anchor="w")
+        num_lbl.pack(side="left", padx=(0, SP_SM))
         title_lbl = ctk.CTkLabel(
-            click_row, text=row_title, anchor="w",
+            click_row, text=row_title, anchor="w", width=20,
             font=F_BOLD_BASE if is_active else F_BASE, text_color=TEXT)
         title_lbl.pack(side="left", fill="x", expand=True)
-        if row_title != name or name != full_title:
-            Tooltip(title_lbl, full_title)
+        fit_label(title_lbl, row_title)
+        Tooltip(title_lbl, full_title)
 
         # Refs for _update_episode_selection — avoids re-rendering all 59
         # episodes when the user clicks one to view its sources.
-        self._ep_row_widgets[ep["num"]] = {"row": row, "title_lbl": title_lbl}
+        self._ep_row_widgets[ep["num"]] = {"row": row, "title_lbl": title_lbl,
+                                           "pill": pill}
 
         def _click(_e=None, e=ep) -> None:
             self._on_episode_clicked(e)
@@ -2466,12 +2682,11 @@ class App(ctk.CTk):
                           if self.selected_ep_for_detail == ep["num"]
                           else "transparent")
 
-        for w in [click_row, num_lbl, title_lbl] + widgets_extra:
+        for w in [row, click_row, num_lbl, title_lbl] + widgets_extra:
             w.bind("<Button-1>", _click)
             w.bind("<Double-Button-1>", _double_click)
             w.bind("<Enter>", _enter)
             w.bind("<Leave>", _leave)
-            w.configure(cursor="hand2")
 
     def _build_arc_pack_row(self, pack: dict) -> None:
         size_str = _fmt_size(pack.get("size_bytes", 0))
@@ -2483,7 +2698,7 @@ class App(ctk.CTk):
         # cream so the eye lands on the trusted ones first.
         card = ctk.CTkFrame(
             self.episode_scroll,
-            fg_color=OFFICIAL_BG if is_official else UNOFFICIAL_BG,
+            fg_color=SURFACE_INNER,
             border_width=1,
             border_color=BORDER if is_official else BORDER,
             corner_radius=RADIUS_SM,
@@ -2509,7 +2724,7 @@ class App(ctk.CTk):
             line2, text="Open magnet", width=120, height=H_SM,
             font=F_BOLD_XS,
             corner_radius=RADIUS_SM,
-            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color=ON_ACCENT,
             command=lambda p=pack: self._open_magnet(
                 p["magnet"], p.get("torrent_title", "")),
         ).pack(side="right")
@@ -2558,6 +2773,9 @@ class App(ctk.CTk):
                 fg_color=SURFACE_SEL if is_active else "transparent")
             widgets["title_lbl"].configure(
                 font=F_BOLD_BASE if is_active else F_BASE)
+            if widgets.get("pill"):
+                widgets["pill"].configure(
+                    fg_color=ACCENT if is_active else "transparent")
 
     def _toggle_select_all(self) -> None:
         if not self.ep_check_vars:
@@ -2639,14 +2857,14 @@ class App(ctk.CTk):
             return
         arc_title = self.selected_arc["title"]
         self.source_header.configure(
-            text=f"{arc_title.upper()}  ·  EPISODE {ep['num']:02d}")
+            text=f"{arc_title}   ›   Episode {ep['num']}")
 
         hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
         hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_MD))
         ctk.CTkLabel(
             hero, text=ep.get("canonical_title") or episode_title(ep),
-            font=F_TITLE, text_color=TEXT, anchor="w", justify="left",
-            wraplength=360,
+            font=F_BOLD_XL, text_color=TEXT, anchor="w", justify="left",
+            wraplength=268,
         ).pack(fill="x")
         tags = ctk.CTkFrame(hero, fg_color="transparent", height=1)
         if self._is_episode_saved(ep, self.selected_arc):
@@ -2669,12 +2887,12 @@ class App(ctk.CTk):
                 plot = plot[:419].rsplit(" ", 1)[0] + "…"
             ctk.CTkLabel(
                 hero, text=plot, font=F_SM, text_color=TEXT_MUTED,
-                anchor="w", justify="left", wraplength=360,
+                anchor="w", justify="left", wraplength=268,
             ).pack(fill="x", pady=(SP_MD, 0))
 
         if not srcs:
             self._build_placeholder_card(
-                _SRC_LABEL[src].upper(),
+                _SRC_LABEL[src],
                 f"No {_SRC_LABEL[src]} options for this episode.")
             return
         card_header = {
@@ -2688,7 +2906,7 @@ class App(ctk.CTk):
     def _render_download_panel(self) -> None:
         """Hero download status panel — combines title, big percentage and
         progress bar into a single tinted band, with chip-row stats below."""
-        self.source_header.configure(text="DOWNLOADING")
+        self.source_header.configure(text="Downloading")
 
         # Hero card with faint red tinted background — visually distinct
         # from the standard source cards so progress reads "this is happening
@@ -2704,7 +2922,7 @@ class App(ctk.CTk):
             wrap, text=self.download_title or "(starting…)",
             font=F_BOLD_LG,
             text_color=TEXT,
-            anchor="w", wraplength=360, justify="left",
+            anchor="w", wraplength=268, justify="left",
         )
         title_lbl.pack(fill="x", padx=SP_LG, pady=(SP_LG, SP_SM))
 
@@ -2742,7 +2960,7 @@ class App(ctk.CTk):
                 "slow the next. Nothing we can tune, just how it is. "
                 "Download finishes either way."),
             font=F_ITALIC_XS, text_color=TEXT_MUTED,
-            wraplength=360, justify="left", anchor="w",
+            wraplength=268, justify="left", anchor="w",
         )
         # Single horizontal chip row for the remaining stats
         chip_row = ctk.CTkFrame(wrap, fg_color="transparent")
@@ -2780,25 +2998,24 @@ class App(ctk.CTk):
         )
         folder_card.pack(fill="x", padx=SP_SM, pady=(0, SP_SM))
         ctk.CTkLabel(
-            folder_card, text="SAVING TO",
+            folder_card, text="Saving to",
             font=F_BOLD_XS,
             text_color=TEXT_MUTED, anchor="w",
         ).pack(fill="x", padx=SP_LG, pady=(SP_MD, 0))
         ctk.CTkLabel(
             folder_card, text=self.save_dir.get() or "(no folder set)",
             font=F_MONO_SM,
-            wraplength=340, justify="left", anchor="w",
+            wraplength=268, justify="left", anchor="w",
             text_color=TEXT,
         ).pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_XS))
         ctk.CTkButton(
             folder_card, text="Open folder", height=H_SM,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG,
-            text_color=LINK,
-            hover_color=SURFACE_HOVER,
+            fg_color=CONTROL_FILL, border_width=1,
+            border_color=CONTROL_STROKE,
+            text_color=TEXT,
+            hover_color=CONTROL_HOVER,
             font=F_SM,
-            command=self._open_folder,
-        ).pack(padx=SP_LG, pady=(0, SP_MD), anchor="w")
+            command=self._open_folder, corner_radius=RADIUS_SM).pack(padx=SP_LG, pady=(0, SP_MD), anchor="w")
 
         self._download_panel_widgets = {
             "title": title_lbl,
@@ -2878,7 +3095,9 @@ class App(ctk.CTk):
                 eta_str = f"{secs // 60}m {secs % 60}s left"
             else:
                 eta_str = f"{secs // 3600}h {(secs % 3600) // 60}m left"
-        w["eta"].configure(text=eta_str)
+        w["eta"].configure(text="")
+        w["speed"].configure(
+            text=f"{speed}  ·  {eta_str}" if eta_str else str(speed))
 
         # Slow-download nudge — once the download has been running > 15s and
         # the sustained rate is below 300 KB/s, surface the friendly note.
@@ -2910,16 +3129,16 @@ class App(ctk.CTk):
         if arc is not None:
             self._render_arc_overview(arc, src)
             return
-        self.source_header.configure(text="WELCOME ABOARD")
+        self.source_header.configure(text="Welcome aboard")
         hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
         hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_LG))
-        ctk.CTkLabel(hero, text="Set sail through\nOne Piece, the fast way.",
-                     font=F_TITLE, text_color=TEXT, anchor="w",
-                     justify="left").pack(fill="x")
+        ctk.CTkLabel(hero, text="Set sail through One Piece, the fast way.",
+                     font=F_BOLD_XL, text_color=TEXT, anchor="w",
+                     justify="left", wraplength=268).pack(fill="x")
         ctk.CTkLabel(
             hero, text=_SRC_BLURB.get(src, ""), font=F_SM,
             text_color=TEXT_MUTED, anchor="w", justify="left",
-            wraplength=360).pack(fill="x", pady=(SP_SM, 0))
+            wraplength=268).pack(fill="x", pady=(SP_SM, 0))
 
         # Library stats
         arcs = [a for a in self.index.get("arcs", [])
@@ -2941,12 +3160,12 @@ class App(ctk.CTk):
             ctk.CTkLabel(tile, text=value, font=(FAMILY, 22, "bold"),
                          text_color=GOLD if label == "Saved" else TEXT).pack(
                 anchor="w", padx=SP_MD, pady=(SP_MD, 0))
-            ctk.CTkLabel(tile, text=label.upper(), font=F_EYEBROW,
+            ctk.CTkLabel(tile, text=label, font=F_EYEBROW,
                          text_color=TEXT_DIM).pack(
                 anchor="w", padx=SP_MD, pady=(0, SP_MD))
 
         # How it works
-        ctk.CTkLabel(self.source_scroll, text="HOW IT WORKS", font=F_EYEBROW,
+        ctk.CTkLabel(self.source_scroll, text="How it works", font=F_EYEBROW,
                      text_color=TEXT_DIM, anchor="w").pack(
             fill="x", padx=SP_LG + SP_XS, pady=(0, SP_SM))
         guide = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
@@ -2965,14 +3184,14 @@ class App(ctk.CTk):
                      pady=(SP_MD if i == 1 else SP_XS,
                            SP_MD if i == len(steps) else SP_XS))
             ctk.CTkLabel(row, text=str(i), font=F_BOLD_SM,
-                         fg_color=HEADER_ACCENT, text_color=HEADER_BG,
+                         fg_color=ACCENT, text_color=ON_ACCENT,
                          corner_radius=12, width=24, height=24).pack(side="left")
             ctk.CTkLabel(row, text=text, font=F_SM, text_color=TEXT,
                          anchor="w", justify="left", wraplength=300).pack(
                 side="left", fill="x", expand=True, padx=(SP_MD, 0))
 
         # Community
-        ctk.CTkLabel(self.source_scroll, text="COMMUNITY", font=F_EYEBROW,
+        ctk.CTkLabel(self.source_scroll, text="Community", font=F_EYEBROW,
                      text_color=TEXT_DIM, anchor="w").pack(
             fill="x", padx=SP_LG + SP_XS, pady=(0, SP_SM))
         link_row = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
@@ -2982,62 +3201,28 @@ class App(ctk.CTk):
                 side="left", padx=(0, SP_XS))
 
     def _build_source_tab(self, parent, key: str) -> None:
-        tab = ctk.CTkFrame(parent, width=1, height=1,
-                           fg_color="transparent", cursor="hand2")
-        tab.pack(side="left", padx=(0, SP_MD))
-        inner = ctk.CTkFrame(tab, width=1, height=1, fg_color="transparent")
-        inner.pack(padx=SP_SM, pady=(SP_XS, 0))
-        name = ctk.CTkLabel(inner, text=_SRC_LABEL[key], font=F_BOLD_SM,
-                            text_color=HEADER_MUTED)
-        name.pack(side="left")
-        count = ctk.CTkLabel(inner, text="", font=F_XS, width=22, height=18,
-                             corner_radius=9, fg_color=HEADER_LINE,
-                             text_color=HEADER_MUTED)
-        count.pack(side="left", padx=(SP_SM, 0))
-        line = ctk.CTkFrame(tab, width=1, height=3, corner_radius=2,
-                            fg_color="transparent")
-        line.pack(fill="x", padx=SP_XS, pady=(SP_SM, 0))
-        self._tab_widgets[key] = {"name": name, "count": count, "line": line,
-                                  "tab": tab}
-
-        def click(_e=None, k=key):
-            self._on_source_change(self._tab_labels.get(k, _SRC_LABEL[k]))
-
-        def enter(_e=None, k=key):
-            if k != self.current_source:
-                name.configure(text_color=HEADER_FG)
-
-        def leave(_e=None, k=key):
-            if k != self.current_source:
-                name.configure(text_color=HEADER_MUTED)
-
-        for w in (tab, inner, name, count, line):
-            w.bind("<Button-1>", click)
-            w.bind("<Enter>", enter)
-            w.bind("<Leave>", leave)
+        self._nav_items[key] = self._nav_item(
+            parent, key, _SRC_LABEL[key],
+            lambda k=key: self._on_source_change(
+                self._tab_labels.get(k, _SRC_LABEL[k])))
 
     def _paint_source_tabs(self) -> None:
-        """Restyle the tab strip for the active source and arc counts."""
-        for key, w in getattr(self, "_tab_widgets", {}).items():
-            active = key == self.current_source
+        """Mark the active source in the navigation pane, with arc counts."""
+        for key in _SRC_LABEL:
+            item = getattr(self, "_nav_items", {}).get(key)
+            if not item:
+                continue
             label = self._tab_labels.get(key, "")
             n = label.rsplit("·", 1)[-1].strip() if "·" in label else ""
-            w["count"].configure(
-                text=n,
-                fg_color=HEADER_ACCENT if active else HEADER_LINE,
-                text_color=HEADER_BG if active else HEADER_MUTED)
-            if not n:
-                w["count"].pack_forget()
-            w["name"].configure(
-                text_color=HEADER_FG if active else HEADER_MUTED)
-            w["line"].configure(
-                fg_color=HEADER_ACCENT if active else "transparent")
+            item["badge"].configure(text=n)
+            self._paint_nav_item(item, key == self.current_source)
 
     def _paint_folder_btn(self) -> None:
         path = self.save_dir.get() or "Choose a save folder"
-        shown = path if len(path) <= 54 else "…" + path[-53:]
+        shown = path if len(path) <= 48 else "…" + path[-47:]
         try:
-            self._folder_btn.configure(text=f"  📁  {shown}  ")
+            prefix = "" if glyph_image("folder") else f"{icon('folder')}  "
+            self._folder_btn.configure(text=f"{prefix} {shown}")
         except Exception:
             pass
 
@@ -3055,19 +3240,152 @@ class App(ctk.CTk):
 
     def _empty_state(self, parent, glyph: str, title: str, body: str) -> None:
         box = ctk.CTkFrame(parent, fg_color="transparent")
-        box.pack(fill="x", pady=(SP_XXL * 2, SP_XL))
-        ctk.CTkLabel(box, text=glyph, font=(FAMILY, 28),
-                     text_color=TEXT_DIM).pack()
+        box.pack(fill="x", pady=(SP_XXL * 3, SP_XL))
+        ctk.CTkLabel(box, text=icon("onepace") if glyph == "☰" else glyph,
+                     font=icon_font(40), text_color=TEXT_DIM).pack()
         ctk.CTkLabel(box, text=title, font=F_BOLD_LG,
-                     text_color=TEXT).pack(pady=(SP_SM, SP_XS))
+                     text_color=TEXT).pack(pady=(SP_MD, SP_XS))
         ctk.CTkLabel(box, text=body, font=F_SM, text_color=TEXT_MUTED,
-                     wraplength=300, justify="center").pack(padx=SP_XL)
+                     wraplength=320, justify="center").pack(padx=SP_XL)
+
+    def _resolve(self, color):
+        """A (light, dark) pair → the hex for the current appearance."""
+        if isinstance(color, (tuple, list)):
+            return color[1] if ctk.get_appearance_mode() == "Dark" else color[0]
+        return color
+
+    def _button(self, parent, text: str, command, *, style: str = "standard",
+                glyph: str | None = None, width: int = 0, anchor="center"):
+        """Fluent buttons: standard (outlined), accent (filled), subtle
+        (no chrome until hovered) and link (accent text)."""
+        label, img = text, None
+        if glyph:
+            img = glyph_image(glyph, 16, ON_ACCENT if style == "accent"
+                              else ACCENT_TEXT if style == "link" else TEXT)
+            if img is None:
+                label = f"{icon(glyph)}  {text}" if text else icon(glyph)
+            elif text:
+                label = f" {text}"
+        kw = dict(text=label, command=command, height=H_SM, image=img,
+                  compound="left",
+                  corner_radius=RADIUS_SM, anchor=anchor,
+                  font=F_BOLD_SM if style == "accent" else F_SM)
+        if width:
+            kw["width"] = width
+        else:
+            kw["width"] = 0
+        if style == "accent":
+            kw.update(fg_color=ACCENT, hover_color=ACCENT_HOVER,
+                      text_color=ON_ACCENT, border_width=0)
+        elif style == "subtle":
+            kw.update(fg_color="transparent", hover_color=SURFACE_HOVER,
+                      text_color=TEXT, border_width=0)
+        elif style == "link":
+            kw.update(fg_color="transparent", hover_color=SURFACE_HOVER,
+                      text_color=ACCENT_TEXT, border_width=0)
+        else:
+            kw.update(fg_color=CONTROL_FILL, hover_color=CONTROL_HOVER,
+                      text_color=TEXT, border_width=1,
+                      border_color=CONTROL_STROKE)
+        return ctk.CTkButton(parent, **kw)
+
+    def _nav_item(self, parent, key: str, text: str, command) -> dict:
+        """One NavigationView row: icon, label, optional count, and the
+        accent pill that marks the selected page."""
+        row = ctk.CTkFrame(parent, fg_color="transparent", height=36,
+                           corner_radius=RADIUS_SM)
+        row.pack(fill="x", padx=SP_XS + 2, pady=1)
+        row.pack_propagate(False)
+        pill = ctk.CTkFrame(row, width=3, height=16, corner_radius=2,
+                            fg_color="transparent")
+        pill.place(x=0, rely=0.5, anchor="w")
+        glyph = ctk.CTkLabel(row, text=icon(key), font=icon_font(16),
+                             width=20, text_color=TEXT)
+        glyph.pack(side="left", padx=(SP_MD + 2, 0))
+        label = ctk.CTkLabel(row, text=text, font=F_BASE, text_color=TEXT,
+                             anchor="w")
+        label.pack(side="left", fill="x", expand=True, padx=(SP_MD + 2, 0))
+        badge = ctk.CTkLabel(row, text="", font=F_XS, text_color=TEXT_DIM,
+                             anchor="e")
+        badge.pack(side="right", padx=(0, SP_MD))
+        item = {"row": row, "pill": pill, "glyph": glyph, "label": label,
+                "badge": badge, "key": key, "text": text}
+
+        def click(_e=None):
+            command()
+
+        def enter(_e=None):
+            if not item.get("selected"):
+                row.configure(fg_color=NAV_HOVER)
+
+        def leave(_e=None):
+            if not item.get("selected"):
+                row.configure(fg_color="transparent")
+
+        for w in (row, glyph, label, badge):
+            w.bind("<Button-1>", click)
+            w.bind("<Enter>", enter)
+            w.bind("<Leave>", leave)
+        Tooltip(row, text)
+        return item
+
+    def _paint_nav_item(self, item: dict, selected: bool) -> None:
+        item["selected"] = selected
+        item["row"].configure(fg_color=NAV_SEL if selected else "transparent")
+        item["pill"].configure(fg_color=ACCENT if selected else "transparent")
+        item["label"].configure(font=F_BOLD_BASE if selected else F_BASE)
+
+    def _on_window_resize(self, event) -> None:
+        if event.widget is not self:
+            return
+        compact = event.width < 1220
+        if compact == self._nav_compact:
+            return
+        self._nav_compact = compact
+        self._nav.configure(
+            width=self.NAV_COMPACT_WIDTH if compact else self.NAV_WIDTH)
+        for item in self._nav_items.values():
+            if compact:
+                item["label"].pack_forget()
+                item["badge"].pack_forget()
+            else:
+                item["badge"].pack(side="right", padx=(0, SP_MD))
+                item["label"].pack(side="left", fill="x", expand=True,
+                                   padx=(SP_MD + 2, 0))
+        if compact:
+            self._brand_text.pack_forget()
+            self._nav_section.configure(text="")
+        else:
+            self._brand_text.pack(side="left", fill="x", expand=True)
+            self._nav_section.configure(text="Sources")
+
+    @staticmethod
+    def _autohide_scrollbar(sf) -> None:
+        """Fluent scrollbars stay out of the way until the list is hovered."""
+        sb = getattr(sf, "_scrollbar", None)
+        if sb is None:
+            return
+        rest = getattr(sb, "_button_color", None) or SURFACE_INNER
+        hover = BORDER_STRONG
+
+        def show(_e=None):
+            try:
+                sb.configure(button_color=hover)
+            except Exception:
+                pass
+
+        def hide(_e=None):
+            try:
+                sb.configure(button_color=rest)
+            except Exception:
+                pass
+        sf._parent_frame.bind("<Enter>", show, add="+")
+        sf._parent_frame.bind("<Leave>", hide, add="+")
 
     def _build_quality_tiles(self, sources: list[dict], ep: dict,
                              kind: str) -> None:
-        """One card per version, a button per quality. The pick that
-        matches the user's defaults is the filled red one."""
-        # Same file can be listed under several quality albums; show it once.
+        """One settings-style card per version with a button per quality.
+        The pick that matches the user's defaults is the accent button."""
         seen: set[str] = set()
         uniq = []
         for s in sources:
@@ -3086,39 +3404,32 @@ class App(ctk.CTk):
                 [v for v in by_ver if v not in VERSIONS]
         for ver in order:
             card = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
-                                fg_color=SURFACE_INNER,
+                                fg_color=SURFACE_CARD,
                                 border_width=1, border_color=BORDER)
             card.pack(fill="x", padx=SP_LG, pady=(0, SP_SM))
             top = ctk.CTkFrame(card, fg_color="transparent")
-            top.pack(fill="x", padx=SP_MD, pady=(SP_MD, SP_SM))
+            top.pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
+            ctk.CTkLabel(top, text=_VER_LONG.get(ver, ver), font=F_BOLD_BASE,
+                         text_color=TEXT, anchor="w").pack(side="left")
             self._chip(top, _VER_SHORT.get(ver, "Dub"),
-                       style=CHIP_DUB if is_dub(ver) else CHIP_SUB).pack(side="left")
-            ctk.CTkLabel(top, text=_VER_LONG.get(ver, ver), font=F_BOLD_SM,
-                         text_color=TEXT).pack(side="left", padx=(SP_SM, 0))
+                       style=CHIP_DUB if is_dub(ver) else CHIP_SUB).pack(
+                side="right")
             grid = ctk.CTkFrame(card, fg_color="transparent")
-            grid.pack(fill="x", padx=SP_MD - 2, pady=(0, SP_MD))
+            grid.pack(fill="x", padx=SP_LG - 2, pady=(0, SP_MD))
             items = sorted(by_ver[ver],
                            key=lambda s: -_quality_rank(s.get("quality", "")))
-            for col in range(3):
+            for col in range(2):
                 grid.grid_columnconfigure(col, weight=1, uniform="q")
             for i, s in enumerate(items):
-                is_best = best is not None and s is best or (
-                    best is not None and s.get("file_id") == best.get("file_id")
-                    and s.get("version") == best.get("version"))
-                btn = ctk.CTkButton(
+                is_best = best is not None and (
+                    s is best or (s.get("file_id") == best.get("file_id")
+                                  and s.get("version") == best.get("version")))
+                btn = self._button(
                     grid,
-                    text=f"{s.get('quality', '—')}\n{_fmt_size(s.get('size_bytes', 0))}",
-                    height=48, corner_radius=RADIUS_SM,
-                    font=F_BOLD_SM,
-                    fg_color=PRIMARY if is_best else SURFACE_CARD,
-                    hover_color=PRIMARY_HOVER if is_best else SURFACE_HOVER,
-                    text_color="white" if is_best else TEXT,
-                    border_width=0 if is_best else 1,
-                    border_color=BORDER_STRONG,
-                    command=lambda src=s, e=ep:
-                        self._download_single_episode_source(e, src),
-                )
-                btn.grid(row=i // 3, column=i % 3, sticky="ew",
+                    f"{s.get('quality', '—')}  ·  {_fmt_size(s.get('size_bytes', 0))}",
+                    lambda src=s, e=ep: self._download_single_episode_source(e, src),
+                    style="accent" if is_best else "standard")
+                btn.grid(row=i // 2, column=i % 2, sticky="ew",
                          padx=2, pady=2)
                 Tooltip(btn, f"Download {_VER_LONG.get(ver, ver)} "
                              f"{s.get('quality', '')}")
@@ -3131,7 +3442,7 @@ class App(ctk.CTk):
         hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
         hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_LG))
         ctk.CTkLabel(hero, text=arc["title"], font=F_TITLE, text_color=TEXT,
-                     anchor="w", justify="left", wraplength=360).pack(fill="x")
+                     anchor="w", justify="left", wraplength=268).pack(fill="x")
         eps, packs = self._arc_source_counts(arc, src)
         ctk.CTkLabel(
             hero,
@@ -3156,7 +3467,7 @@ class App(ctk.CTk):
                          ).pack(side="right")
             pb = ctk.CTkProgressBar(card, height=6, corner_radius=3,
                                     progress_color=OK if total and saved == total
-                                    else HEADER_ACCENT,
+                                    else ACCENT,
                                     fg_color=SURFACE_ROW, border_width=0)
             pb.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
             pb.set(saved / total if total else 0)
@@ -3188,7 +3499,7 @@ class App(ctk.CTk):
                     ctk.CTkLabel(tile, text=value, font=F_BOLD_LG,
                                  text_color=TEXT).pack(
                         anchor="w", padx=SP_MD, pady=(SP_MD, 0))
-                    ctk.CTkLabel(tile, text=label.upper(), font=F_EYEBROW,
+                    ctk.CTkLabel(tile, text=label, font=F_EYEBROW,
                                  text_color=TEXT_DIM).pack(
                         anchor="w", padx=SP_MD, pady=(0, SP_MD))
 
@@ -3199,27 +3510,28 @@ class App(ctk.CTk):
                    "for whole-arc downloads.")
         ctk.CTkLabel(self.source_scroll, text=tip, font=F_SM,
                      text_color=TEXT_MUTED, anchor="w", justify="left",
-                     wraplength=360).pack(fill="x", padx=SP_LG + SP_XS,
+                     wraplength=268).pack(fill="x", padx=SP_LG + SP_XS,
                                           pady=(SP_XS, SP_MD))
 
     def _build_source_card(self, header: str, sources: list[dict],
                            ep: dict, kind: str) -> None:
         if not sources:
             return
-        ctk.CTkLabel(self.source_scroll, text=header, font=F_EYEBROW,
-                     text_color=TEXT_DIM, anchor="w").pack(
-            fill="x", padx=SP_LG + SP_XS, pady=(SP_SM, SP_XS))
+        ctk.CTkLabel(self.source_scroll, text=header.title()
+                     if header.isupper() else header,
+                     font=F_BOLD_BASE, text_color=TEXT, anchor="w").pack(
+            fill="x", padx=SP_LG + SP_XS, pady=(SP_MD, SP_SM))
         if kind in ("onepace", "muhn"):
             self._build_quality_tiles(sources, ep, kind)
         else:
             card = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
-                                fg_color=SURFACE_INNER,
+                                fg_color=SURFACE_CARD,
                                 border_width=1, border_color=BORDER)
             card.pack(fill="x", padx=SP_LG, pady=(0, SP_SM))
             for i, s in enumerate(sources):
                 if i:
                     ctk.CTkFrame(card, height=1, fg_color=BORDER,
-                                 corner_radius=0).pack(fill="x", padx=SP_MD)
+                                 corner_radius=0).pack(fill="x")
                 self._build_source_row(card, s, ep, kind)
         if kind == "muhn":
             self._build_muhn_gdrive_fallback(self.source_scroll)
@@ -3249,7 +3561,7 @@ class App(ctk.CTk):
                      text_color=TEXT_DIM).pack(
             fill="x", padx=SP_LG, pady=(SP_MD, 0))
         ctk.CTkLabel(card, text=msg, font=F_SM, anchor="w",
-                     text_color=TEXT_MUTED, wraplength=340,
+                     text_color=TEXT_MUTED, wraplength=268,
                      justify="left").pack(
             fill="x", padx=SP_LG, pady=(SP_XS, SP_MD))
 
@@ -3270,7 +3582,7 @@ class App(ctk.CTk):
             ctk.CTkButton(
                 row, text="Get NZB", width=92, height=H_SM - 2,
                 corner_radius=RADIUS_SM, font=F_BOLD_XS,
-                fg_color=INFO, hover_color=INFO_HOVER, text_color="white",
+                fg_color=INFO, hover_color=INFO_HOVER, text_color=ON_ACCENT,
                 command=lambda src=s, e=ep: self._download_usenet_nzb(src, e),
             ).pack(side="right", padx=(SP_SM, 0))
             ctk.CTkLabel(row, text=size_str, font=F_XS,
@@ -3292,7 +3604,7 @@ class App(ctk.CTk):
             ctk.CTkButton(
                 row, text="Open magnet", width=104, height=H_SM - 2,
                 corner_radius=RADIUS_SM, font=F_BOLD_XS,
-                fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color="white",
+                fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color=ON_ACCENT,
                 command=lambda m=s["magnet"], t=s.get("torrent_title", ""):
                     self._open_magnet(m, t),
             ).pack(side="right", padx=(SP_SM, 0))
@@ -3301,14 +3613,14 @@ class App(ctk.CTk):
 
     @staticmethod
     def _chip(parent, text: str, *, fg=None, txt=None, style=None):
-        """Small rounded pill — Sub/Dub/quality/Official/Saved labels."""
+        """Small tag — Sub/Dub/quality/Official/Saved labels."""
         bg, fgc = style if style is not None else CHIP_NEUTRAL
         return ctk.CTkLabel(
-            parent, text=f"  {text}  ", height=20,
-            font=F_BOLD_XS,
+            parent, text=f" {text} ", height=22,
+            font=F_XS,
             fg_color=fg if fg is not None else bg,
             text_color=txt if txt is not None else fgc,
-            corner_radius=6,
+            corner_radius=RADIUS_SM,
         )
 
     # ------------------------------------------------- download actions ---
@@ -3770,9 +4082,8 @@ class App(ctk.CTk):
         btn_row.pack(pady=14)
         ctk.CTkButton(
             btn_row, text="Get qBittorrent", width=140,
-            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-            command=lambda: webbrowser.open("https://www.qbittorrent.org/")
-        ).pack(side="left", padx=6)
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color=ON_ACCENT,
+            command=lambda: webbrowser.open("https://www.qbittorrent.org/"), corner_radius=RADIUS_SM).pack(side="left", padx=6)
         ctk.CTkButton(
             btn_row, text="OK", width=100,
             fg_color="#374A6E", hover_color="#2C3D5C",
@@ -3906,18 +4217,17 @@ class App(ctk.CTk):
         ctk.CTkButton(
             btn_row, text="Open Settings", width=140, height=H_MD,
             font=F_BOLD_SM,
-            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color=ON_ACCENT,
             command=lambda: (overlay.destroy(),
                              self._open_settings_panel()),
         ).pack(side="left", padx=SP_XS)
         ctk.CTkButton(
             btn_row, text="Setup guide", width=120, height=H_MD,
             font=F_SM,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG, text_color=LINK,
-            hover_color=SURFACE_HOVER,
-            command=lambda: webbrowser.open(USENET_SETUP_GUIDE_URL),
-        ).pack(side="left", padx=SP_XS)
+            fg_color=CONTROL_FILL, border_width=1,
+            border_color=CONTROL_STROKE, text_color=TEXT,
+            hover_color=CONTROL_HOVER,
+            command=lambda: webbrowser.open(USENET_SETUP_GUIDE_URL), corner_radius=RADIUS_SM).pack(side="left", padx=SP_XS)
         ctk.CTkButton(
             btn_row, text="Close", width=90, height=H_MD,
             font=F_SM,
@@ -3938,21 +4248,16 @@ class App(ctk.CTk):
     # --------------------------------------------- updates-available badge
 
     def _set_refresh_badge(self, available: bool) -> None:
-        """Update the header Refresh button to advertise pending updates.
-        Yellow-tinted + arrow when something new is on onepace.net since
-        our last full refresh; plain when in sync."""
-        btn = getattr(self, "_refresh_btn", None)
-        if btn is None:
+        """Show a dot and "New episodes" on the Refresh nav item when the
+        published index has changed since our last refresh."""
+        item = getattr(self, "_refresh_btn", None)
+        if item is None:
             return
         try:
-            if available:
-                btn.configure(
-                    text="●  New episodes", text_color=HEADER_ACCENT,
-                    border_color=HEADER_ACCENT)
-            else:
-                btn.configure(
-                    text="⟳  Refresh", text_color=HEADER_FG,
-                    border_color=HEADER_LINE)
+            item["label"].configure(
+                text="New episodes" if available else "Refresh")
+            item["badge"].configure(text="●" if available else "",
+                                    text_color=ACCENT)
         except Exception:
             pass
 
@@ -4010,15 +4315,18 @@ class App(ctk.CTk):
         box = getattr(self, "_header_btn_box", None)
         if box is None or getattr(self, "_app_update_btn", None) is not None:
             return
-        self._app_update_btn = ctk.CTkButton(
-            box, text=f"✦  Version {version} is out", height=H_SM,
-            corner_radius=RADIUS_SM, font=F_BOLD_SM,
-            fg_color=HEADER_ACCENT, hover_color="#E0AE3A",
-            text_color=HEADER_BG,
-            command=lambda: webbrowser.open(url))
+        item = self._nav_item(box, "update", f"Get version {version}",
+                              lambda: webbrowser.open(url))
+        item["glyph"].configure(text_color=ACCENT_TEXT)
+        item["label"].configure(text_color=ACCENT_TEXT, font=F_BOLD_BASE)
+        item["row"].pack_forget()
         first = box.winfo_children()[0]
-        self._app_update_btn.pack(side="left", padx=(0, SP_SM), before=first)
-        Tooltip(self._app_update_btn, "Open the download page for the new version")
+        item["row"].pack(fill="x", padx=SP_XS + 2, pady=1, before=first)
+        self._nav_items["update"] = item
+        self._app_update_btn = item
+        if self._nav_compact:
+            item["label"].pack_forget()
+            item["badge"].pack_forget()
         self._log(f"Version {version} is available: {url}")
 
     def _refresh_all(self) -> None:
@@ -4263,11 +4571,10 @@ class App(ctk.CTk):
 
     def _toggle_log(self) -> None:
         if self._log_visible:
-            self.log_panel.pack_forget()
+            self.log_panel.grid_forget()
             self._log_visible = False
         else:
-            self.log_panel.pack(fill="x", side="bottom",
-                                padx=12, pady=(0, 8))
+            self.log_panel.grid(row=3, column=0, columnspan=3, sticky="ew")
             self._log_visible = True
 
     def _cancel(self) -> None:
@@ -4443,7 +4750,7 @@ class ModalOverlay(ctk.CTkFrame):
     and centers a card containing the modal panel's content."""
     
     def __init__(self, parent, title_text: str, width: int = 560, height: int = 480) -> None:
-        overlay_color = ("#C9CED8", "#03050B")
+        overlay_color = SMOKE
         super().__init__(parent, fg_color=overlay_color)
         
         self.parent_app = parent
@@ -4504,22 +4811,22 @@ class BatchDownloadDialog(ModalOverlay):
         self.allow_subs = allow_subs
 
         btn_row = ctk.CTkFrame(self.card, fg_color="transparent")
-        btn_row.pack(side="bottom", pady=(SP_LG, SP_MD))
+        btn_row.pack(side="bottom", fill="x", padx=SP_XL, pady=(SP_LG, SP_XL))
         ctk.CTkButton(
             btn_row, text="Cancel", width=120, height=H_MD,
             font=F_SM,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG,
-            text_color=LINK,
-            hover_color=SURFACE_HOVER,
-            command=self._cancel,
-        ).pack(side="left", padx=SP_XS)
+            fg_color=CONTROL_FILL, border_width=1,
+            border_color=CONTROL_STROKE,
+            text_color=TEXT,
+            hover_color=CONTROL_HOVER,
+            command=self._cancel, corner_radius=RADIUS_SM).pack(
+            side="right", expand=True, fill="x", padx=(SP_XS, 0))
         ctk.CTkButton(
             btn_row, text="Start download", width=180, height=H_MD,
             font=F_BOLD_SM,
-            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-            command=self._confirm,
-        ).pack(side="left", padx=SP_XS)
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color=ON_ACCENT,
+            command=self._confirm, corner_radius=RADIUS_SM).pack(
+            side="right", expand=True, fill="x", padx=(0, SP_XS))
 
         ctk.CTkLabel(
             self.card,
@@ -4539,7 +4846,7 @@ class BatchDownloadDialog(ModalOverlay):
         opt.pack(fill="x", padx=SP_XL, pady=SP_SM)
 
         if source == "onepace":
-            ctk.CTkLabel(opt, text="VERSION",
+            ctk.CTkLabel(opt, text="Version",
                          font=F_BOLD_SM, text_color=TEXT_MUTED,
                          anchor="w").pack(fill="x",
                                            padx=SP_LG, pady=(SP_MD, 2))
@@ -4547,19 +4854,19 @@ class BatchDownloadDialog(ModalOverlay):
             ctk.CTkComboBox(
                 opt, variable=self.version_var, values=VERSIONS,
                 state="readonly", height=H_SM, font=F_SM,
-                border_color=BORDER,
-                button_color=SECONDARY,
-                button_hover_color=SECONDARY_HOVER,
-                dropdown_fg_color=SURFACE_INNER,
+                border_color=CONTROL_STROKE, border_width=1,
+                button_color=CONTROL_FILL, corner_radius=RADIUS_SM,
+                button_hover_color=CONTROL_HOVER, text_color=TEXT,
+                dropdown_fg_color=SURFACE_INNER, dropdown_font=F_SM,
                 dropdown_hover_color=SURFACE_HOVER,
                 dropdown_text_color=TEXT,
-                fg_color=SURFACE_INNER,
+                fg_color=CONTROL_FILL,
                 command=lambda _v: self._update_size_preview(),
             ).pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
         else:
             self.version_var = ctk.StringVar(value="English Dub")
 
-        ctk.CTkLabel(opt, text="QUALITY",
+        ctk.CTkLabel(opt, text="Quality",
                      font=F_BOLD_SM, text_color=TEXT_MUTED,
                      anchor="w").pack(fill="x",
                                        padx=SP_LG, pady=(SP_SM, 2))
@@ -4567,13 +4874,13 @@ class BatchDownloadDialog(ModalOverlay):
         ctk.CTkComboBox(
             opt, variable=self.quality_var, values=QUALITIES,
             state="readonly", height=H_SM, font=F_SM,
-            border_color=BORDER,
-            button_color=SECONDARY,
-            button_hover_color=SECONDARY_HOVER,
-            dropdown_fg_color=SURFACE_INNER,
+            border_color=CONTROL_STROKE, border_width=1,
+            button_color=CONTROL_FILL, corner_radius=RADIUS_SM,
+            button_hover_color=CONTROL_HOVER, text_color=TEXT,
+            dropdown_fg_color=SURFACE_INNER, dropdown_font=F_SM,
             dropdown_hover_color=SURFACE_HOVER,
             dropdown_text_color=TEXT,
-            fg_color=SURFACE_INNER,
+            fg_color=CONTROL_FILL,
             command=lambda _v: self._update_size_preview(),
         ).pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
 
@@ -4584,7 +4891,7 @@ class BatchDownloadDialog(ModalOverlay):
         )
         size_card.pack(fill="x", padx=SP_XL, pady=SP_SM)
         ctk.CTkLabel(
-            size_card, text="TOTAL DOWNLOAD SIZE",
+            size_card, text="Total download size",
             font=F_EYEBROW, text_color=GOLD, anchor="w",
         ).pack(fill="x", padx=SP_LG, pady=(SP_MD, 0))
         self.size_lbl = ctk.CTkLabel(
@@ -4604,8 +4911,7 @@ class BatchDownloadDialog(ModalOverlay):
             size_card, text="Get the subtitled version of those instead",
             variable=self.allow_subs_var, font=F_SM, text_color=TEXT,
             fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-            command=self._update_size_preview,
-        )
+            command=self._update_size_preview, checkbox_width=20, checkbox_height=20, corner_radius=RADIUS_SM, border_width=1, border_color=CHECK_STROKE, checkmark_color=ON_ACCENT)
         n_saved = len(self.saved_nums)
         self.skip_saved_var = ctk.BooleanVar(value=self.skip_saved)
         if n_saved:
@@ -4615,8 +4921,7 @@ class BatchDownloadDialog(ModalOverlay):
                       f"{'s' if n_saved != 1 else ''} already in your library"),
                 variable=self.skip_saved_var, font=F_SM, text_color=TEXT,
                 fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-                command=self._update_size_preview,
-            ).pack(fill="x", padx=SP_XL, pady=(SP_SM, 0))
+                command=self._update_size_preview, checkbox_width=20, checkbox_height=20, corner_radius=RADIUS_SM, border_width=1, border_color=CHECK_STROKE, checkmark_color=ON_ACCENT).pack(fill="x", padx=SP_XL, pady=(SP_SM, 0))
 
         self._update_size_preview()
 
@@ -4714,8 +5019,8 @@ class DnsPanel(ModalOverlay):
         self.cloudflare_btn = ctk.CTkButton(
             btn_row1, text="Switch to Cloudflare (1.1.1.1)",
             height=H_LG, font=F_BOLD_SM,
-            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-            command=self._switch_cloudflare)
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color=ON_ACCENT,
+            command=self._switch_cloudflare, corner_radius=RADIUS_SM)
         self.cloudflare_btn.pack(fill="x")
 
         btn_row2 = ctk.CTkFrame(self.card, fg_color="transparent")
@@ -4730,11 +5035,11 @@ class DnsPanel(ModalOverlay):
         self.revert_btn = ctk.CTkButton(
             btn_row2, text="Revert to DHCP",
             height=H_MD, font=F_SM,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG,
-            text_color=LINK,
-            hover_color=SURFACE_HOVER,
-            command=self._revert)
+            fg_color=CONTROL_FILL, border_width=1,
+            border_color=CONTROL_STROKE,
+            text_color=TEXT,
+            hover_color=CONTROL_HOVER,
+            command=self._revert, corner_radius=RADIUS_SM)
         self.revert_btn.pack(side="left", fill="x", expand=True,
                               padx=(SP_XS, 0))
 
@@ -4775,12 +5080,11 @@ class DnsPanel(ModalOverlay):
         ctk.CTkButton(
             self.card, text="Close panel",
             height=H_MD, font=F_SM,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG,
-            text_color=LINK,
-            hover_color=SURFACE_HOVER,
-            command=self.destroy
-        ).pack(side="bottom", pady=(0, SP_MD))
+            fg_color=CONTROL_FILL, border_width=1,
+            border_color=CONTROL_STROKE,
+            text_color=TEXT,
+            hover_color=CONTROL_HOVER,
+            command=self.destroy, corner_radius=RADIUS_SM).pack(side="bottom", pady=(0, SP_MD))
 
         self._refresh_state()
 
@@ -4898,7 +5202,7 @@ class SettingsPanel(ModalOverlay):
     _SECTION_ORDER = ("General", "Output", "Usenet", "Updates", "About")
 
     def __init__(self, parent: App) -> None:
-        super().__init__(parent, "Settings", width=720, height=520)
+        super().__init__(parent, "Settings", width=780, height=580)
         cfg = parent.config_data
         self._original_appearance = cfg.get(
             "appearance", self.DEFAULT_APPEARANCE)
@@ -4924,7 +5228,9 @@ class SettingsPanel(ModalOverlay):
         ctk.CTkLabel(titlebar, text="Settings", font=F_BOLD_XL,
                      text_color=TEXT, anchor="w").pack(side="left")
         ctk.CTkButton(
-            titlebar, text="✕", width=32, height=32, font=F_BOLD_BASE,
+            titlebar, text=icon("cancel"), width=32, height=32,
+            font=icon_font(12) if ICON_FONT else F_BOLD_BASE,
+            corner_radius=RADIUS_SM,
             fg_color="transparent", hover_color=SURFACE_HOVER,
             text_color=TEXT_MUTED, command=self._rollback_and_close,
         ).pack(side="right")
@@ -4937,8 +5243,7 @@ class SettingsPanel(ModalOverlay):
         body.pack(fill="both", expand=True, padx=SP_XL, pady=(0, SP_MD))
 
         self._sidebar = ctk.CTkFrame(
-            body, fg_color=SURFACE_CARD, corner_radius=RADIUS_LG,
-            width=148, border_width=1, border_color=BORDER)
+            body, fg_color="transparent", corner_radius=0, width=164)
         self._sidebar.pack(side="left", fill="y")
         self._sidebar.pack_propagate(False)
 
@@ -4954,9 +5259,9 @@ class SettingsPanel(ModalOverlay):
         for i, name in enumerate(self._SECTION_ORDER):
             btn = ctk.CTkButton(
                 self._sidebar, text=name, anchor="w",
-                font=F_SM, height=H_MD, corner_radius=RADIUS_SM,
+                font=F_BASE, height=36, corner_radius=RADIUS_SM,
                 fg_color="transparent", text_color=TEXT,
-                hover_color=SURFACE_HOVER,
+                hover_color=NAV_HOVER,
                 command=lambda n=name: self._show_section(n))
             btn.pack(fill="x", padx=SP_XS,
                      pady=(SP_SM if i == 0 else 2, 2))
@@ -4988,9 +5293,11 @@ class SettingsPanel(ModalOverlay):
                                         padx=SP_LG, pady=SP_LG)
         for n, btn in self._nav_buttons.items():
             if n == name:
-                btn.configure(fg_color=PRIMARY, text_color="#FFFFFF")
+                btn.configure(fg_color=NAV_SEL, text_color=TEXT,
+                              font=F_BOLD_BASE)
             else:
-                btn.configure(fg_color="transparent", text_color=TEXT)
+                btn.configure(fg_color="transparent", text_color=TEXT,
+                              font=F_BASE)
         self._active_section = name
 
     @staticmethod
@@ -5014,11 +5321,12 @@ class SettingsPanel(ModalOverlay):
         return ctk.CTkComboBox(
             parent, variable=variable, values=values, state="readonly",
             height=H_MD, font=F_SM,
-            border_color=BORDER,
-            button_color=SECONDARY, button_hover_color=SECONDARY_HOVER,
-            dropdown_fg_color=SURFACE_INNER,
+            border_color=CONTROL_STROKE, border_width=1,
+            corner_radius=RADIUS_SM, text_color=TEXT,
+            button_color=CONTROL_FILL, button_hover_color=CONTROL_HOVER,
+            dropdown_fg_color=SURFACE_INNER, dropdown_font=F_SM,
             dropdown_hover_color=SURFACE_HOVER,
-            dropdown_text_color=TEXT, fg_color=SURFACE_INNER,
+            dropdown_text_color=TEXT, fg_color=CONTROL_FILL,
             command=command)
 
     # --------------------------------------------------- section builders -
@@ -5046,8 +5354,7 @@ class SettingsPanel(ModalOverlay):
             parent, text="Organize for Plex / Jellyfin",
             variable=self.organize_var, font=F_SM,
             fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-            border_color=BORDER_STRONG,
-        ).pack(fill="x", anchor="w", pady=(0, SP_SM))
+            checkbox_width=20, checkbox_height=20, corner_radius=RADIUS_SM, border_width=1, border_color=CHECK_STROKE, checkmark_color=ON_ACCENT).pack(fill="x", anchor="w", pady=(0, SP_SM))
         self._help_text(parent,
             "After each download, files are renamed into\n"
             "One Pace / Season N / One Pace - sNNeMM - Title.mkv\n"
@@ -5087,10 +5394,9 @@ class SettingsPanel(ModalOverlay):
         ):
             ctk.CTkButton(
                 row, text=txt, height=H_SM, width=w,
-                fg_color="transparent", border_width=1,
-                border_color=BORDER_STRONG, text_color=LINK,
-                hover_color=SURFACE_HOVER, font=F_SM, command=cmd,
-            ).pack(side="left", padx=(0, SP_XS))
+                fg_color=CONTROL_FILL, border_width=1,
+                border_color=CONTROL_STROKE, text_color=TEXT,
+                hover_color=CONTROL_HOVER, font=F_SM, command=cmd, corner_radius=RADIUS_SM).pack(side="left", padx=(0, SP_XS))
         self.test_status_lbl = ctk.CTkLabel(
             parent, text="", font=F_XS, anchor="w")
         self.test_status_lbl.pack(fill="x", pady=(SP_XS, 0))
@@ -5107,11 +5413,10 @@ class SettingsPanel(ModalOverlay):
             "you've edited the bundled JSON files (60-90 seconds).")
         ctk.CTkButton(
             parent, text="Force full rebuild", height=H_MD, width=200,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG, text_color=LINK,
-            hover_color=SURFACE_HOVER, font=F_SM,
-            command=self._force_full_rebuild,
-        ).pack(anchor="w", pady=(SP_MD, 0))
+            fg_color=CONTROL_FILL, border_width=1,
+            border_color=CONTROL_STROKE, text_color=TEXT,
+            hover_color=CONTROL_HOVER, font=F_SM,
+            command=self._force_full_rebuild, corner_radius=RADIUS_SM).pack(anchor="w", pady=(SP_MD, 0))
 
     def _build_about_section(self, parent) -> None:
         self._section_title(parent, "About")
@@ -5174,16 +5479,16 @@ class SettingsPanel(ModalOverlay):
         ctk.CTkButton(
             action_row, text="Restore defaults", width=140, height=H_MD,
             font=F_SM,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG,
-            text_color=LINK,
-            hover_color=SURFACE_HOVER,
-            command=self._restore_defaults).pack(side="left", padx=SP_XS)
+            fg_color=CONTROL_FILL, border_width=1,
+            border_color=CONTROL_STROKE,
+            text_color=TEXT,
+            hover_color=CONTROL_HOVER,
+            command=self._restore_defaults, corner_radius=RADIUS_SM).pack(side="left", padx=SP_XS)
         ctk.CTkButton(
             action_row, text="Save & close", width=160, height=H_MD,
             font=F_BOLD_SM,
-            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-            command=self._save).pack(side="left", padx=SP_XS)
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color=ON_ACCENT,
+            command=self._save, corner_radius=RADIUS_SM).pack(side="left", padx=SP_XS)
         # Thin divider above the action row so it reads as a distinct band.
         ctk.CTkFrame(self.card, height=1, fg_color=BORDER).pack(
             side="bottom", fill="x", padx=SP_XL)
