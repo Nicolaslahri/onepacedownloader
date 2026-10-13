@@ -558,11 +558,16 @@ function renderDownloads() {
     histCard.style.display = "";
     histEl.innerHTML = pixDone
       .map(
-        (d) => `
+        (d) => {
+          const warn = d.status === "done" && (d.warnings || []).length;
+          const label = warn ? `done · ${d.warnings.length} warning${d.warnings.length !== 1 ? "s" : ""}` : d.status;
+          const tip = warn ? ` title="${escapeAttr(d.warnings.join("\n"))}"` : "";
+          return `
         <div class="dl-hist-row">
           <span>${esc(d.arc_title)}</span>
-          <span class="dl-status-pill ${d.status}">${d.status}</span>
-        </div>`
+          <span class="dl-status-pill ${d.status}${warn ? " warn" : ""}"${tip}>${esc(label)}</span>
+        </div>`;
+        }
       )
       .join("");
   } else {
@@ -612,17 +617,25 @@ function connectSSE() {
   es.onmessage = (ev) => {
     try {
       const data = JSON.parse(ev.data);
+      // Only announce a job finishing that we saw running. Jobs that were
+      // already finished arrive again on every page load and reconnect.
+      const prev = downloads[data.id];
+      const finishedNow = prev && prev.status !== data.status &&
+        (prev.status === "queued" || prev.status === "downloading");
       downloads[data.id] = data;
       renderDownloads();
-      if (data.status === "done" && !data._toasted) {
-        toast(`Completed: ${data.arc_title}`);
-        data._toasted = true;
+      if (finishedNow && data.status === "done") {
+        const w = (data.warnings || []).length;
+        if (w) {
+          toast(`Completed with ${w} warning${w !== 1 ? "s" : ""}: ${data.arc_title} — ${data.warnings[0]}`, "error");
+        } else {
+          toast(`Completed: ${data.arc_title}`);
+        }
         loadStats();
         loadDownloaded();  // refresh saved chips + arc progress
       }
-      if (data.status === "error" && !data._toasted) {
+      if (finishedNow && data.status === "error") {
         toast(`Error: ${data.arc_title} — ${data.error || "unknown"}`, "error");
-        data._toasted = true;
       }
     } catch (e) {}
   };
@@ -702,7 +715,16 @@ async function loadSettings() {
       .join("");
     for (const [elId, key] of Object.entries(SETTINGS_FIELDS)) {
       const el = document.getElementById(elId);
-      if (el) el.value = settings[key] || "";
+      if (!el) continue;
+      el.value = settings[key] || "";
+      // Saved secrets never come back from the server — just whether one
+      // is set. Leaving the box empty keeps it.
+      if (key + "_set" in settings) {
+        el.dataset.placeholder ??= el.placeholder;
+        el.placeholder = settings[key + "_set"]
+          ? "Saved (leave blank to keep)"
+          : el.dataset.placeholder;
+      }
     }
     // About section
     document.getElementById("aboutVersion").textContent =
@@ -740,10 +762,9 @@ async function saveSettings() {
       method: "PUT",
       body: JSON.stringify(settingsPayload()),
     });
-    settings = { ...settings, ...settingsPayload() };
+    await loadSettings();
     toast("Settings saved");
     closeSettings();
-    startClientPolling();
   } catch (e) {
     toast("Failed to save: " + e.message, "error");
   }

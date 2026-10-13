@@ -949,8 +949,21 @@ def load_config() -> dict:
     return {}
 
 
+_save_lock = threading.Lock()
+
+
+def atomic_write(path: Path, data: bytes) -> None:
+    """Write to a temp file and swap it in. A crash or a second thread
+    saving at the same moment can't leave a half-written file behind —
+    load_config() would read that as empty and lose every setting."""
+    with _save_lock:
+        tmp = path.with_name(path.name + ".tmp")
+        tmp.write_bytes(data)
+        os.replace(tmp, path)
+
+
 def save_config(cfg: dict) -> None:
-    CONFIG_FILE.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+    atomic_write(CONFIG_FILE, json.dumps(cfg, indent=2).encode("utf-8"))
 
 
 # ---------------------------------------------------------------- gui -----
@@ -4560,7 +4573,7 @@ class App(ctk.CTk):
                 f"Remote payload looks malformed ({e}) — falling back."))
             return False
 
-        INDEX_FILE.write_bytes(blob)
+        atomic_write(INDEX_FILE, blob)
         rc = dict(self.config_data.get("refresh_cache", {}))
         if etag:
             rc["remote_etag"] = etag

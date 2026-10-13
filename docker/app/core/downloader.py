@@ -175,6 +175,8 @@ class Downloader:
         # file_id -> indexed filename. Lets run() find an episode that was
         # re-uploaded under a new file ID since the index was built.
         self.expected_names = expected_names or {}
+        # Filtered files the album no longer has, filled in by run().
+        self.missing: list[str] = []
         self.subfolder = subfolder
         # Flipped on the moment the speed-based detector judges pixeldrain.com
         # too slow — subsequent files in the same album skip it outright.
@@ -240,6 +242,7 @@ class Downloader:
                 f"list was built -- matched them by name.")
         if missing:
             names = [self.expected_names.get(i, i) for i in sorted(missing)]
+            self.missing = names
             self.on_log(
                 f"Album {title!r}: {len(missing)} episode(s) are no longer in "
                 f"this album: {', '.join(names[:3])}"

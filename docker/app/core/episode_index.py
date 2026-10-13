@@ -12,7 +12,13 @@ import re
 import time
 import urllib.request
 
-from ..config import APP_VERSION, BUNDLED_INDEX_FILE, INDEX_FILE, REMOTE_INDEX_URL
+from ..config import (
+    APP_VERSION,
+    BUNDLED_INDEX_FILE,
+    INDEX_FILE,
+    REMOTE_INDEX_URL,
+    atomic_write,
+)
 from . import tls_trust
 
 
@@ -63,7 +69,7 @@ def try_remote_refresh(config: dict, log=None) -> bool:
         return False
 
     try:
-        INDEX_FILE.write_bytes(blob)
+        atomic_write(INDEX_FILE, blob)
     except OSError as e:
         # /config not writable (bad volume permissions) — don't crash,
         # just fall back to the index bundled in the image.

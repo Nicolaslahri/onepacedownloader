@@ -35,6 +35,7 @@ class _Job:
         self.current_idx = 0
         self.total_files = len(episodes)
         self.error: str | None = None
+        self.warnings: list[str] = []
         self.cancel_evt = threading.Event()
 
     def to_model(self) -> DownloadStatus:
@@ -48,6 +49,7 @@ class _Job:
             current_idx=self.current_idx,
             total_files=self.total_files,
             error=self.error,
+            warnings=self.warnings,
         )
 
 
@@ -61,7 +63,12 @@ class DownloadManager:
         self._lock = threading.Lock()
         self._worker = threading.Thread(target=self._run_loop, daemon=True)
         self._wake = threading.Event()
-        self._sse_listeners: list[asyncio.Queue] = []
+        # Each SSE client's queue plus the event loop it lives on. Updates
+        # come from the worker thread, so they have to be handed to that
+        # loop — a bare put_nowait() from another thread doesn't wake the
+        # waiting client until something else does (up to 30s later).
+        self._sse_listeners: list[tuple[asyncio.AbstractEventLoop,
+                                        asyncio.Queue]] = []
         self._worker.start()
 
     # ── Public API ────────────────────────────────────────────────────
@@ -105,15 +112,16 @@ class DownloadManager:
             return [j.to_model() for j in self._jobs.values()]
 
     def subscribe(self) -> asyncio.Queue:
-        q: asyncio.Queue = asyncio.Queue()
-        self._sse_listeners.append(q)
+        """Call from the SSE handler (on the event loop)."""
+        q: asyncio.Queue = asyncio.Queue(maxsize=500)
+        with self._lock:
+            self._sse_listeners.append((asyncio.get_running_loop(), q))
         return q
 
     def unsubscribe(self, q: asyncio.Queue) -> None:
-        try:
-            self._sse_listeners.remove(q)
-        except ValueError:
-            pass
+        with self._lock:
+            self._sse_listeners = [
+                (lp, x) for lp, x in self._sse_listeners if x is not q]
 
     # ── Background worker ─────────────────────────────────────────────
 
@@ -152,8 +160,10 @@ class DownloadManager:
                                       job.version, job.quality,
                                       allow_subs=job.allow_subs)
                 if not src:
-                    log(f"  No {job.version} source for episode "
-                        f"{ep.get('num', '?')}, skipped")
+                    msg = (f"Episode {ep.get('num', '?')}: no "
+                           f"{job.version} source, skipped")
+                    log(f"  {msg}")
+                    job.warnings.append(msg)
                     continue
                 if src.get("version") and src["version"] != job.version:
                     log(f"  Episode {ep.get('num', '?')}: no {job.version}, "
@@ -210,12 +220,22 @@ class DownloadManager:
                 )
                 downloaded_sub = dl.run()
 
+                for name in dl.missing:
+                    job.warnings.append(
+                        f"{name} is no longer on Pixeldrain, skipped")
+
                 # Plex organize (always on in Docker mode)
                 if downloaded_sub.exists():
-                    organize_for_plex(
+                    moved = organize_for_plex(
                         downloaded_sub, file_ids, job.arc, index,
                         MEDIA_DIR, log=log,
                     )
+                    left = len(file_ids) - len(dl.missing) - moved
+                    if left > 0:
+                        job.warnings.append(
+                            f"{left} file(s) couldn't be sorted into "
+                            f"One Pace/Season folders and are still in "
+                            f"{downloaded_sub.name}")
 
                 done_eps += len(eps)
 
@@ -251,14 +271,23 @@ class DownloadManager:
 
     def _broadcast(self, job: _Job):
         data = job.to_model().model_dump()
-        dead: list[asyncio.Queue] = []
-        for q in self._sse_listeners:
+        with self._lock:
+            listeners = list(self._sse_listeners)
+        for loop, q in listeners:
             try:
-                q.put_nowait(data)
-            except Exception:
-                dead.append(q)
-        for q in dead:
-            self.unsubscribe(q)
+                loop.call_soon_threadsafe(_offer, q, data)
+            except RuntimeError:
+                # That client's loop is gone.
+                self.unsubscribe(q)
+
+
+def _offer(q: asyncio.Queue, data: dict) -> None:
+    # A client too slow to drain 500 updates just misses some; the next
+    # one carries the full job state anyway.
+    try:
+        q.put_nowait(data)
+    except asyncio.QueueFull:
+        pass
 
 
 # Module-level singleton

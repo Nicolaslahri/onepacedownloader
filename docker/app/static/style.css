@@ -605,6 +605,7 @@ body::before {
 .dl-status-pill.downloading { background: rgba(247,147,26,0.12); color: var(--orange); }
 .dl-status-pill.done        { background: rgba(34,197,94,0.12);  color: var(--green); }
 .dl-status-pill.error       { background: rgba(239,68,68,0.12);  color: var(--red-soft); }
+.dl-status-pill.done.warn   { background: rgba(247,147,26,0.14); color: var(--orange); cursor: help; }
 .dl-status-pill.cancelled   { background: rgba(255,255,255,0.04); color: var(--dim); }
 
 /* Transfer card header — title + source tag on one row */

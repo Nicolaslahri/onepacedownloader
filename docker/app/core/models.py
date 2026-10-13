@@ -27,6 +27,9 @@ class DownloadStatus(BaseModel):
     current_idx: int = 0
     total_files: int = 0
     error: str | None = None
+    # Finished, but not everything asked for came down (skipped episodes,
+    # files that couldn't be organized). Shown as "done with warnings".
+    warnings: list[str] = []
 
 
 class SettingsPayload(BaseModel):
