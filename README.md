@@ -22,7 +22,7 @@
 
 <br /><br />
 
-<img src="assets/screenshot.png" width="750" alt="App screenshot" />
+<img src="assets/screenshot.png" width="800" alt="App screenshot" />
 
 </div>
 
@@ -69,7 +69,7 @@ Downloading arcs from onepace.net by hand is a pain — every arc is split acros
 </td>
 <td width="50%">
 
-<img src="assets/screenshot_dialog.png" width="360" alt="Batch download dialog" />
+<img src="assets/screenshot_dialog.png" width="400" alt="Batch download dialog" />
 
 </td>
 </tr>
@@ -205,15 +205,15 @@ Fair question. Verify yourself.
 
 <div align="center">
 
-**SHA256:** `75935b45d4f589f501001743e5ab653a5f39c689c17615012e0d3dd88fa926ef`
+**SHA256 (v2.0.5):** `e9d2a1988d1949f3cc608eee02c3aa97e64a952e9257c94eced64809f1bae3f1`
 
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-Scan_Report-394EFF?style=for-the-badge&logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/75935b45d4f589f501001743e5ab653a5f39c689c17615012e0d3dd88fa926ef)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-Scan_Report-394EFF?style=for-the-badge&logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/e9d2a1988d1949f3cc608eee02c3aa97e64a952e9257c94eced64809f1bae3f1)
 
 </div>
 
 Most engines clean &mdash; Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malwarebytes, Microsoft Defender all pass. A handful of heuristic scanners (APEX, Bkav, Cylance, SentinelOne, Yandex) sometimes flag PyInstaller `--onefile` builds based on packed-binary patterns rather than actual malicious behavior &mdash; a common false-positive for unsigned solo-dev tools.
 
-> Don't trust the badge? Drop the `.exe` onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) &mdash; one file, stdlib only, MIT.
+> Don't trust the badge? Drop the `.exe` onto [virustotal.com](https://www.virustotal.com) yourself, or read the [full Python source](_source/onepace_downloader.py) &mdash; one main file, MIT.
 
 ---
 

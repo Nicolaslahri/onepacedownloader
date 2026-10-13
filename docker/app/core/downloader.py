@@ -8,6 +8,7 @@ import threading
 import time
 import urllib.error
 import urllib.request
+import zlib
 from pathlib import Path
 
 from ..config import (
@@ -34,9 +35,20 @@ def http_get(url: str, *, timeout: int = 30, retries: int = 5) -> bytes:
     last: Exception | None = None
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            req = urllib.request.Request(url, headers={
+                "User-Agent": UA,
+                "Accept": "text/html,application/json;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+            })
             with tls_trust.urlopen(req, timeout=timeout) as r:
                 return r.read()
+        except urllib.error.HTTPError as e:
+            # A 403/404 won't change in the next 30s of retries. Only
+            # rate limits and server-side hiccups are worth waiting out.
+            if e.code < 500 and e.code not in (408, 429):
+                raise
+            last = e
+            time.sleep(min(2 ** attempt, 15))
         except _TRANSIENT as e:
             # A cert failure means every trust store we have was already
             # tried — retrying just stalls the caller for ~30s. Bail out.
@@ -103,6 +115,24 @@ def sanitize_filename(name: str) -> str:
     return name or "untitled"
 
 
+# One Pace re-releases episodes in place: the album keeps its ID but the file
+# is re-uploaded with a new Pixeldrain ID and a new CRC in its name, sometimes
+# with a widened episode range. These are stripped so a re-release still
+# matches what the index recorded.
+_CRC_TAG_RE = re.compile(r"\[[0-9A-Fa-f]{8}\]")
+_RANGE_TAG_RE = re.compile(r"\[\d+(?:[-,]\d+)*\]")
+
+
+def episode_key(filename: str) -> str:
+    """Identity of an episode file that survives a re-release, e.g.
+    '[One Pace][115-117] Little Garden 01 [1080p][En Sub][DEC3026A].mp4'
+    -> 'little garden 01 [1080p][en sub].mp4'."""
+    k = _CRC_TAG_RE.sub("", filename)
+    k = _RANGE_TAG_RE.sub("", k)
+    k = re.sub(r"(?i)\[one pace\]", "", k)
+    return re.sub(r"\s+", " ", k).strip().lower()
+
+
 def fmt_bytes(n: float) -> str:
     for unit in ("B", "KB", "MB", "GB", "TB"):
         if n < 1024:
@@ -132,6 +162,7 @@ class Downloader:
         on_log,
         cancel_evt: threading.Event,
         file_filter: set[str] | None = None,
+        expected_names: dict[str, str] | None = None,
         subfolder: str | None = None,
     ) -> None:
         self.album_id = album_id
@@ -141,6 +172,11 @@ class Downloader:
         self.on_log = on_log
         self.cancel_evt = cancel_evt
         self.file_filter = file_filter
+        # file_id -> indexed filename. Lets run() find an episode that was
+        # re-uploaded under a new file ID since the index was built.
+        self.expected_names = expected_names or {}
+        # Filtered files the album no longer has, filled in by run().
+        self.missing: list[str] = []
         self.subfolder = subfolder
         # Flipped on the moment the speed-based detector judges pixeldrain.com
         # too slow — subsequent files in the same album skip it outright.
@@ -160,13 +196,10 @@ class Downloader:
         files = album.get("files", [])
         title = album.get("title") or self.album_id
         if self.file_filter is not None:
-            files = [f for f in files if f.get("id") in self.file_filter]
+            files = self._select_files(files, title)
         folder_name = sanitize_filename(self.subfolder or title)
         target = self.dest_dir / folder_name
         if not files:
-            self.on_log(
-                f"Album {title!r}: no files matched the filter -- nothing to do."
-            )
             return target
         target.mkdir(parents=True, exist_ok=True)
         self.on_log(
@@ -185,6 +218,37 @@ class Downloader:
         self.on_log(f"Done: {title}")
         return target
 
+    def _select_files(self, files: list[dict], title: str) -> list[dict]:
+        """Files in the album matching file_filter. IDs the album no longer
+        has are matched by episode_key on the indexed filename instead."""
+        wanted = self.file_filter or set()
+        present = {f.get("id") for f in files}
+        missing = wanted - present
+        keys = {episode_key(self.expected_names[i]): i
+                for i in missing if self.expected_names.get(i)}
+        picked = []
+        for f in files:
+            if f.get("id") in wanted:
+                picked.append(f)
+                continue
+            fid = keys.pop(episode_key(f.get("name", "")), None)
+            if fid is not None:
+                picked.append(f)
+                missing.discard(fid)
+        rematched = len(picked) - len(wanted & present)
+        if rematched:
+            self.on_log(
+                f"  {rematched} episode(s) were re-released since the episode "
+                f"list was built -- matched them by name.")
+        if missing:
+            names = [self.expected_names.get(i, i) for i in sorted(missing)]
+            self.missing = names
+            self.on_log(
+                f"Album {title!r}: {len(missing)} episode(s) are no longer in "
+                f"this album: {', '.join(names[:3])}"
+                f"{'...' if len(names) > 3 else ''}.")
+        return picked
+
     def _download_one(self, file_id: str, out: Path, size: int,
                       idx: int, total: int) -> None:
         partial = out.with_suffix(out.suffix + ".part")
@@ -198,11 +262,23 @@ class Downloader:
         while attempt < 5:
             attempt += 1
             try:
-                self._stream_to(file_id, partial, start, size, idx, total)
-                if size and partial.stat().st_size != size:
-                    raise IOError(
-                        f"size mismatch: expected {size}, got {partial.stat().st_size}"
-                    )
+                if size and start > size:
+                    # Left over from a resume the server didn't honour.
+                    self.on_log(f"  discarding oversized partial file "
+                                f"for {out.name}")
+                    partial.unlink()
+                    start = 0
+                if not (size and start == size):
+                    # A .part already at full size (closed before the
+                    # rename) only needs verifying — asking the server for
+                    # bytes past the end just earns a 416.
+                    self._stream_to(file_id, partial, start, size, idx, total)
+                got = partial.stat().st_size
+                if size and got != size:
+                    if got > size:
+                        partial.unlink()
+                    raise IOError(f"size mismatch: expected {size}, got {got}")
+                self._verify_crc(partial, out.name)
                 if out.exists():
                     out.unlink()
                 partial.rename(out)
@@ -218,6 +294,23 @@ class Downloader:
                     raise DownloadCancelled()
         raise RuntimeError(f"failed after 5 attempts: {last_exc}")
 
+    @staticmethod
+    def _verify_crc(path: Path, name: str) -> None:
+        """One Pace names every file with its CRC32, e.g. [DEC3026A]. A file
+        of the right size can still be damaged; this catches it."""
+        m = _CRC_TAG_RE.search(name)
+        if not m:
+            return
+        expected = int(m.group(0)[1:-1], 16)
+        crc = 0
+        with open(path, "rb") as f:
+            while chunk := f.read(1024 * 1024):
+                crc = zlib.crc32(chunk, crc)
+        if crc != expected:
+            path.unlink()
+            raise IOError(f"checksum mismatch (got {crc:08X}, expected "
+                          f"{expected:08X}) — file was damaged, re-downloading")
+
     def _stream_to(self, file_id: str, partial: Path, start: int,
                    size: int, idx: int, total: int) -> None:
         # Switch off pixeldrain.com to the bypass CDN if it's running slow —
@@ -230,6 +323,11 @@ class Downloader:
         resp, host = open_stream_dual(
             file_id, start=start, on_log=self.on_log,
             force_bypass=self._prefer_bypass)
+        if start and getattr(resp, "status", 206) != 206:
+            # The server ignored the Range header and is sending the whole
+            # file. Appending it would corrupt the .part, so start over.
+            self.on_log(f"  {host} can't resume this file — restarting it")
+            start = 0
         if start == 0:
             suffix = " (forced — pixeldrain.com was slow earlier)" \
                 if self._prefer_bypass else ""
@@ -272,6 +370,9 @@ class Downloader:
                                 resp = open_stream(
                                     BYPASS_FILE.format(file_id=file_id),
                                     start=bytes_now, timeout=60)
+                                if getattr(resp, "status", 206) != 206:
+                                    raise IOError(
+                                        "bypass CDN ignored the resume offset")
                                 host = "cdn.pixeldrain.eu.cc"
                                 display_start = bytes_now
                                 t0 = now

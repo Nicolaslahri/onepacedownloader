@@ -16,6 +16,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import webbrowser
+import zlib
 from pathlib import Path
 from tkinter import filedialog, messagebox
 
@@ -30,6 +31,8 @@ import tls_trust
 DISCORD_URL = "https://discord.gg/KHn6AbevZ2"
 REDDIT_URL = "https://www.reddit.com/user/nicolasenjah/"
 GITHUB_URL = "https://github.com/Nicolaslahri/onepacedownloader"
+RELEASES_API_URL = (
+    "https://api.github.com/repos/Nicolaslahri/onepacedownloader/releases/latest")
 MUHN_GDRIVE_MIRROR_URL = "https://drive.google.com/drive/folders/1OiT81U_kJulO9ptcBJA0wdZTSQAq83Sl"
 
 # Social brand colors — (fill, hover) for the Discord / Reddit / GitHub
@@ -91,7 +94,7 @@ INDEX_FILE = APP_DIR / "episode_index.json"
 CONFIG_FILE = APP_DIR / "config.json"
 DEFAULT_DOWNLOADS = APP_DIR / "downloads"
 
-APP_VERSION = "2.0.5"
+APP_VERSION = "2.1.0"
 
 # Sources
 SRC_ONE_PACE = "One Pace"
@@ -124,46 +127,59 @@ SOURCE_INFO = {
 DUB_GUIDE_URL = "https://www.reddit.com/r/onepace/comments/1rtpukk/one_pace_dub_watch_guide/"
 
 # ============================================================ DESIGN TOKENS
-# Brand — "Straw Hat / ship hull" identity. Header stays always-dark; the
-# body uses the rest of the palette adapted to light/dark via tuples.
-HEADER_BG = "#0E1627"        # deep navy — ship hull
-HEADER_FG = "#F8F4E8"        # cream
-HEADER_ACCENT = "#E5B85A"    # straw gold (matches hat ribbon)
-HEADER_ACCENT_DEEP = "#B58A36"
-PRIMARY = "#C8232A"          # ribbon red — download buttons
-PRIMARY_HOVER = "#A11C22"
-PRIMARY_BG = ("#FFF1F2", "#3A1518")  # tinted bg for selected/focused state
+# Brand: "Straw Hat" — deep night-sea navy, straw gold for selection and
+# focus, ribbon red for the one thing you came to do (download). Every
+# body colour is a (light, dark) pair; the header band is always dark.
+HEADER_BG = "#0A0F1C"        # night sea
+HEADER_BG_2 = "#0E1526"      # tab band under the title bar
+HEADER_FG = "#F4F1E8"        # cream
+HEADER_MUTED = "#8B94AA"
+HEADER_LINE = "#1B2540"
+HEADER_HOVER = "#18213A"
+HEADER_ACCENT = "#F2C14E"    # straw gold
+HEADER_ACCENT_DEEP = "#C99A2E"
+PRIMARY = "#E23B3F"          # ribbon red — download actions only
+PRIMARY_HOVER = "#C42E33"
+PRIMARY_BG = ("#FDECEC", "#3A1A1D")
 MUTED = "#7B8597"
+GOLD = ("#B7841A", "#F2C14E")   # gold that stays readable on white
 
-# Surface elevation — three tiers with real contrast. The body (panel) is
-# the darkest, columns sit raised on it (card), inner cards within columns
-# pop a bit more. Hairline border ties the system together.
-SURFACE_PANEL = ("#E8EAEE", "#0D131F")   # window/body background — darkest
-SURFACE_CARD  = ("#FFFFFF", "#1A2332")   # column surface — raised
-SURFACE_INNER = ("#F6F7FA", "#212D3F")   # inner cards (banner, source cards)
-SURFACE_ROW   = ("#F0F1F4", "#23303F")
-SURFACE_HOVER = ("#E5E8EE", "#2C3D5C")
-BORDER        = ("#DBDFE5", "#2A3441")
-BORDER_STRONG = ("#C0C5CD", "#3A4250")
+# Surfaces, darkest to most raised. Columns are cards on the window;
+# rows inside them tint on hover and turn warm when selected.
+SURFACE_PANEL = ("#EDEFF4", "#080C18")   # window
+SURFACE_CARD  = ("#FFFFFF", "#111829")   # columns, dialogs
+SURFACE_INNER = ("#F6F7FB", "#172036")   # cards inside a column
+SURFACE_ROW   = ("#F2F4F8", "#18223A")
+SURFACE_HOVER = ("#F1F3F8", "#19233B")
+SURFACE_SEL   = ("#FFF5DC", "#1F2A46")   # selected arc / episode
+BORDER        = ("#E3E6ED", "#1C2640")
+BORDER_STRONG = ("#C8CDD8", "#2C395A")
 
 # Text
-TEXT          = ("gray10",  "gray92")
-TEXT_MUTED    = ("gray35",  "gray65")
-TEXT_DIM      = ("gray50",  "gray50")
-LINK          = HEADER_ACCENT  # gold links carry the brand into the body
+TEXT          = ("#131826", "#E8ECF5")
+TEXT_MUTED    = ("#5A6377", "#929FBB")
+TEXT_DIM      = ("#9AA1B1", "#5B6785")
+LINK          = GOLD
 
 # Semantic — every accent is theme-aware (light, dark) so dark mode pops too
-OK            = ("#1E7E34", "#4CAF50")
-WARN          = ("#B97500", "#E5A23A")
-DANGER        = ("#A11C22", "#D63B40")
-DANGER_HOVER  = ("#7E2A2A", "#9F2A30")
-INFO          = ("#3F62A4", "#5C7DC4")   # secondary blue (also magnet)
-INFO_HOVER    = ("#2B4977", "#3F62A4")
-SECONDARY     = ("#374A6E", "#374A6E")   # neutral filled button
-SECONDARY_HOVER = ("#2C3D5C", "#2C3D5C")
-OFFICIAL_BG   = ("#E8F5E9", "#1E3A24")   # Galaxy9000 row background
-UNOFFICIAL_BG = ("#FFF7E0", "#2E2814")   # other Nyaa pack row background
-OFFICIAL_CHIP = ("#1E7E34", "#3FA85A")
+OK            = ("#1D7A45", "#4FCB8B")
+WARN          = ("#A86A00", "#E8A93A")
+DANGER        = ("#C42E33", "#E0484C")
+DANGER_HOVER  = ("#9F2428", "#B8363A")
+INFO          = ("#3563C9", "#4C7BE0")   # magnets / NZBs
+INFO_HOVER    = ("#2A4FA3", "#3C66C4")
+SECONDARY     = ("#2B3A5E", "#24304F")   # neutral filled button (white text)
+SECONDARY_HOVER = ("#22304F", "#2D3B60")
+OFFICIAL_BG   = ("#E9F7EF", "#122A21")   # Galaxy9000 row background
+UNOFFICIAL_BG = ("#FFF8E6", "#262111")   # other Nyaa pack row background
+OFFICIAL_CHIP = ("#1D7A45", "#2E9E63")
+
+# Chips: (background, text) pairs
+CHIP_NEUTRAL = (("#EEF0F5", "#1C2640"), ("#5A6377", "#A3AEC8"))
+CHIP_SUB     = (("#E8EEFF", "#17264A"), ("#2F58C4", "#8DB0FF"))
+CHIP_DUB     = (("#F3EAFF", "#271B45"), ("#7A3EC8", "#C7A6FF"))
+CHIP_OK      = (("#E3F6EA", "#11302A"), ("#1D7A45", "#5ED39A"))
+CHIP_GOLD    = (("#FFF3D6", "#2E2610"), ("#8A6110", "#F2C14E"))
 
 # Spacing — 4px base unit. Always use these constants, never raw numbers.
 SP_XS = 4
@@ -173,11 +189,11 @@ SP_LG = 16
 SP_XL = 20
 SP_XXL = 24
 
-# Corner radius — only two values app-wide
-RADIUS_SM = 6   # rows, badges, small buttons
-RADIUS_LG = 10  # cards, modals, large containers
+# Corner radius
+RADIUS_SM = 8    # rows, chips, small buttons
+RADIUS_LG = 14   # cards, modals, columns
 
-# Typography — five-step ramp.
+# Typography
 FAMILY = "Segoe UI"
 FAMILY_MONO = "Consolas"
 F_XS    = (FAMILY, 9)
@@ -191,14 +207,17 @@ F_BOLD_SM   = (FAMILY, 10, "bold")
 F_BOLD_BASE = (FAMILY, 11, "bold")
 F_BOLD_LG   = (FAMILY, 13, "bold")
 F_BOLD_XL   = (FAMILY, 16, "bold")
-F_HERO_BOLD = (FAMILY, 28, "bold")
+F_TITLE     = (FAMILY, 19, "bold")
+F_HERO_BOLD = (FAMILY, 30, "bold")
+F_EYEBROW   = (FAMILY, 8, "bold")
 F_ITALIC_XS = (FAMILY, 9, "italic")
+F_MONO_XS   = (FAMILY_MONO, 9)
 F_MONO_SM   = (FAMILY_MONO, 10)
 F_MONO_BASE = (FAMILY_MONO, 11)
-# Button heights — three sizes only
-H_SM = 28
-H_MD = 34
-H_LG = 40
+# Button heights
+H_SM = 30
+H_MD = 36
+H_LG = 42
 
 ONEPACE_URL = "https://onepace.net/en/watch"
 PIXELDRAIN_API = "https://pixeldrain.com/api/list/{album_id}"
@@ -228,6 +247,21 @@ UA = (
 VERSIONS = ["English Subtitles", "English Dub", "English Dub with Closed Captions"]
 QUALITIES = ["1080p", "720p", "480p"]
 
+# Closest substitute first. The two dubs share an audio track, so they stand
+# in for each other before anything falls back to the Japanese audio.
+_VERSION_FALLBACK = {
+    "English Subtitles": ["English Subtitles", "English Dub",
+                          "English Dub with Closed Captions"],
+    "English Dub": ["English Dub", "English Dub with Closed Captions",
+                    "English Subtitles"],
+    "English Dub with Closed Captions": ["English Dub with Closed Captions",
+                                         "English Dub", "English Subtitles"],
+}
+
+
+def is_dub(version: str | None) -> bool:
+    return bool(version) and "Dub" in version
+
 
 # ---------------------------------------------------------------- helpers ---
 
@@ -243,9 +277,20 @@ def http_get(url: str, *, timeout: int = 30, retries: int = 5) -> bytes:
     last: Exception | None = None
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            req = urllib.request.Request(url, headers={
+                "User-Agent": UA,
+                "Accept": "text/html,application/json;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+            })
             with tls_trust.urlopen(req, timeout=timeout) as r:
                 return r.read()
+        except urllib.error.HTTPError as e:
+            # A 403/404 won't change in the next 30s of retries. Only
+            # rate limits and server-side hiccups are worth waiting out.
+            if e.code < 500 and e.code not in (408, 429):
+                raise
+            last = e
+            time.sleep(min(2 ** attempt, 15))
         except _TRANSIENT as e:
             # A cert failure means every trust store we have was already
             # tried — retrying just stalls the user for ~30s. Bail out.
@@ -323,6 +368,35 @@ def fmt_bytes(n: float) -> str:
             return f"{n:.1f} {unit}"
         n /= 1024
     return f"{n:.1f} PB"
+
+
+# One Pace re-releases episodes in place: the album keeps its ID but the file
+# is re-uploaded with a new Pixeldrain ID and a new CRC in its name, sometimes
+# with a widened episode range. These are stripped so a re-release still
+# matches what the index recorded.
+_CRC_TAG_RE = re.compile(r"\[[0-9A-Fa-f]{8}\]")
+_RANGE_TAG_RE = re.compile(r"\[\d+(?:[-,]\d+)*\]")
+
+
+def version_tuple(v: str) -> tuple[int, ...]:
+    """"v2.1.0" -> (2, 1, 0). Non-numeric parts end the tuple."""
+    out = []
+    for part in (v or "").strip().lstrip("vV").split("."):
+        m = re.match(r"\d+", part)
+        if not m:
+            break
+        out.append(int(m.group()))
+    return tuple(out)
+
+
+def episode_key(filename: str) -> str:
+    """Identity of an episode file that survives a re-release, e.g.
+    '[One Pace][115-117] Little Garden 01 [1080p][En Sub][DEC3026A].mp4'
+    -> 'little garden 01 [1080p][en sub].mp4'."""
+    k = _CRC_TAG_RE.sub("", filename)
+    k = _RANGE_TAG_RE.sub("", k)
+    k = re.sub(r"(?i)\[one pace\]", "", k)
+    return re.sub(r"\s+", " ", k).strip().lower()
 
 
 # ------------------------------------------------------------- arc loader ---
@@ -610,6 +684,31 @@ def load_usenet_arcs() -> list[dict]:
     return []
 
 
+def dedupe_sources(sources: list[dict]) -> list[dict]:
+    """Drop repeats of the same Pixeldrain file. One Pace albums sometimes
+    list one file under several quality albums, which shows up as several
+    identical "sources" with different quality labels."""
+    seen: set[tuple] = set()
+    out = []
+    for s in sources:
+        fid = s.get("file_id")
+        if fid:
+            key = (s.get("kind"), fid)
+            if key in seen:
+                continue
+            seen.add(key)
+        out.append(s)
+    return out
+
+
+def _dedupe_index(data: dict) -> dict:
+    for arc in data.get("arcs", []):
+        for ep in arc.get("episodes", []):
+            if "sources" in ep:
+                ep["sources"] = dedupe_sources(ep["sources"])
+    return data
+
+
 def load_episode_index() -> dict:
     """Load the unified per-episode index (v2). Returns the envelope with
     'arcs' (each containing 'episodes' and 'arc_packs') and 'specials'.
@@ -617,7 +716,8 @@ def load_episode_index() -> dict:
     for p in (INDEX_FILE, BUNDLED_INDEX_FILE):
         if p.exists():
             try:
-                return json.loads(p.read_text(encoding="utf-8"))
+                return _dedupe_index(
+                    json.loads(p.read_text(encoding="utf-8")))
             except json.JSONDecodeError:
                 pass
     return {"arcs": [], "specials": []}
@@ -663,6 +763,7 @@ class Downloader:
         on_log,
         cancel_evt: threading.Event,
         file_filter: set[str] | None = None,
+        expected_names: dict[str, str] | None = None,
         subfolder: str | None = None,
     ) -> None:
         self.album_id = album_id
@@ -672,6 +773,9 @@ class Downloader:
         self.on_log = on_log
         self.cancel_evt = cancel_evt
         self.file_filter = file_filter
+        # file_id -> indexed filename. Lets run() find an episode that was
+        # re-uploaded under a new file ID since the index was built.
+        self.expected_names = expected_names or {}
         # Custom subfolder name (defaults to album title when None)
         self.subfolder = subfolder
         # Flipped on the moment the speed-based detector judges pixeldrain.com
@@ -689,11 +793,8 @@ class Downloader:
         files = album.get("files", [])
         title = album.get("title") or self.album_id
         if self.file_filter is not None:
-            files = [f for f in files if f.get("id") in self.file_filter]
+            files = self._select_files(files, title)
             if not files:
-                self.on_log(
-                    f"Album {title!r}: no files matched the filter — nothing to do."
-                )
                 return
         folder_name = sanitize_filename(self.subfolder or title)
         target = self.dest_dir / folder_name
@@ -712,6 +813,37 @@ class Downloader:
 
         self.on_log(f"Done: {title}")
 
+    def _select_files(self, files: list[dict], title: str) -> list[dict]:
+        """Files in the album matching file_filter. IDs the album no longer
+        has are matched by episode_key on the indexed filename instead."""
+        wanted = self.file_filter or set()
+        present = {f.get("id") for f in files}
+        missing = wanted - present
+        keys = {episode_key(self.expected_names[i]): i
+                for i in missing if self.expected_names.get(i)}
+        picked = []
+        for f in files:
+            if f.get("id") in wanted:
+                picked.append(f)
+                continue
+            fid = keys.pop(episode_key(f.get("name", "")), None)
+            if fid is not None:
+                picked.append(f)
+                missing.discard(fid)
+        rematched = len(picked) - len(wanted & present)
+        if rematched:
+            self.on_log(
+                f"  {rematched} episode(s) were re-released since the episode "
+                f"list was built — matched them by name.")
+        if missing:
+            names = [self.expected_names.get(i, i) for i in sorted(missing)]
+            self.on_log(
+                f"Album {title!r}: {len(missing)} episode(s) are no longer in "
+                f"this album: {', '.join(names[:3])}"
+                f"{'…' if len(names) > 3 else ''}. Click Refresh to "
+                f"update the episode list.")
+        return picked
+
     def _download_one(self, file_id: str, out: Path, size: int, idx: int, total: int) -> None:
         partial = out.with_suffix(out.suffix + ".part")
         if out.exists() and (size == 0 or out.stat().st_size == size):
@@ -725,11 +857,23 @@ class Downloader:
         while attempt < 5:
             attempt += 1
             try:
-                self._stream_to(file_id, partial, start, size, idx, total)
-                if size and partial.stat().st_size != size:
-                    raise IOError(
-                        f"size mismatch: expected {size}, got {partial.stat().st_size}"
-                    )
+                if size and start > size:
+                    # Left over from a resume the server didn't honour.
+                    self.on_log(f"  discarding oversized partial file "
+                                f"for {out.name}")
+                    partial.unlink()
+                    start = 0
+                if not (size and start == size):
+                    # A .part already at full size (closed before the
+                    # rename) only needs verifying — asking the server for
+                    # bytes past the end just earns a 416.
+                    self._stream_to(file_id, partial, start, size, idx, total)
+                got = partial.stat().st_size
+                if size and got != size:
+                    if got > size:
+                        partial.unlink()
+                    raise IOError(f"size mismatch: expected {size}, got {got}")
+                self._verify_crc(partial, out.name)
                 if out.exists():
                     out.unlink()
                 partial.rename(out)
@@ -745,6 +889,23 @@ class Downloader:
                     raise DownloadCancelled()
         raise RuntimeError(f"failed after 5 attempts: {last_exc}")
 
+    @staticmethod
+    def _verify_crc(path: Path, name: str) -> None:
+        """One Pace names every file with its CRC32, e.g. [DEC3026A]. A file
+        of the right size can still be damaged; this catches it."""
+        m = _CRC_TAG_RE.search(name)
+        if not m:
+            return
+        expected = int(m.group(0)[1:-1], 16)
+        crc = 0
+        with open(path, "rb") as f:
+            while chunk := f.read(1024 * 1024):
+                crc = zlib.crc32(chunk, crc)
+        if crc != expected:
+            path.unlink()
+            raise IOError(f"checksum mismatch (got {crc:08X}, expected "
+                          f"{expected:08X}) — file was damaged, re-downloading")
+
     def _stream_to(
         self, file_id: str, partial: Path, start: int, size: int, idx: int, total: int
     ) -> None:
@@ -758,6 +919,11 @@ class Downloader:
         resp, host = open_stream_dual(
             file_id, start=start, on_log=self.on_log,
             force_bypass=self._prefer_bypass)
+        if start and getattr(resp, "status", 206) != 206:
+            # The server ignored the Range header and is sending the whole
+            # file. Appending it would corrupt the .part, so start over.
+            self.on_log(f"  {host} can't resume this file — restarting it")
+            start = 0
         if start == 0:
             suffix = " (forced — pixeldrain.com was slow earlier)" \
                 if self._prefer_bypass else ""
@@ -800,6 +966,9 @@ class Downloader:
                                 resp = open_stream(
                                     BYPASS_FILE.format(file_id=file_id),
                                     start=bytes_now, timeout=60)
+                                if getattr(resp, "status", 206) != 206:
+                                    raise IOError(
+                                        "bypass CDN ignored the resume offset")
                                 host = "cdn.pixeldrain.eu.cc"
                                 display_start = bytes_now
                                 t0 = now
@@ -835,8 +1004,21 @@ def load_config() -> dict:
     return {}
 
 
+_save_lock = threading.Lock()
+
+
+def atomic_write(path: Path, data: bytes) -> None:
+    """Write to a temp file and swap it in. A crash or a second thread
+    saving at the same moment can't leave a half-written file behind —
+    load_config() would read that as empty and lose every setting."""
+    with _save_lock:
+        tmp = path.with_name(path.name + ".tmp")
+        tmp.write_bytes(data)
+        os.replace(tmp, path)
+
+
 def save_config(cfg: dict) -> None:
-    CONFIG_FILE.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+    atomic_write(CONFIG_FILE, json.dumps(cfg, indent=2).encode("utf-8"))
 
 
 # ---------------------------------------------------------------- gui -----
@@ -968,6 +1150,49 @@ class Tooltip:
             self._tip = None
 
 
+# Plex/Jellyfin season numbers, pinned per arc. Deriving them from the arc's
+# position in the index would renumber every later season (and orphan the
+# user's existing library folders) the day One Pace adds an arc in the middle.
+# Arcs not listed here are numbered after the highest pinned season, in index
+# order.
+PINNED_SEASONS = {
+    "romancedawn": 1, "orangetown": 2, "syrupvillage": 3, "gaimon": 4,
+    "baratie": 5, "arlongpark": 6, "theadventuresofbuggyscrew": 7,
+    "loguetown": 8, "reversemountain": 9, "whiskypeak": 10,
+    "thetrialsofkobymeppo": 11, "littlegarden": 12, "drumisland": 13,
+    "alabasta": 14, "jaya": 15, "skypiea": 16, "longringlongland": 17,
+    "waterseven": 18, "enieslobby": 19, "postenieslobby": 20,
+    "thrillerbark": 21, "sabaodyarchipelago": 22, "amazonlily": 23,
+    "impeldown": 24,
+    "ifyoucouldgoanywheretheadventuresofthestrawhats": 25,
+    "marineford": 26, "postwar": 27, "returntosabaody": 28,
+    "fishmanisland": 29, "punkhazard": 30, "dressrosa": 31, "zou": 32,
+    "wholecakeisland": 33, "reverie": 34, "wano": 35, "egghead": 36,
+}
+
+
+def _arc_slug(title: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", (title or "").lower())
+
+
+def season_for_arc(index: dict, title: str) -> int | None:
+    """Plex season number for an arc title, or None if it isn't in the index."""
+    arcs = index.get("arcs", [])
+    if not any(a.get("title") == title for a in arcs):
+        return None
+    pinned = PINNED_SEASONS.get(_arc_slug(title))
+    if pinned:
+        return pinned
+    nxt = max(PINNED_SEASONS.values())
+    for a in arcs:
+        if _arc_slug(a.get("title", "")) in PINNED_SEASONS:
+            continue
+        nxt += 1
+        if a.get("title") == title:
+            return nxt
+    return None
+
+
 # Source page identity — drives which arcs/episodes are shown and how the
 # detail pane is built. Keys are internal; labels feed the tab strip.
 _SRC_LABEL = {"onepace": "One Pace", "muhn": "Muhn Pace",
@@ -979,6 +1204,13 @@ _SRC_BLURB = {
     "nyaa":    "Torrents from nyaa.si — official One Pace uploads are tagged with a green Official badge.",
     "usenet":  "NZB files from NZBGeek — needs your own Usenet provider + indexer API key (configure in Settings).",
 }
+
+# Short labels for chips, longer ones for cards.
+_VER_SHORT = {"English Subtitles": "Sub", "English Dub": "Dub",
+              "English Dub with Closed Captions": "Dub-CC"}
+_VER_LONG = {"English Subtitles": "English subtitles",
+             "English Dub": "English dub",
+             "English Dub with Closed Captions": "English dub + closed captions"}
 
 
 class App(ctk.CTk):
@@ -1034,7 +1266,7 @@ class App(ctk.CTk):
         # Active source page — "onepace" / "muhn" / "nyaa". The arc + episode +
         # detail panes all filter by this so each source has its own view.
         prev_src = self.config_data.get("source", "onepace")
-        if prev_src not in ("onepace", "muhn", "nyaa"):
+        if prev_src not in _SRC_LABEL:
             prev_src = "onepace"
         self.current_source = prev_src
 
@@ -1108,714 +1340,8 @@ class App(ctk.CTk):
                 "_source/build_episode_index.py to populate per-episode data."
             )
 
-    # ---- UI construction ----
-
-    def _apply_icon(self) -> None:
-        # Title bar icon (Windows) — silently skip if asset missing in dev.
-        if BUNDLED_ICON_ICO.exists():
-            try:
-                self.iconbitmap(default=str(BUNDLED_ICON_ICO))
-            except tk.TclError:
-                pass
-        if BUNDLED_ICON_PNG.exists():
-            try:
-                self._app_icon = tk.PhotoImage(file=str(BUNDLED_ICON_PNG))
-                self.iconphoto(True, self._app_icon)
-            except tk.TclError:
-                self._app_icon = None
-        else:
-            self._app_icon = None
-
-    def _configure_styles(self) -> None:
-        style = ttk.Style(self)
-        try:
-            style.theme_use("clam")  # most consistent across Windows for color overrides
-        except tk.TclError:
-            pass
-
-        # Info banner under the Source picker.
-        style.configure("Info.TFrame", background="#FBF6E8")
-        style.configure("Info.TLabel",
-                        background="#FBF6E8", foreground="#6B5A1F",
-                        font=("Segoe UI", 9))
-        style.configure("InfoLink.TLabel",
-                        background="#FBF6E8", foreground="#0066CC",
-                        font=("Segoe UI", 9, "underline"))
-
-        # Primary action button (Download / Download all) — ribbon red.
-        style.configure(
-            "Primary.TButton",
-            background=PRIMARY, foreground="#FFFFFF",
-            borderwidth=0, focusthickness=0, padding=(14, 7),
-            font=("Segoe UI", 10, "bold"),
-        )
-        style.map(
-            "Primary.TButton",
-            background=[("active", PRIMARY_HOVER), ("disabled", "#9CA3AF")],
-            foreground=[("disabled", "#E5E7EB")],
-        )
-
-        # Subtle outline button (Browse, Open folder, Refresh).
-        style.configure(
-            "Ghost.TButton",
-            padding=(10, 6),
-            font=("Segoe UI", 9),
-        )
-
-        # Header label styles
-        style.configure("Header.TFrame", background=HEADER_BG)
-        style.configure("HeaderTitle.TLabel",
-                        background=HEADER_BG, foreground=HEADER_FG,
-                        font=("Segoe UI", 18, "bold"))
-        style.configure("HeaderTagline.TLabel",
-                        background=HEADER_BG, foreground=HEADER_ACCENT,
-                        font=("Segoe UI", 10))
-        style.configure("HeaderCredit.TLabel",
-                        background=HEADER_BG, foreground=MUTED,
-                        font=("Segoe UI", 9, "italic"))
-
-    def _build_ui(self) -> None:
-        pad = {"padx": 12, "pady": 6}
-
-        # ---- HEADER ----
-        header = ttk.Frame(self, style="Header.TFrame", padding=(16, 12, 16, 12))
-        header.pack(fill="x")
-        if self._app_icon is not None:
-            # Resize the icon to a sane header size by using subsample
-            # (PhotoImage subsample is integer factors; 512/72 ≈ 7).
-            try:
-                hdr_icon = self._app_icon.subsample(7, 7)
-                self._hdr_icon_ref = hdr_icon  # keep reference
-                tk.Label(
-                    header, image=hdr_icon, bg=HEADER_BG, bd=0,
-                ).pack(side="left", padx=(0, 14))
-            except tk.TclError:
-                pass
-        text_block = ttk.Frame(header, style="Header.TFrame")
-        text_block.pack(side="left", fill="y", expand=False)
-        ttk.Label(text_block, text="One Pace Downloader",
-                  style="HeaderTitle.TLabel").pack(anchor="w")
-        ttk.Label(text_block,
-                  text="Grab full arcs in one click.  No daily limit.",
-                  style="HeaderTagline.TLabel").pack(anchor="w", pady=(2, 0))
-        ttk.Label(header, text="Made by Nicolas",
-                  style="HeaderCredit.TLabel").pack(side="right", anchor="se")
-
-        # ---- SOURCE PICKER + INFO BANNER ----
-        src = ttk.Frame(self)
-        src.pack(fill="x", padx=12, pady=(10, 4))
-        ttk.Label(src, text="Source:", font=("Segoe UI", 10, "bold")).pack(side="left")
-        self.source_combo = ttk.Combobox(
-            src, textvariable=self.source,
-            values=[
-                SOURCE_LABELS[SRC_ONE_PACE],
-                SOURCE_LABELS[SRC_MUHN_PACE],
-                SOURCE_LABELS[SRC_NYAA],
-            ],
-            state="readonly", width=64,
-        )
-        # Set the visible text based on the stored source key
-        self.source_combo.set(SOURCE_LABELS[self._current_source()])
-        self.source_combo.pack(side="left", padx=(8, 0))
-        self.source_combo.bind("<<ComboboxSelected>>", self._on_source_change)
-
-        info = ttk.Frame(self, style="Info.TFrame", padding=(12, 8, 12, 8))
-        info.pack(fill="x", padx=12, pady=(0, 6))
-        self.info_label = ttk.Label(info, text="", style="Info.TLabel", wraplength=820, justify="left")
-        self.info_label.pack(side="left", fill="x", expand=True, anchor="w")
-        self.info_link = ttk.Label(info, text="Open dub watch-order guide ↗",
-                                    style="InfoLink.TLabel", cursor="hand2")
-        self.info_link.bind("<Button-1>", lambda _e: webbrowser.open(DUB_GUIDE_URL))
-        # Link is shown only for Muhn Pace; gets packed/unpacked by _update_info_banner.
-        self._info_link_packed = False
-
-        top = ttk.Frame(self)
-        top.pack(fill="x", **pad)
-
-        ttk.Label(top, text="Save to:").grid(row=0, column=0, sticky="w")
-        self.path_entry = ttk.Entry(top, textvariable=self.save_dir)
-        self.path_entry.grid(row=0, column=1, sticky="ew", padx=(6, 6))
-        ttk.Button(top, text="Browse…", command=self._pick_folder).grid(row=0, column=2)
-        ttk.Button(top, text="Open folder", command=self._open_folder).grid(row=0, column=3, padx=(6, 0))
-        top.columnconfigure(1, weight=1)
-
-        opt = ttk.Frame(self)
-        opt.pack(fill="x", **pad)
-        ttk.Label(opt, text="Version:").grid(row=0, column=0, sticky="w")
-        self.version_combo = ttk.Combobox(opt, textvariable=self.version,
-                                          values=VERSIONS, state="readonly", width=34)
-        self.version_combo.grid(row=0, column=1, padx=(6, 16))
-        self.version_combo.bind("<<ComboboxSelected>>", lambda _e: self._refresh_arc_rows())
-
-        ttk.Label(opt, text="Quality:").grid(row=0, column=2, sticky="w")
-        self.quality_combo = ttk.Combobox(opt, textvariable=self.quality,
-                                          values=QUALITIES, state="readonly", width=8)
-        self.quality_combo.grid(row=0, column=3, padx=(6, 16))
-        self.quality_combo.bind("<<ComboboxSelected>>", lambda _e: self._refresh_arc_rows())
-
-        self.refresh_btn = ttk.Button(opt, text="Refresh from onepace.net",
-                                       style="Ghost.TButton", command=self._refresh_arcs)
-        self.refresh_btn.grid(row=0, column=4, padx=(0, 6))
-        ttk.Button(opt, text="Download all arcs",
-                   style="Primary.TButton",
-                   command=self._download_all).grid(row=0, column=5)
-
-        # Arc list
-        body = ttk.LabelFrame(self, text="Arcs")
-        body.pack(fill="both", expand=True, **pad)
-
-        self.canvas = tk.Canvas(body, highlightthickness=0)
-        scroll = ttk.Scrollbar(body, orient="vertical", command=self.canvas.yview)
-        self.canvas.configure(yscrollcommand=scroll.set)
-        self.canvas.pack(side="left", fill="both", expand=True)
-        scroll.pack(side="right", fill="y")
-
-        self.rows_frame = ttk.Frame(self.canvas)
-        self.rows_window = self.canvas.create_window((0, 0), window=self.rows_frame, anchor="nw")
-        self.rows_frame.bind(
-            "<Configure>",
-            lambda _e: self.canvas.configure(scrollregion=self.canvas.bbox("all")),
-        )
-        self.canvas.bind(
-            "<Configure>",
-            lambda e: self.canvas.itemconfig(self.rows_window, width=e.width),
-        )
-        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
-
-        # Progress + log
-        bot = ttk.Frame(self)
-        bot.pack(fill="x", **pad)
-        self.status_var = tk.StringVar(value="Ready.")
-        self.progress_var = tk.DoubleVar(value=0)
-        ttk.Label(bot, textvariable=self.status_var).pack(anchor="w")
-        self.progress = ttk.Progressbar(bot, variable=self.progress_var, maximum=1.0)
-        self.progress.pack(fill="x", pady=(2, 6))
-
-        btnrow = ttk.Frame(bot)
-        btnrow.pack(fill="x")
-        self.cancel_btn = ttk.Button(btnrow, text="Cancel", command=self._cancel, state="disabled")
-        self.cancel_btn.pack(side="right")
-
-        log_frame = ttk.LabelFrame(self, text="Log")
-        log_frame.pack(fill="both", expand=False, **pad)
-        self.log_box = tk.Text(log_frame, height=7, state="disabled", wrap="word")
-        self.log_box.pack(fill="both", expand=True)
-
-        # Follow footer (credit moved into the header)
-        footer = ttk.Frame(self)
-        footer.pack(fill="x", padx=12, pady=(0, 10))
-        ttk.Label(
-            footer,
-            text="Enjoying the tool?  Follow for updates  →",
-            foreground=MUTED,
-        ).pack(side="left")
-        ttk.Button(
-            footer, text="Discord", style="Ghost.TButton", width=10,
-            command=lambda: webbrowser.open(DISCORD_URL),
-        ).pack(side="left", padx=(8, 4))
-        ttk.Button(
-            footer, text="Reddit", style="Ghost.TButton", width=10,
-            command=lambda: webbrowser.open(REDDIT_URL),
-        ).pack(side="left", padx=4)
-
-    def _on_mousewheel(self, event: tk.Event) -> None:
-        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-    # ---- source / info banner ----
-
-    def _current_source(self) -> str:
-        """Return canonical source key (SRC_ONE_PACE / SRC_MUHN_PACE) regardless of
-        whether `self.source` holds the key or the user-facing dropdown label."""
-        v = self.source.get()
-        if v in SOURCE_LABELS:  # canonical key
-            return v
-        for key, label in SOURCE_LABELS.items():
-            if v == label:
-                return key
-        return SRC_ONE_PACE
-
-    def _on_source_change(self, _event=None) -> None:
-        # Normalize the picker text back to a canonical key so config saves cleanly.
-        chosen = self._current_source()
-        self.source.set(chosen)
-        self.source_combo.set(SOURCE_LABELS[chosen])
-        self._apply_source_state()
-        self._update_info_banner()
-        self._refresh_arc_rows()
-        self._persist_settings()
-
-    def _apply_source_state(self) -> None:
-        """Enable/disable controls based on the active source."""
-        src = self._current_source()
-        if src == SRC_MUHN_PACE:
-            # Muhn Pace is dub-only; quality varies per album so we let the
-            # downloader use whatever the album publishes. Lock the controls
-            # so the user sees they don't apply.
-            self.version_combo.set("English Dub")
-            self.version_combo.configure(state="disabled")
-            self.quality_combo.set("(varies)")
-            self.quality_combo.configure(state="disabled")
-            self.refresh_btn.configure(state="disabled", text="Refresh from onepace.net")
-        elif src == SRC_NYAA:
-            # Nyaa torrents have varied versions/qualities per upload — the
-            # user picks the specific torrent per arc, so global controls don't apply.
-            self.version_combo.set("(per torrent)")
-            self.version_combo.configure(state="disabled")
-            self.quality_combo.set("(per torrent)")
-            self.quality_combo.configure(state="disabled")
-            self.refresh_btn.configure(state="normal", text="Refresh from nyaa.si")
-        else:
-            self.version_combo.configure(state="readonly")
-            if self.version.get() not in VERSIONS:
-                self.version.set("English Subtitles")
-            self.quality_combo.configure(state="readonly", values=QUALITIES)
-            if self.quality.get() not in QUALITIES:
-                self.quality.set("1080p")
-            self.refresh_btn.configure(state="normal", text="Refresh from onepace.net")
-
-    def _update_info_banner(self) -> None:
-        src = self._current_source()
-        self.info_label.configure(text=SOURCE_INFO[src])
-        if src == SRC_MUHN_PACE:
-            if not self._info_link_packed:
-                self.info_link.pack(side="right", padx=(8, 0))
-                self._info_link_packed = True
-        elif self._info_link_packed:
-            self.info_link.pack_forget()
-            self._info_link_packed = False
-
-    # ---- arc rows ----
-
-    def _refresh_arc_rows(self) -> None:
-        for w in self.rows_frame.winfo_children():
-            w.destroy()
-        src = self._current_source()
-        if src == SRC_MUHN_PACE:
-            if not self.muhn_arcs:
-                ttk.Label(self.rows_frame, text="(no Muhn Pace data bundled)").pack(padx=10, pady=10)
-                return
-            for idx, arc in enumerate(self.muhn_arcs):
-                self._build_muhn_row(idx, arc)
-            return
-        if src == SRC_NYAA:
-            if not self.nyaa_arcs:
-                ttk.Label(
-                    self.rows_frame,
-                    text="(no Nyaa data yet — click 'Refresh from nyaa.si')",
-                ).pack(padx=10, pady=10)
-                return
-            for idx, arc in enumerate(self.nyaa_arcs):
-                self._build_nyaa_row(idx, arc)
-            return
-        # One Pace
-        if not self.arcs:
-            ttk.Label(self.rows_frame, text="(no data — click Refresh)").pack(padx=10, pady=10)
-            return
-        ver = self.version.get()
-        qual = self.quality.get()
-        for idx, arc in enumerate(self.arcs):
-            self._build_arc_row(idx, arc, ver, qual)
-
-    def _build_arc_row(self, idx: int, arc: dict, version: str, quality: str) -> None:
-        row = ttk.Frame(self.rows_frame, padding=(8, 4))
-        row.grid(row=idx, column=0, sticky="ew")
-        self.rows_frame.columnconfigure(0, weight=1)
-        bg_tag = "even" if idx % 2 == 0 else "odd"
-        if bg_tag == "even":
-            row.configure(style="Even.TFrame")
-
-        ttk.Label(row, text=arc["title"], width=42, anchor="w").grid(row=0, column=0, sticky="w")
-
-        chosen_ver, chosen_qual, chosen_id, note = self._resolve_album(arc, version, quality)
-
-        badge = []
-        for v in VERSIONS:
-            if v in arc["resources"]:
-                qs = sorted(arc["resources"][v].keys(), key=lambda q: int(q[:-1]))
-                short = {"English Subtitles": "Sub", "English Dub": "Dub",
-                         "English Dub with Closed Captions": "Dub-CC"}[v]
-                badge.append(f"{short}: {','.join(qs)}")
-        ttk.Label(row, text="  •  ".join(badge), foreground="#666").grid(row=0, column=1, sticky="w", padx=(8, 8))
-
-        if chosen_id is None:
-            btn = ttk.Button(row, text="Not available",
-                             style="Ghost.TButton", state="disabled")
-        else:
-            label = "Download"
-            if note:
-                label = f"Download ({note})"
-            btn = ttk.Button(
-                row, text=label, style="Primary.TButton",
-                command=lambda a=arc, alb=chosen_id, cv=chosen_ver, cq=chosen_qual:
-                    self._start_download_one(a, alb, cv, cq),
-            )
-        btn.grid(row=0, column=2, sticky="e")
-        row.columnconfigure(1, weight=1)
-
-    def _build_muhn_row(self, idx: int, arc: dict) -> None:
-        row = ttk.Frame(self.rows_frame, padding=(8, 4))
-        row.grid(row=idx, column=0, sticky="ew")
-        self.rows_frame.columnconfigure(0, weight=1)
-
-        ttk.Label(row, text=arc["title"], width=42, anchor="w").grid(row=0, column=0, sticky="w")
-
-        # Badge: episode count + total size, then notes (gap-fill range etc.)
-        size_gb = arc.get("total_bytes", 0) / 1024 / 1024 / 1024
-        meta = f"{arc.get('file_count', '?')} eps  •  {size_gb:.1f} GB"
-        ttk.Label(row, text=meta, foreground="#444").grid(
-            row=0, column=1, sticky="w", padx=(8, 8))
-        notes = arc.get("notes") or ""
-        if notes:
-            ttk.Label(row, text=notes, foreground=MUTED,
-                      font=("Segoe UI", 9, "italic")).grid(
-                row=1, column=1, sticky="w", padx=(8, 8))
-
-        btn = ttk.Button(
-            row, text="Download", style="Primary.TButton",
-            command=lambda a=arc: self._start_download_one(
-                {"title": a["title"]}, a["album_id"], "English Dub", "muhn"),
-        )
-        btn.grid(row=0, column=2, sticky="e", rowspan=2)
-        row.columnconfigure(1, weight=1)
-
-    def _build_nyaa_row(self, idx: int, arc: dict) -> None:
-        torrents = arc.get("torrents", [])
-        if not torrents:
-            return
-
-        # Arc heading + top torrent on the same row
-        top = torrents[0]
-        row = ttk.Frame(self.rows_frame, padding=(8, 4))
-        row.grid(row=idx, column=0, sticky="ew")
-        self.rows_frame.columnconfigure(0, weight=1)
-
-        ttk.Label(row, text=arc["title"], width=28, anchor="w",
-                  font=("Segoe UI", 10, "bold")).grid(row=0, column=0, sticky="w")
-
-        meta = f"{len(torrents)} torrent{'s' if len(torrents) != 1 else ''}  •  top: {top['size']}  •  {top['seeders']} seeders"
-        ttk.Label(row, text=meta, foreground="#444").grid(
-            row=0, column=1, sticky="w", padx=(8, 8))
-        ttk.Label(row, text=top["title"], foreground=MUTED,
-                  font=("Segoe UI", 9, "italic"), wraplength=520, justify="left").grid(
-            row=1, column=1, sticky="w", padx=(8, 8))
-
-        ttk.Button(
-            row, text="Open magnet", style="Primary.TButton",
-            command=lambda m=top["magnet"], t=top["title"]: self._open_magnet(m, t),
-        ).grid(row=0, column=2, sticky="e", rowspan=2)
-        row.columnconfigure(1, weight=1)
-
-    @staticmethod
-    def _resolve_album(arc: dict, version: str, quality: str) -> tuple[str, str, str | None, str]:
-        """Return (version_used, quality_used, album_id_or_None, note).
-        Falls back to the next-best combination if the requested one isn't present."""
-        if version in arc["resources"] and quality in arc["resources"][version]:
-            return version, quality, arc["resources"][version][quality], ""
-
-        # same version, best other quality
-        if version in arc["resources"]:
-            qs = arc["resources"][version]
-            best = sorted(qs.keys(), key=lambda q: int(q[:-1]), reverse=True)[0]
-            return version, best, qs[best], f"only {best}"
-
-        # other version, requested quality if possible, else best
-        for alt in VERSIONS:
-            if alt in arc["resources"] and quality in arc["resources"][alt]:
-                short = {"English Subtitles": "Sub", "English Dub": "Dub",
-                         "English Dub with Closed Captions": "Dub-CC"}[alt]
-                return alt, quality, arc["resources"][alt][quality], f"{short} only"
-
-        for alt in VERSIONS:
-            if alt in arc["resources"]:
-                qs = arc["resources"][alt]
-                best = sorted(qs.keys(), key=lambda q: int(q[:-1]), reverse=True)[0]
-                short = {"English Subtitles": "Sub", "English Dub": "Dub",
-                         "English Dub with Closed Captions": "Dub-CC"}[alt]
-                return alt, best, qs[best], f"{short} {best}"
-
-        return version, quality, None, ""
-
-    # ---- handlers ----
-
-    def _pick_folder(self) -> None:
-        chosen = filedialog.askdirectory(initialdir=self.save_dir.get() or str(DEFAULT_DOWNLOADS))
-        if chosen:
-            self.save_dir.set(chosen)
-            self._persist_settings()
-
-    def _open_folder(self) -> None:
-        path = Path(self.save_dir.get())
-        path.mkdir(parents=True, exist_ok=True)
-        try:
-            os.startfile(path)  # Windows-only, fine here
-        except AttributeError:
-            self._log(f"Folder: {path}")
-
-    def _persist_settings(self) -> None:
-        self.config_data.update({
-            "save_folder": self.save_dir.get(),
-            "default_version": self.version.get() if self.version.get() in VERSIONS else "English Subtitles",
-            "default_quality": self.quality.get() if self.quality.get() in QUALITIES else "1080p",
-            "source": self._current_source(),
-        })
-        save_config(self.config_data)
-
-    def _refresh_arcs(self) -> None:
-        if self.worker and self.worker.is_alive():
-            messagebox.showinfo("Busy", "A download is in progress. Cancel it first.")
-            return
-
-        src = self._current_source()
-        if src == SRC_NYAA:
-            self._set_status("Fetching nyaa.si…")
-            # Use the canonical One Pace arc list for bucketing — fall back to
-            # whatever is already in self.nyaa_arcs (preserves arc names if
-            # arcs.json hasn't been refreshed yet).
-            arc_titles = [a["title"] for a in self.arcs] or [
-                a["title"] for a in self.nyaa_arcs if a["title"] != "Other / Packs"
-            ]
-            if not arc_titles:
-                self.ui_queue.put((
-                    "error",
-                    "Refresh One Pace first so I know the arc names to group torrents by.",
-                ))
-                return
-
-            def task():
-                try:
-                    bucketed = refresh_nyaa_from_web(arc_titles)
-                    total = sum(len(b["torrents"]) for b in bucketed)
-                    self.ui_queue.put(("nyaa_arcs", bucketed))
-                    self.ui_queue.put((
-                        "log",
-                        f"Refreshed {len(bucketed)} arc buckets ({total} torrents) from nyaa.si.",
-                    ))
-                    self.ui_queue.put(("status", "Refreshed."))
-                except Exception as e:
-                    self.ui_queue.put(("error", f"Refresh failed: {e}"))
-
-            threading.Thread(target=task, daemon=True).start()
-            return
-
-        self._set_status("Fetching onepace.net…")
-
-        def task():
-            try:
-                arcs = refresh_arcs_from_web()
-                self.ui_queue.put(("arcs", arcs))
-                self.ui_queue.put(("log", f"Refreshed {len(arcs)} arcs."))
-                self.ui_queue.put(("status", "Refreshed."))
-            except Exception as e:
-                self.ui_queue.put(("error", f"Refresh failed: {e}"))
-
-        threading.Thread(target=task, daemon=True).start()
-
-    def _open_magnet(self, magnet: str, title: str = "") -> None:
-        """Hand a magnet link to the OS default torrent handler.
-        Falls back to clipboard if no handler is registered."""
-        try:
-            os.startfile(magnet)  # type: ignore[attr-defined]  # Windows ShellExecuteW
-            self._log(f"Sent to torrent client: {title or 'magnet'}")
-            self._set_status("Magnet sent to your torrent client.")
-        except (OSError, AttributeError):
-            # No registered magnet handler (or non-Windows during dev).
-            self.clipboard_clear()
-            self.clipboard_append(magnet)
-            self.update()  # ensure clipboard survives app close on Win
-            messagebox.showinfo(
-                "No torrent client found",
-                "Magnet copied to clipboard.\n\n"
-                "Install qBittorrent (or another torrent client), open it, "
-                "and paste this magnet — it will start downloading.",
-            )
-
-    def _start_download_one(self, arc: dict, album_id: str, version: str, quality: str) -> None:
-        self._persist_settings()
-        if self.worker and self.worker.is_alive():
-            messagebox.showinfo("Busy", "A download is already in progress.")
-            return
-        dest = Path(self.save_dir.get())
-        dest.mkdir(parents=True, exist_ok=True)
-        self.cancel_evt.clear()
-        self._set_cancel_visible(True)
-        self._log(f"Starting: {arc['title']} — {version} {quality}")
-
-        def task():
-            try:
-                Downloader(
-                    album_id, dest,
-                    on_status=lambda s: self.ui_queue.put(("status", s)),
-                    on_progress=self._on_progress,
-                    on_log=lambda m: self.ui_queue.put(("log", m)),
-                    cancel_evt=self.cancel_evt,
-                ).run()
-                self.ui_queue.put(("status", f"Done: {arc['title']}"))
-                self.ui_queue.put(("done", None))
-            except DownloadCancelled:
-                self.ui_queue.put(("log", "Cancelled."))
-                self.ui_queue.put(("status", "Cancelled."))
-                self.ui_queue.put(("done", None))
-            except Exception as e:
-                self.ui_queue.put(("error", str(e)))
-                self.ui_queue.put(("done", None))
-
-        self.worker = threading.Thread(target=task, daemon=True)
-        self.worker.start()
-
-    def _send_all_nyaa_magnets(self) -> None:
-        """Open the top magnet for every Nyaa arc bucket sequentially."""
-        magnets = [
-            (a["title"], a["torrents"][0]["magnet"])
-            for a in self.nyaa_arcs
-            if a.get("torrents")
-        ]
-        if not magnets:
-            messagebox.showinfo("Nothing to send", "No Nyaa torrents loaded yet.")
-            return
-        if not messagebox.askyesno(
-            "Send all magnets to torrent client",
-            f"This will open {len(magnets)} magnet links in your default torrent "
-            "client (qBittorrent / uTorrent / etc.).\n\n"
-            "Make sure your client is running. Continue?",
-        ):
-            return
-
-        # Stagger calls so the OS doesn't drop rapid-fire ShellExecute requests.
-        self._log(f"Sending {len(magnets)} magnets to torrent client…")
-
-        def step(i: int) -> None:
-            if i >= len(magnets):
-                self._set_status(f"Sent {len(magnets)} magnets.")
-                self._log("All magnets dispatched.")
-                return
-            title, magnet = magnets[i]
-            try:
-                os.startfile(magnet)  # type: ignore[attr-defined]
-                self._set_status(f"Sent {i + 1}/{len(magnets)}: {title}")
-            except (OSError, AttributeError) as e:
-                self._log(f"  Failed on {title}: {e}")
-            self.after(250, lambda: step(i + 1))
-
-        step(0)
-
-    def _download_all(self) -> None:
-        self._persist_settings()
-        if self.worker and self.worker.is_alive():
-            messagebox.showinfo("Busy", "A download is already in progress.")
-            return
-
-        src = self._current_source()
-        if src == SRC_NYAA:
-            self._send_all_nyaa_magnets()
-            return
-
-        plan: list[tuple[dict, str, str, str]] = []
-
-        if src == SRC_MUHN_PACE:
-            if not self.muhn_arcs:
-                return
-            total_gb = sum(a.get("total_bytes", 0) for a in self.muhn_arcs) / 1024**3
-            if not messagebox.askyesno(
-                "Download all Muhn Pace arcs",
-                f"Queue every Muhn Pace arc — {len(self.muhn_arcs)} albums, "
-                f"about {total_gb:.0f} GB total. Continue?"
-            ):
-                return
-            for arc in self.muhn_arcs:
-                plan.append(({"title": arc["title"]}, arc["album_id"], "English Dub", "muhn"))
-        else:
-            if not self.arcs:
-                return
-            if not messagebox.askyesno(
-                "Download all arcs",
-                "This will queue every arc using your selected Version + Quality "
-                "(falling back per-arc if missing). It can be 100+ GB. Continue?"
-            ):
-                return
-            version = self.version.get()
-            quality = self.quality.get()
-            for arc in self.arcs:
-                v, q, aid, note = self._resolve_album(arc, version, quality)
-                if aid:
-                    plan.append((arc, aid, v, q))
-
-        dest = Path(self.save_dir.get())
-        dest.mkdir(parents=True, exist_ok=True)
-        self.cancel_evt.clear()
-        self._set_cancel_visible(True)
-
-        self._log(f"Queue: {len(plan)} arcs.")
-
-        def task():
-            for i, (arc, album_id, v, q) in enumerate(plan, 1):
-                if self.cancel_evt.is_set():
-                    break
-                self.ui_queue.put(("log", f"[{i}/{len(plan)}] {arc['title']} — {v} {q}"))
-                try:
-                    Downloader(
-                        album_id, dest,
-                        on_status=lambda s, a=arc: self.ui_queue.put(
-                            ("status", f"{a['title']}: {s}")),
-                        on_progress=self._on_progress,
-                        on_log=lambda m: self.ui_queue.put(("log", m)),
-                        cancel_evt=self.cancel_evt,
-                    ).run()
-                except DownloadCancelled:
-                    self.ui_queue.put(("log", "Cancelled."))
-                    break
-                except Exception as e:
-                    self.ui_queue.put(("log", f"  ERROR on {arc['title']}: {e}"))
-            self.ui_queue.put(("status", "All done." if not self.cancel_evt.is_set() else "Cancelled."))
-            self.ui_queue.put(("done", None))
-
-        self.worker = threading.Thread(target=task, daemon=True)
-        self.worker.start()
-
-    def _cancel(self) -> None:
-        self.cancel_evt.set()
-        self._log("Cancel requested…")
-
-    def _on_progress(self, frac: float, speed: str, idx: int, total: int, bytes_now: int) -> None:
-        self.ui_queue.put(("progress", (frac, speed, idx, total, bytes_now)))
-
-    def _drain_ui_queue(self) -> None:
-        try:
-            while True:
-                kind, payload = self.ui_queue.get_nowait()
-                if kind == "status":
-                    self._set_status(payload)
-                elif kind == "progress":
-                    frac, speed, idx, total, bytes_now = payload
-                    self.progress_var.set(min(max(frac, 0.0), 1.0))
-                    self._set_status(
-                        f"[{idx}/{total}]  {fmt_bytes(bytes_now)}  •  {speed}"
-                    )
-                elif kind == "log":
-                    self._log(payload)
-                elif kind == "arcs":
-                    self.arcs = payload
-                    self._refresh_arc_rows()
-                elif kind == "nyaa_arcs":
-                    self.nyaa_arcs = payload
-                    self._refresh_arc_rows()
-                elif kind == "error":
-                    self._log("ERROR: " + payload)
-                    messagebox.showerror("Error", payload)
-                elif kind == "done":
-                    self.cancel_btn.configure(state="disabled")
-        except queue.Empty:
-            pass
-        self.after(80, self._drain_ui_queue)
-
     def _set_status(self, text: str) -> None:
         self.status_var.set(text)
-
-    # ======================================================================
-    # v2 methods — these definitions appear after the legacy v1 methods
-    # above and override them via Python's last-definition-wins semantics.
-    # The v1 methods are inert dead code (they reference widgets that
-    # v2's _build_ui never creates).
-    # ======================================================================
 
     def _apply_icon(self) -> None:
         """Apply window icon. Skips silently if assets are missing (dev runs)."""
@@ -1835,300 +1361,252 @@ class App(ctk.CTk):
     # ------------------------------------------------------- UI scaffolding -
 
     def _build_ui(self) -> None:
-        # ---- HEADER ----
-        # Header block + thin gold underline strip below it so the brand
-        # accent threads into the body, not just the top.
-        header_wrap = ctk.CTkFrame(self, fg_color="transparent")
-        header_wrap.pack(fill="x", side="top")
-        header = ctk.CTkFrame(header_wrap, height=72, corner_radius=0,
-                              fg_color=HEADER_BG)
-        header.pack(fill="x")
-        header.pack_propagate(False)
-        # 2px gold rule under the header
-        ctk.CTkFrame(header_wrap, height=2, corner_radius=0,
-                     fg_color=HEADER_ACCENT).pack(fill="x")
+        self.configure(fg_color=SURFACE_PANEL)
+
+        # ---- HEADER: brand bar + source tabs, one dark band ----
+        header = ctk.CTkFrame(self, corner_radius=0, fg_color=HEADER_BG)
+        header.pack(fill="x", side="top")
+
+        top = ctk.CTkFrame(header, fg_color="transparent", height=60)
+        top.pack(fill="x", padx=SP_XL)
+        top.pack_propagate(False)
 
         if self._app_icon is not None:
             try:
-                hdr_img = self._app_icon.subsample(6, 6)
+                hdr_img = self._app_icon.subsample(8, 8)
                 self._hdr_img_ref = hdr_img
-                tk.Label(header, image=hdr_img, bg=HEADER_BG, bd=0).pack(
-                    side="left", padx=(SP_LG, SP_MD), pady=SP_MD)
+                tk.Label(top, image=hdr_img, bg=HEADER_BG, bd=0).pack(
+                    side="left", padx=(0, SP_MD))
             except tk.TclError:
                 pass
+        brand = ctk.CTkFrame(top, fg_color="transparent")
+        brand.pack(side="left")
+        ctk.CTkLabel(brand, text="One Pace", font=(FAMILY, 17, "bold"),
+                     text_color=HEADER_FG).pack(side="left")
+        ctk.CTkLabel(brand, text=" Downloader", font=(FAMILY, 17),
+                     text_color=HEADER_MUTED).pack(side="left")
+        ctk.CTkLabel(brand, text=f"  v{APP_VERSION}", font=F_XS,
+                     text_color=TEXT_DIM[1]).pack(side="left", pady=(4, 0))
 
-        title_block = ctk.CTkFrame(header, fg_color="transparent")
-        title_block.pack(side="left", fill="y", pady=SP_MD)
-        ctk.CTkLabel(title_block, text="One Pace Downloader",
-                     font=(FAMILY, 18, "bold"),
-                     text_color=HEADER_FG).pack(anchor="w")
-        # Tagline in muted cream — gold is reserved for structural accents
-        ctk.CTkLabel(title_block,
-                     text="Pick an arc, tick the episodes you want, hit Download.",
-                     font=F_SM,
-                     text_color="#C4B89D").pack(anchor="w")
+        btn_box = ctk.CTkFrame(top, fg_color="transparent")
+        btn_box.pack(side="right")
+        self._header_btn_box = btn_box
 
-        btn_box = ctk.CTkFrame(header, fg_color="transparent")
-        btn_box.pack(side="right", padx=SP_XL, pady=SP_MD)
-        # Header buttons read as nav controls — transparent with subtle hover,
-        # not solid slabs.
-        ctk.CTkButton(
-            btn_box, text="DNS", width=80, height=H_SM + 4,
-            fg_color="transparent",
-            border_width=1, border_color="#2C3D5C",
-            hover_color="#1F2A44",
-            text_color=HEADER_FG, font=F_SM,
-            command=self._open_dns_panel,
-        ).pack(side="left", padx=SP_XS)
-        # The Refresh button is held by reference so the background
-        # update-check can re-style it when new content is detected
-        # (see _check_for_updates_async).
-        self._refresh_btn = ctk.CTkButton(
-            btn_box, text="Refresh", width=110, height=H_SM + 4,
-            fg_color="transparent",
-            border_width=1, border_color="#2C3D5C",
-            hover_color="#1F2A44",
-            text_color=HEADER_FG, font=F_SM,
-            command=self._refresh_all,
-        )
-        self._refresh_btn.pack(side="left", padx=SP_XS)
-        ctk.CTkButton(
-            btn_box, text="Settings", width=110, height=H_SM + 4,
-            fg_color="transparent",
-            border_width=1, border_color="#2C3D5C",
-            hover_color="#1F2A44",
-            text_color=HEADER_FG, font=F_SM,
-            command=self._open_settings_panel,
-        ).pack(side="left", padx=SP_XS)
+        def header_btn(text, command, width=96):
+            return ctk.CTkButton(
+                btn_box, text=text, width=width, height=H_SM,
+                corner_radius=RADIUS_SM,
+                fg_color="transparent", hover_color=HEADER_HOVER,
+                border_width=1, border_color=HEADER_LINE,
+                text_color=HEADER_FG, font=F_SM, command=command)
 
-        # ---- SOURCE TAB STRIP ----
-        # Pill-style segmented control sitting in a soft container — the
-        # selected tab pops as a rounded ribbon-red pill, the others blend
-        # into the strip until hovered.
-        tab_row = ctk.CTkFrame(self, fg_color="transparent")
-        tab_row.pack(fill="x", padx=SP_MD, pady=(SP_MD, SP_XS))
+        header_btn("DNS", self._open_dns_panel, width=64).pack(
+            side="left", padx=(0, SP_SM))
+        # Held by reference so the background update check can restyle it
+        # when new content is detected (see _set_refresh_badge).
+        self._refresh_btn = header_btn("⟳  Refresh", self._refresh_all)
+        self._refresh_btn.pack(side="left", padx=(0, SP_SM))
+        header_btn("⚙  Settings", self._open_settings_panel).pack(side="left")
+
+        # Source tabs: text tabs with a gold underline on the active one.
+        tabs = ctk.CTkFrame(header, fg_color="transparent")
+        tabs.pack(fill="x", padx=SP_LG)
+        self._tab_widgets: dict[str, dict] = {}
         self._tab_labels = self._compute_tab_labels()
         self._tab_key_by_label = {v: k for k, v in self._tab_labels.items()}
-
-        # Outer pill frame so the segmented button reads as a single
-        # contained control rather than three loose buttons on the panel.
-        tab_pill = ctk.CTkFrame(
-            tab_row,
-            fg_color=("#DDE1E8", "#1F2A3D"),
-            corner_radius=20,
-        )
-        tab_pill.pack(side="left", padx=(0, SP_LG))
-        self.source_tabs = ctk.CTkSegmentedButton(
-            tab_pill,
-            values=list(self._tab_labels.values()),
-            command=self._on_source_change,
-            font=F_BOLD_SM,
-            height=H_MD,
-            corner_radius=18,
-            border_width=0,
-            fg_color=("#DDE1E8", "#1F2A3D"),
-            selected_color=PRIMARY,
-            selected_hover_color=PRIMARY_HOVER,
-            unselected_color=("#DDE1E8", "#1F2A3D"),
-            unselected_hover_color=("#CFD4DB", "#2C3D5C"),
-            text_color=("gray25", "gray85"),
-            text_color_disabled=("gray50", "gray45"),
-        )
-        self.source_tabs.pack(padx=4, pady=4)
-        self.source_tabs.set(self._tab_labels[self.current_source])
-
-        # Small colored dot beside the blurb to match the active source
-        info_wrap = ctk.CTkFrame(tab_row, fg_color="transparent")
-        info_wrap.pack(side="left", fill="x", expand=True, padx=(0, SP_LG))
-        self.source_dot = ctk.CTkLabel(
-            info_wrap, text="●", font=F_BASE,
-            text_color=PRIMARY, width=14,
-        )
-        self.source_dot.pack(side="left")
+        for key in _SRC_LABEL:
+            self._build_source_tab(tabs, key)
         self.source_info = ctk.CTkLabel(
-            info_wrap, text="", anchor="w",
-            font=F_SM,
-            text_color=TEXT_MUTED,
-            wraplength=720, justify="left",
-        )
-        self.source_info.pack(side="left", fill="x", expand=True,
-                              padx=(SP_SM, 0))
+            tabs, text="", anchor="e", font=F_SM,
+            text_color=HEADER_MUTED)
+        self.source_info.pack(side="right", padx=(SP_LG, SP_XS))
+        ctk.CTkFrame(header, height=1, corner_radius=0,
+                     fg_color=HEADER_LINE).pack(fill="x")
+        self._paint_source_tabs()
 
-        # ---- BODY: three columns ----
-        # Body is a soft tinted panel; each column sits ON it as a raised
-        # card. This gives the arc/episode lists a real surface so rows
-        # don't float on the window background.
-        body = ctk.CTkFrame(self, fg_color=SURFACE_PANEL)
-        body.pack(fill="both", expand=True, padx=SP_SM, pady=(SP_XS, 0))
-        body.grid_columnconfigure(0, weight=0, minsize=230)
-        body.grid_columnconfigure(1, weight=1, minsize=360)
-        body.grid_columnconfigure(2, weight=1, minsize=360)
+        # ---- FOOTER (packed before the body so it keeps its height) ----
+        footer = ctk.CTkFrame(self, corner_radius=0, fg_color=SURFACE_CARD,
+                              border_width=0)
+        footer.pack(fill="x", side="bottom")
+        self.progress = ctk.CTkProgressBar(
+            footer, height=3, corner_radius=0,
+            progress_color=PRIMARY, fg_color=SURFACE_CARD, border_width=0)
+        self.progress.set(0)
+        self.progress.pack(fill="x")
+        bar = ctk.CTkFrame(footer, fg_color="transparent", height=44)
+        bar.pack(fill="x", padx=SP_LG)
+        self._footer_bar = bar
+        bar.pack_propagate(False)
+
+        self._folder_btn = ctk.CTkButton(
+            bar, text="", height=H_SM - 2, anchor="w",
+            corner_radius=RADIUS_SM,
+            fg_color=SURFACE_INNER, hover_color=SURFACE_HOVER,
+            border_width=1, border_color=BORDER,
+            text_color=TEXT, font=F_SM,
+            command=self._pick_folder)
+        self._folder_btn.pack(side="left")
+        Tooltip(self._folder_btn, "Where downloads are saved — click to change")
+        ctk.CTkButton(
+            bar, text="Open", width=58, height=H_SM - 2,
+            corner_radius=RADIUS_SM,
+            fg_color="transparent", hover_color=SURFACE_HOVER,
+            text_color=LINK, font=F_BOLD_SM,
+            command=self._open_folder,
+        ).pack(side="left", padx=(SP_XS, 0))
+        self.save_dir.trace_add("write", lambda *_: self._paint_folder_btn())
+        self._paint_folder_btn()
+
+        ctk.CTkButton(
+            bar, text="Log", width=56, height=H_SM - 2,
+            corner_radius=RADIUS_SM,
+            fg_color="transparent", hover_color=SURFACE_HOVER,
+            text_color=TEXT_MUTED, font=F_SM,
+            command=self._toggle_log,
+        ).pack(side="right")
+        self.cancel_btn = ctk.CTkButton(
+            bar, text="Cancel", width=80, height=H_SM - 2,
+            corner_radius=RADIUS_SM, font=F_BOLD_SM,
+            fg_color=DANGER, hover_color=DANGER_HOVER,
+            command=self._cancel)
+        self._cancel_btn_parent = bar
+        ctk.CTkLabel(bar, textvariable=self.status_var, font=F_SM,
+                     anchor="w", text_color=TEXT_MUTED).pack(
+            side="left", fill="x", expand=True, padx=(SP_LG, SP_SM))
+
+        # Collapsible log panel (hidden by default; toggled by Log button)
+        self.log_panel = ctk.CTkFrame(self, height=150, fg_color=SURFACE_CARD,
+                                      corner_radius=RADIUS_LG)
+        self.log_textbox = ctk.CTkTextbox(
+            self.log_panel, height=130, font=F_MONO_XS,
+            fg_color=SURFACE_INNER, text_color=TEXT_MUTED,
+            corner_radius=RADIUS_SM)
+        self.log_textbox.pack(fill="both", expand=True, padx=SP_SM, pady=SP_SM)
+        self.log_textbox.configure(state="disabled")
+
+        # ---- BODY: three cards on the window background ----
+        body = ctk.CTkFrame(self, fg_color="transparent")
+        body.pack(fill="both", expand=True, padx=SP_MD, pady=SP_MD)
+        body.grid_columnconfigure(0, weight=0, minsize=270)
+        body.grid_columnconfigure(1, weight=5, minsize=380, uniform="main")
+        body.grid_columnconfigure(2, weight=4, minsize=340, uniform="main")
         body.grid_rowconfigure(0, weight=1)
 
-        # Column 1: arcs — raised card with gentle corner radius
-        col1 = ctk.CTkFrame(body, fg_color=SURFACE_CARD,
-                            corner_radius=RADIUS_LG)
-        col1.grid(row=0, column=0, sticky="nsew",
-                  padx=(SP_XS, SP_XS), pady=SP_SM)
-        col1.grid_columnconfigure(0, weight=1)
-        col1.grid_rowconfigure(2, weight=1)
-        ctk.CTkLabel(col1, text="ARCS", anchor="w",
-                     font=F_BOLD_SM,
-                     text_color=TEXT_MUTED).grid(
-            row=0, column=0, sticky="ew",
-            padx=SP_SM, pady=(SP_SM, SP_XS))
-        search_entry = ctk.CTkEntry(
-            col1, textvariable=self.search_var,
-            placeholder_text="Search arcs… (Esc to clear)",
-            height=H_SM, font=F_SM)
-        search_entry.grid(row=1, column=0, sticky="ew",
-                          padx=SP_SM, pady=(0, SP_SM))
-        search_entry.bind("<Escape>", lambda _e: self.search_var.set(""))
-        self.arc_scroll = ctk.CTkScrollableFrame(
-            col1, label_text="", fg_color="transparent")
-        self.arc_scroll.grid(row=2, column=0, sticky="nsew",
-                             padx=0, pady=(0, SP_SM))
+        def column(col, padx):
+            card = ctk.CTkFrame(body, fg_color=SURFACE_CARD,
+                                corner_radius=RADIUS_LG,
+                                border_width=1, border_color=BORDER)
+            card.grid(row=0, column=col, sticky="nsew", padx=padx)
+            card.grid_columnconfigure(0, weight=1)
+            return card
 
-        # Column 2: episodes — raised card matching column 1
-        col2 = ctk.CTkFrame(body, fg_color=SURFACE_CARD,
-                            corner_radius=RADIUS_LG)
-        col2.grid(row=0, column=1, sticky="nsew",
-                  padx=SP_XS, pady=SP_SM)
-        col2.grid_columnconfigure(0, weight=1)
-        col2.grid_rowconfigure(2, weight=1)
-        self.episodes_header = ctk.CTkLabel(col2, text="EPISODES",
-                                            anchor="w",
-                                            font=F_BOLD_SM,
-                                            text_color=TEXT_MUTED)
-        self.episodes_header.grid(row=0, column=0, sticky="ew",
-                                  padx=SP_SM, pady=(SP_SM, SP_XS))
+        # Column 1: arcs
+        col1 = column(0, (0, SP_SM))
+        col1.grid_rowconfigure(2, weight=1)
+        head1 = ctk.CTkFrame(col1, fg_color="transparent")
+        head1.grid(row=0, column=0, sticky="ew",
+                   padx=SP_LG, pady=(SP_LG, SP_SM))
+        ctk.CTkLabel(head1, text="Arcs", font=F_BOLD_LG,
+                     text_color=TEXT).pack(side="left")
+        self._arc_count_lbl = ctk.CTkLabel(head1, text="", font=F_SM,
+                                           text_color=TEXT_DIM)
+        self._arc_count_lbl.pack(side="left", padx=(SP_SM, 0), pady=(2, 0))
+        # No textvariable: CTkEntry hides its placeholder when one is set.
+        search_entry = ctk.CTkEntry(
+            col1, placeholder_text="⌕  Search arcs",
+            height=H_SM, font=F_SM, corner_radius=RADIUS_SM,
+            fg_color=SURFACE_INNER, border_color=BORDER, border_width=1,
+            text_color=TEXT, placeholder_text_color=TEXT_DIM)
+        search_entry.grid(row=1, column=0, sticky="ew",
+                          padx=SP_MD, pady=(0, SP_SM))
+        search_entry.bind(
+            "<KeyRelease>",
+            lambda _e: self.search_var.set(search_entry.get()))
+
+        def clear_search(_e=None):
+            search_entry.delete(0, "end")
+            self.search_var.set("")
+            self.focus_set()
+        search_entry.bind("<Escape>", clear_search)
+        self.arc_scroll = ctk.CTkScrollableFrame(
+            col1, label_text="", fg_color="transparent",
+            scrollbar_button_color=BORDER,
+            scrollbar_button_hover_color=BORDER_STRONG)
+        self.arc_scroll.grid(row=2, column=0, sticky="nsew",
+                             padx=(SP_XS, 0), pady=(0, SP_SM))
+
+        # Column 2: episodes
+        col2 = column(1, SP_XS)
+        col2.grid_rowconfigure(3, weight=1)
+        head2 = ctk.CTkFrame(col2, fg_color="transparent")
+        head2.grid(row=0, column=0, sticky="ew",
+                   padx=SP_LG, pady=(SP_LG, 0))
+        self.episodes_header = ctk.CTkLabel(
+            head2, text="Episodes", anchor="w", font=F_TITLE,
+            text_color=TEXT)
+        self.episodes_header.pack(fill="x")
+        self.episodes_sub = ctk.CTkLabel(
+            head2, text="", anchor="w", font=F_SM, text_color=TEXT_MUTED)
+        self.episodes_sub.pack(fill="x")
         ep_tools = ctk.CTkFrame(col2, fg_color="transparent")
         ep_tools.grid(row=1, column=0, sticky="ew",
-                      padx=SP_SM, pady=(0, SP_SM))
+                      padx=SP_LG, pady=(SP_MD, SP_SM))
         self.select_all_btn = ctk.CTkButton(
-            ep_tools, text="Select all", width=120, height=H_SM,
-            fg_color=SECONDARY, hover_color=SECONDARY_HOVER,
-            font=F_SM,
+            ep_tools, text="Select all", width=110, height=H_SM,
+            corner_radius=RADIUS_SM,
+            fg_color=SURFACE_INNER, hover_color=SURFACE_HOVER,
+            border_width=1, border_color=BORDER,
+            text_color=TEXT, font=F_SM,
             command=self._toggle_select_all)
         self.select_all_btn.pack(side="left")
         self.nyaa_view_toggle = ctk.CTkSegmentedButton(
             ep_tools,
             values=["Individual", "Packs"],
             command=self._on_nyaa_view_change,
-            height=H_SM,
-            font=F_SM,
-            selected_color=PRIMARY,
-            selected_hover_color=PRIMARY_HOVER,
+            height=H_SM, font=F_SM, corner_radius=RADIUS_SM,
+            fg_color=SURFACE_INNER,
+            selected_color=("#FFFFFF", "#2B3A5E"),
+            selected_hover_color=("#FFFFFF", "#33446C"),
+            unselected_color=SURFACE_INNER,
+            unselected_hover_color=SURFACE_HOVER,
+            text_color=TEXT,
         )
         self.download_selected_btn = ctk.CTkButton(
-            ep_tools, text="Download selected", height=H_SM,
-            font=F_BOLD_SM,
+            ep_tools, text="Download selected", height=H_SM, width=150,
+            corner_radius=RADIUS_SM, font=F_BOLD_SM,
             fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+            text_color="white",
             command=self._download_selected_episodes)
         self.download_selected_btn.pack(side="right")
         self.selection_size_lbl = ctk.CTkLabel(
-            ep_tools, text="", font=F_XS, text_color=TEXT_MUTED
-        )
-        self.selection_size_lbl.pack(side="right", padx=(0, 12))
+            ep_tools, text="", font=F_SM, text_color=TEXT_MUTED)
+        self.selection_size_lbl.pack(side="right", padx=(0, SP_MD))
+        ctk.CTkFrame(col2, height=1, corner_radius=0,
+                     fg_color=BORDER).grid(row=2, column=0, sticky="ew")
         self.episode_scroll = ctk.CTkScrollableFrame(
-            col2, label_text="", fg_color="transparent")
-        self.episode_scroll.grid(row=2, column=0, sticky="nsew",
-                                 padx=0, pady=(0, SP_SM))
+            col2, label_text="", fg_color="transparent",
+            scrollbar_button_color=BORDER,
+            scrollbar_button_hover_color=BORDER_STRONG)
+        self.episode_scroll.grid(row=3, column=0, sticky="nsew",
+                                 padx=(SP_XS, 0), pady=SP_SM)
 
-        # Column 3: sources / download / idle — raised card matching the others
-        col3 = ctk.CTkFrame(body, fg_color=SURFACE_CARD,
-                            corner_radius=RADIUS_LG)
-        col3.grid(row=0, column=2, sticky="nsew",
-                  padx=(SP_XS, SP_XS), pady=SP_SM)
-        col3.grid_columnconfigure(0, weight=1)
+        # Column 3: episode details / download / welcome
+        col3 = column(2, (SP_SM, 0))
         col3.grid_rowconfigure(1, weight=1)
-        self.source_header = ctk.CTkLabel(col3, text="DETAILS",
-                                          anchor="w",
-                                          font=F_BOLD_SM,
-                                          text_color=TEXT_MUTED)
+        self.source_header = ctk.CTkLabel(
+            col3, text="", anchor="w", font=F_EYEBROW, text_color=GOLD)
         self.source_header.grid(row=0, column=0, sticky="ew",
-                                padx=SP_SM, pady=(SP_SM, SP_XS))
+                                padx=SP_XL, pady=(SP_LG, 0))
         self.source_scroll = ctk.CTkScrollableFrame(
-            col3, label_text="", fg_color="transparent")
+            col3, label_text="", fg_color="transparent",
+            scrollbar_button_color=BORDER,
+            scrollbar_button_hover_color=BORDER_STRONG)
         self.source_scroll.grid(row=1, column=0, sticky="nsew",
-                                padx=0, pady=(0, SP_SM))
+                                padx=(SP_XS, 0), pady=(0, SP_SM))
 
-        # Speed up scrolling in columns
+        # Faster wheel scrolling in the columns
         for sf in (self.arc_scroll, self.episode_scroll, self.source_scroll):
             sf._on_mousewheel = lambda event, f=sf: f._canvas.yview_scroll(int(-3 * (event.delta / 120)), "units")
-
-        # ---- FOOTER: save folder + progress + status ----
-        footer = ctk.CTkFrame(self, corner_radius=0,
-                              fg_color=SURFACE_PANEL,
-                              height=110)
-        footer.pack(fill="x", side="bottom")
-
-        fr1 = ctk.CTkFrame(footer, fg_color="transparent")
-        fr1.pack(fill="x", padx=SP_MD, pady=(SP_MD, SP_XS))
-        save_entry = ctk.CTkEntry(
-            fr1, textvariable=self.save_dir,
-            height=H_SM, font=F_SM,
-            placeholder_text="Save folder…",
-        )
-        save_entry.pack(side="left", fill="x", expand=True, padx=(0, SP_XS))
-        save_entry.bind("<FocusOut>", lambda _e: self._persist_settings())
-        save_entry.bind("<Return>", lambda _e: self._persist_settings())
-        ctk.CTkButton(
-            fr1, text="Browse", width=80, height=H_SM,
-            font=F_SM, fg_color=SECONDARY, hover_color=SECONDARY_HOVER,
-            command=self._pick_folder,
-        ).pack(side="left", padx=(0, SP_XS))
-        ctk.CTkButton(
-            fr1, text="Open", width=70, height=H_SM,
-            font=F_SM,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG,
-            text_color=LINK,
-            hover_color=SURFACE_HOVER,
-            command=self._open_folder,
-        ).pack(side="left", padx=(0, SP_XS))
-        # Cancel button only mounts via _set_cancel_visible while running
-        self._cancel_btn_parent = fr1
-        self.cancel_btn = ctk.CTkButton(
-            fr1, text="Cancel", width=80, height=H_SM,
-            font=F_SM,
-            fg_color=DANGER, hover_color=DANGER_HOVER,
-            command=self._cancel)
-
-        # Thin branded progress bar — slim secondary indicator. Hidden
-        # entirely when the right-column hero panel is showing detailed
-        # progress (no need for two bars).
-        fr2 = ctk.CTkFrame(footer, fg_color="transparent")
-        fr2.pack(fill="x", padx=SP_MD, pady=SP_XS)
-        self.progress = ctk.CTkProgressBar(
-            fr2, height=6,
-            progress_color=PRIMARY,
-            fg_color=("#E8E8EC", "#1F2733"),
-            border_width=0,
-        )
-        self.progress.set(0)
-        self.progress.pack(fill="x")
-
-        fr3 = ctk.CTkFrame(footer, fg_color="transparent")
-        fr3.pack(fill="x", padx=SP_MD, pady=(SP_XS, SP_SM))
-        ctk.CTkLabel(fr3, textvariable=self.status_var,
-                     font=F_SM, anchor="w",
-                     text_color=TEXT_MUTED).pack(
-            side="left", fill="x", expand=True)
-        ctk.CTkButton(
-            fr3, text="Log ▾", width=70, command=self._toggle_log,
-            fg_color="transparent",
-            hover_color=SURFACE_HOVER,
-            text_color=LINK,
-            font=F_SM,
-        ).pack(side="right")
-
-        # Collapsible log panel (hidden by default; toggled by Log button)
-        self.log_panel = ctk.CTkFrame(self, height=140)
-        self.log_textbox = ctk.CTkTextbox(
-            self.log_panel, height=120, font=("Consolas", 9))
-        self.log_textbox.pack(fill="both", expand=True, padx=8, pady=8)
-        self.log_textbox.configure(state="disabled")
 
     # ----------------------------------------------------- source switch ---
 
@@ -2152,6 +1630,7 @@ class App(ctk.CTk):
         self.selected_arc = None
         self.selected_ep_for_detail = None
         self.ep_check_vars.clear()
+        self._paint_source_tabs()
         self._refresh_nyaa_view_toggle()
         self._render_arc_list()
         self._render_episode_list()
@@ -2238,13 +1717,13 @@ class App(ctk.CTk):
         downloaded; otherwise shows the source's content counts."""
         if self.current_source == "nyaa":
             cov = self._nyaa_arc_coverage(arc)
-            bits = []
-            if cov["total"]:
-                bits.append(f"{cov['per_ep_covered']}/{cov['total']} eps")
-            if cov["pack_count"]:
-                bits.append("+ pack" if cov["pack_count"] == 1
-                            else f"+ {cov['pack_count']} packs")
-            return " ".join(bits) if bits else "—"
+            n = cov["pack_count"]
+            if not cov["total"]:
+                return f"{n} pack{'s' if n != 1 else ''}" if n else "—"
+            eps = f"{cov['per_ep_covered']}/{cov['total']}"
+            if not n:
+                return f"{eps} eps"
+            return f"{eps} · {n} pack{'s' if n != 1 else ''}"
         ep_count, pack_count = self._arc_source_counts(arc, self.current_source)
         saved, total = self._arc_saved_count(arc)
         bits = []
@@ -2261,22 +1740,18 @@ class App(ctk.CTk):
         so download progress badges update without rebuilding the arc list."""
         for arc in self.index.get("arcs", []):
             widgets = self._arc_row_widgets.get(arc.get("title"))
-            if not widgets:
+            if not widgets or not widgets.get("meta_lbl"):
                 continue
-            meta_lbl = widgets.get("meta_lbl")
-            if not meta_lbl:
-                continue
-            meta_lbl.configure(text=self._compute_arc_meta(arc))
+            text, color = self._compute_arc_meta_styled(arc)
+            widgets["meta_lbl"].configure(text=text, text_color=color)
 
     # --------------------------------------------- Plex / Jellyfin layout --
 
     def _arc_index_for_title(self, title: str) -> int | None:
-        """0-based canonical arc index for a given arc title (Romance Dawn=0,
-        ..., Egghead=35). Used to derive the Plex/Jellyfin Season N folder."""
-        for i, a in enumerate(self.index.get("arcs", [])):
-            if a.get("title") == title:
-                return i
-        return None
+        """Plex/Jellyfin season number minus one for an arc (Romance
+        Dawn=0, ..., Egghead=35). Pinned, see PINNED_SEASONS."""
+        season = season_for_arc(self.index, title)
+        return season - 1 if season else None
 
     @staticmethod
     def _build_nfo_xml(season: int, ep_num: int, title: str, plot: str) -> str:
@@ -2365,12 +1840,24 @@ class App(ctk.CTk):
                             found = True
                             break
                 if not found:
-                    # Last resort: single-file subfolder
+                    # Re-released upstream: CRC changed, episode didn't.
+                    key = episode_key(raw_name)
+                    for p in downloaded_subfolder.glob("*"):
+                        if (p.is_file()
+                                and not p.name.endswith(".part")
+                                and episode_key(p.name) == key):
+                            src_path = p
+                            found = True
+                            break
+                if not found:
+                    # Last resort: single-file subfolder. Only safe when this
+                    # run fetched a single episode — with several, the lone
+                    # file left may belong to another one.
                     candidates = [
                         p for p in downloaded_subfolder.glob("*")
                         if p.is_file() and not p.name.endswith(".part")
                     ]
-                    if len(candidates) == 1:
+                    if len(candidates) == 1 and len(ep_for_file) == 1:
                         src_path = candidates[0]
                     else:
                         log(f"  [warn] Plex organize: file not found — "
@@ -2436,7 +1923,10 @@ class App(ctk.CTk):
         # Build a lookup: sanitized_filename -> (arc_idx, ep_num, canonical,
         # plot, raw_filename) from the full index.
         file_map: dict[str, tuple[int, int, str, str, str]] = {}
-        for arc_idx, arc in enumerate(self.index.get("arcs", [])):
+        for arc in self.index.get("arcs", []):
+            arc_idx = self._arc_index_for_title(arc.get("title", ""))
+            if arc_idx is None:
+                continue
             for ep in arc.get("episodes", []):
                 for src in ep.get("sources", []):
                     fn = src.get("filename")
@@ -2598,9 +2088,8 @@ class App(ctk.CTk):
         if not arcs:
             ctk.CTkLabel(self.arc_scroll,
                 text="No episode_index.json found.\n\nRun:\npython _source/build_episode_index.py",
-                justify="left",
-                font=("Segoe UI", 9),
-                text_color=("gray40", "gray70")).pack(padx=12, pady=12)
+                justify="left", font=F_SM,
+                text_color=TEXT_MUTED).pack(padx=12, pady=12)
             return
 
         filtered = [a for a in arcs if self._arc_has_source(a, self.current_source)]
@@ -2608,6 +2097,11 @@ class App(ctk.CTk):
         if rebuild or not self._arc_row_widgets:
             for arc in filtered:
                 self._build_arc_button(arc)
+
+        try:
+            self._arc_count_lbl.configure(text=str(len(filtered)))
+        except Exception:
+            pass
 
         any_visible = False
         for arc in filtered:
@@ -2620,7 +2114,7 @@ class App(ctk.CTk):
             matches = not query or query in title.lower()
             if matches:
                 if not row.winfo_ismapped():
-                    row.pack(fill="x", padx=SP_XS, pady=1)
+                    row.pack(fill="x", padx=(SP_XS, SP_SM), pady=1)
                 any_visible = True
             else:
                 if row.winfo_ismapped():
@@ -2629,9 +2123,7 @@ class App(ctk.CTk):
         if not hasattr(self, "_no_arcs_label") or not self._no_arcs_label.winfo_exists():
             self._no_arcs_label = ctk.CTkLabel(
                 self.arc_scroll,
-                text="",
-                font=("Segoe UI", 9),
-                text_color=("gray40", "gray70"),
+                text="", font=F_SM, text_color=TEXT_MUTED,
             )
         
         if not any_visible:
@@ -2652,74 +2144,61 @@ class App(ctk.CTk):
         title = arc["title"]
         is_selected = (self.selected_arc is not None
                        and self.selected_arc.get("title") == title)
+        idx = self._arc_index_for_title(title)
+        meta, meta_color = self._compute_arc_meta_styled(arc)
 
-        # Selection = solid ribbon-red bg with white text; non-selected =
-        # transparent with hover tint. Single frame keeps Tk geometry sane.
-        if is_selected:
-            base_color = PRIMARY
-            hover_color = PRIMARY
-            text_color = ("white", "white")
-            meta_text_color = ("#FFE5A8", "#FFE5A8")
-            title_font = F_BOLD_BASE
-        else:
-            base_color = "transparent"
-            hover_color = SURFACE_HOVER
-            text_color = TEXT
-            meta_text_color = TEXT_MUTED
-            title_font = F_BASE
-
-        meta = self._compute_arc_meta(arc)
-
-        row = ctk.CTkFrame(self.arc_scroll, fg_color=base_color,
-                           corner_radius=RADIUS_SM,
-                           height=36)
-        row.pack(fill="x", padx=SP_XS, pady=1)
+        row = ctk.CTkFrame(self.arc_scroll,
+                           fg_color=SURFACE_SEL if is_selected else "transparent",
+                           corner_radius=RADIUS_SM, height=38)
+        row.pack(fill="x", padx=(SP_XS, SP_SM), pady=1)
         row.pack_propagate(False)
 
+        bar = ctk.CTkFrame(row, width=3, height=18, corner_radius=2,
+                           fg_color=GOLD if is_selected else "transparent")
+        bar.pack(side="left", padx=(SP_XS, 0))
+        num_lbl = ctk.CTkLabel(
+            row, text=f"{idx + 1:02d}" if idx is not None else "",
+            width=24, font=F_MONO_XS,
+            text_color=GOLD if is_selected else TEXT_DIM)
+        num_lbl.pack(side="left", padx=(SP_SM, SP_XS))
+        meta_lbl = ctk.CTkLabel(row, text=meta, anchor="e", font=F_XS,
+                                text_color=meta_color)
+        meta_lbl.pack(side="right", padx=(SP_XS, SP_MD))
+        shown = title if len(title) <= 26 else title[:25].rstrip() + "…"
         title_lbl = ctk.CTkLabel(
-            row, text=title, anchor="w",
-            font=title_font, text_color=text_color,
-        )
-        title_lbl.pack(side="left", fill="x", expand=True,
-                       padx=(SP_MD, SP_SM))
-
-        meta_lbl = None
-        if meta:
-            meta_lbl = ctk.CTkLabel(
-                row, text=meta, anchor="e",
-                font=F_XS, text_color=meta_text_color,
-            )
-            meta_lbl.pack(side="right", padx=(SP_SM, SP_MD))
+            row, text=shown, anchor="w",
+            font=F_BOLD_BASE if is_selected else F_BASE, text_color=TEXT)
+        title_lbl.pack(side="left", fill="x", expand=True)
 
         # Stash refs so _update_arc_selection can mutate this row in place
         # instead of triggering a full list re-render on every click.
         self._arc_row_widgets[title] = {
             "row": row, "title_lbl": title_lbl, "meta_lbl": meta_lbl,
+            "bar": bar, "num_lbl": num_lbl,
         }
 
         def _click(_e=None, a=arc) -> None:
             self._on_arc_selected(a)
 
+        def _is_sel() -> bool:
+            return (self.selected_arc is not None
+                    and self.selected_arc.get("title") == title)
+
         def _enter(_e=None) -> None:
-            is_sel = (self.selected_arc is not None
-                      and self.selected_arc.get("title") == title)
-            if not is_sel:
+            if not _is_sel():
                 row.configure(fg_color=SURFACE_HOVER)
 
         def _leave(_e=None) -> None:
-            is_sel = (self.selected_arc is not None
-                      and self.selected_arc.get("title") == title)
-            row.configure(fg_color=PRIMARY if is_sel else "transparent")
+            row.configure(fg_color=SURFACE_SEL if _is_sel() else "transparent")
 
-        for w in (row, title_lbl) + ((meta_lbl,) if meta_lbl else ()):
+        for w in (row, bar, num_lbl, title_lbl, meta_lbl):
             w.bind("<Button-1>", _click)
             w.bind("<Enter>", _enter)
             w.bind("<Leave>", _leave)
             w.configure(cursor="hand2")
 
-        if len(title) > 24:
+        if shown != title:
             Tooltip(title_lbl, title)
-            Tooltip(row, title)
 
     def _on_arc_selected(self, arc: dict) -> None:
         prev_title = (self.selected_arc.get("title")
@@ -2734,6 +2213,9 @@ class App(ctk.CTk):
         self._update_arc_selection(prev_title, new_title)
         self._render_episode_list()
         self._render_source_panel()
+        if self.download_state is None and self.status_var.get().startswith(
+                "Pick an arc"):
+            self._set_status("Tick episodes, then hit Download")
 
     def _update_arc_selection(self, prev_title: str | None,
                               new_title: str | None) -> None:
@@ -2745,20 +2227,14 @@ class App(ctk.CTk):
             widgets = self._arc_row_widgets.get(title)
             if not widgets:
                 continue
-            row = widgets["row"]
-            title_lbl = widgets["title_lbl"]
-            meta_lbl = widgets["meta_lbl"]
-            if is_sel:
-                row.configure(fg_color=PRIMARY)
-                title_lbl.configure(font=F_BOLD_BASE,
-                                    text_color=("white", "white"))
-                if meta_lbl:
-                    meta_lbl.configure(text_color=("#FFE5A8", "#FFE5A8"))
-            else:
-                row.configure(fg_color="transparent")
-                title_lbl.configure(font=F_BASE, text_color=TEXT)
-                if meta_lbl:
-                    meta_lbl.configure(text_color=TEXT_MUTED)
+            widgets["row"].configure(
+                fg_color=SURFACE_SEL if is_sel else "transparent")
+            widgets["bar"].configure(
+                fg_color=GOLD if is_sel else "transparent")
+            widgets["num_lbl"].configure(
+                text_color=GOLD if is_sel else TEXT_DIM)
+            widgets["title_lbl"].configure(
+                font=F_BOLD_BASE if is_sel else F_BASE)
 
     # ------------------------------------------------- episode list pane ---
 
@@ -2771,17 +2247,16 @@ class App(ctk.CTk):
         arc = self.selected_arc
         if not arc:
             self.episodes_header.configure(text="Episodes")
-            ctk.CTkLabel(
-                self.episode_scroll, justify="left",
-                text="← Pick an arc on the left.\n\n"
-                     "Episodes for that arc will show up here. Tick the\n"
-                     "boxes for the ones you want, then click "
-                     "'Download selected'.",
-                font=("Segoe UI", 10),
-                text_color=("gray40", "gray70"),
-            ).pack(padx=18, pady=24, anchor="w")
+            self.episodes_sub.configure(text="Pick an arc on the left to see its episodes.")
+            self._empty_state(
+                self.episode_scroll, "☰",
+                "No arc selected",
+                "Choose an arc from the list. Its episodes show up here — "
+                "tick the ones you want and hit Download.")
             return
         src = self.current_source
+        idx = self._arc_index_for_title(arc["title"])
+        self.episodes_header.configure(text=arc["title"])
 
         # Coverage banner (Nyaa tab only) — always at the top regardless of
         # sub-view so users see the headline before the rows.
@@ -2791,16 +2266,12 @@ class App(ctk.CTk):
         # Nyaa tab is split into Individual / Packs sub-views.
         if src == "nyaa" and self.nyaa_view == "packs":
             packs = arc.get("arc_packs", [])
-            self.episodes_header.configure(
-                text=f"Full-arc packs  —  {arc['title']}  ({len(packs)})  •  Nyaa")
+            self.episodes_sub.configure(
+                text=f"{len(packs)} full-arc pack{'s' if len(packs) != 1 else ''} on Nyaa")
             if not packs:
-                ctk.CTkLabel(
-                    self.episode_scroll, justify="left", anchor="w",
-                    text="(no full-arc torrent packs for this arc — "
-                         "check the Individual tab for per-episode torrents)",
-                    font=("Segoe UI", 9), wraplength=380,
-                    text_color=("gray40", "gray70"),
-                ).pack(padx=12, pady=12)
+                self._empty_state(
+                    self.episode_scroll, "∅", "No full-arc packs",
+                    "Switch to Individual for per-episode torrents.")
                 return
             for pack in packs:
                 self._build_arc_pack_row(pack)
@@ -2811,55 +2282,56 @@ class App(ctk.CTk):
             ep for ep in arc.get("episodes", [])
             if any(s.get("kind") == src for s in ep.get("sources", []))
         ]
-        suffix = (" — Individual" if src == "nyaa" else "")
-        self.episodes_header.configure(
-            text=f"Episodes  —  {arc['title']}  ({len(eps)})  •  {_SRC_LABEL[src]}{suffix}")
+        bits = []
+        if idx is not None:
+            bits.append(f"Season {idx + 1}")
+        bits.append(f"{len(eps)} episode{'s' if len(eps) != 1 else ''}")
+        bits.append(_SRC_LABEL[src])
+        if src in ("onepace", "muhn"):
+            saved, total = self._arc_saved_count(arc)
+            if saved:
+                bits.append(f"{saved} saved")
+        self.episodes_sub.configure(text="  ·  ".join(bits))
         for ep in eps:
             self._build_episode_row(ep)
         self._refresh_selection_buttons()
         if not eps:
-            empty_msg = (
-                "(no per-episode torrents — flip to Packs above for full-arc options)"
+            self._empty_state(
+                self.episode_scroll, "∅", "Nothing here",
+                "No per-episode torrents — switch to Packs above."
                 if src == "nyaa"
-                else f"(no {_SRC_LABEL[src]} episodes for this arc)"
-            )
-            ctk.CTkLabel(
-                self.episode_scroll, justify="left", anchor="w",
-                text=empty_msg,
-                font=("Segoe UI", 9), wraplength=380,
-                text_color=("gray40", "gray70"),
-            ).pack(padx=12, pady=12)
+                else f"No {_SRC_LABEL[src]} episodes for this arc.")
 
     def _build_nyaa_coverage_banner(self, arc: dict) -> None:
         cov = self._nyaa_arc_coverage(arc)
         total, per_ep, pack_n = cov["total"], cov["per_ep_covered"], cov["pack_count"]
         if total == 0:
             heading, body = "No data", "This arc has no canonical episode list."
-            accent, bg = TEXT_MUTED, ("#F4F5F8", "#1F2733")
+            accent = TEXT_MUTED
         elif per_ep == total:
             heading = "Full coverage"
             body = f"{total}/{total} episodes have per-episode torrents."
-            accent, bg = OK, ("#E8F5E9", "#1E3A24")
+            accent = OK
         elif pack_n and per_ep == 0:
             heading = "Full coverage via pack"
             body = (f"No per-episode torrents, but {pack_n} full-arc pack"
                     f"{'s' if pack_n != 1 else ''} cover"
                     f"{'s' if pack_n == 1 else ''} all {total} episodes.")
-            accent, bg = OK, ("#E8F5E9", "#1E3A24")
+            accent = OK
         elif pack_n:
             heading = "Full coverage"
             body = (f"{per_ep}/{total} per-episode + {pack_n} full-arc pack"
                     f"{'s' if pack_n != 1 else ''} fill the gap.")
-            accent, bg = OK, ("#E8F5E9", "#1E3A24")
+            accent = OK
         else:
             heading = "Partial coverage"
             body = (f"{per_ep}/{total} per-episode, "
                     f"{total - per_ep} not available on Nyaa.")
-            accent, bg = WARN, ("#FFF7E0", "#2E2814")
+            accent = WARN
 
         body_card = ctk.CTkFrame(
-            self.episode_scroll, fg_color=bg,
-            corner_radius=RADIUS_SM,
+            self.episode_scroll, fg_color=SURFACE_INNER,
+            corner_radius=RADIUS_SM, border_width=1, border_color=BORDER,
         )
         body_card.pack(fill="x", padx=SP_SM, pady=(SP_SM, SP_SM))
         row1 = ctk.CTkFrame(body_card, fg_color="transparent")
@@ -2877,28 +2349,28 @@ class App(ctk.CTk):
 
     def _build_episode_row(self, ep: dict) -> None:
         is_active = (self.selected_ep_for_detail == ep["num"])
-        # Active row = subtle tinted bg; non-active = transparent with hover.
-        # No separate ribbon frame — Tk packs that with fill="y" balloon the
-        # row's container.
         row = ctk.CTkFrame(
             self.episode_scroll,
-            fg_color=("#FFF6E0", "#2A2010") if is_active else "transparent",
-            corner_radius=RADIUS_SM,
-            height=32,
+            fg_color=SURFACE_SEL if is_active else "transparent",
+            corner_radius=RADIUS_SM, height=40,
         )
-        row.pack(fill="x", padx=SP_XS, pady=1)
+        row.pack(fill="x", padx=(SP_XS, SP_SM), pady=1)
         row.pack_propagate(False)
         var = ctk.BooleanVar(value=False)
         var.trace_add("write", lambda *_: not getattr(self, "_updating_checks", False) and self._refresh_selection_buttons())
         cb = ctk.CTkCheckBox(
-            row, text="", variable=var, width=20,
-            fg_color=PRIMARY,
-            hover_color=PRIMARY_HOVER,
-            border_color=BORDER_STRONG,
+            row, text="", variable=var, width=22,
+            checkbox_width=18, checkbox_height=18,
+            corner_radius=5, border_width=2,
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+            border_color=BORDER_STRONG, checkmark_color="white",
         )
-        cb.pack(side="left", padx=(SP_SM, SP_SM))
+        cb.pack(side="left", padx=(SP_MD, SP_XS))
         cb._canvas.bind("<Button-1>", lambda event, num=ep["num"]: self._on_checkbox_clicked(event, num), add="+")
         self.ep_check_vars[ep["num"]] = var
+
+        click_row = ctk.CTkFrame(row, fg_color="transparent")
+        click_row.pack(side="left", fill="both", expand=True)
 
         # Only count sources from the active page
         sources = [s for s in ep.get("sources", [])
@@ -2907,33 +2379,19 @@ class App(ctk.CTk):
                                             "English Subtitles")
         quality_pref = self.config_data.get("default_quality", "1080p")
 
-        if self.current_source == "onepace":
-            best = self._best_source_for(ep, "onepace",
-                                         version_pref, quality_pref)
-            extras = sorted(
-                {s.get("quality", "?") for s in sources
-                 if s.get("quality") != (best or {}).get("quality")},
-                key=lambda q: -_quality_rank(q),
-            )
+        chip_text, chip_style, detail = "", CHIP_NEUTRAL, ""
+        if self.current_source in ("onepace", "muhn"):
+            best = self._best_source_for(
+                ep, self.current_source,
+                version_pref if self.current_source == "onepace"
+                else "English Dub", quality_pref)
             if best:
-                ver_short = {"English Subtitles": "Sub",
-                             "English Dub": "Dub",
-                             "English Dub with Closed Captions":
-                                 "Dub-CC"}.get(best.get("version", ""), "?")
-                detail = (f"{ver_short} {best.get('quality', '')}  •  "
-                          f"{_fmt_size(best.get('size_bytes', 0))}")
-                if extras:
-                    detail += f"  ({', '.join(extras)})"
+                ver = best.get("version") or "English Dub"
+                chip_text = f"{_VER_SHORT.get(ver, 'Dub')} {best.get('quality', '')}".strip()
+                chip_style = CHIP_DUB if is_dub(ver) else CHIP_SUB
+                detail = _fmt_size(best.get("size_bytes", 0))
             else:
-                detail = "(no source)"
-        elif self.current_source == "muhn":
-            best = self._best_source_for(ep, "muhn",
-                                         "English Dub", quality_pref)
-            if best:
-                detail = (f"Dub {best.get('quality', 'varies')}  •  "
-                          f"{_fmt_size(best.get('size_bytes', 0))}")
-            else:
-                detail = "(no source)"
+                detail = "no source"
         elif self.current_source == "nyaa":
             # Prefer Galaxy9000 (official One Pace uploader); fall back to most-seeded.
             official = [s for s in sources
@@ -2942,74 +2400,56 @@ class App(ctk.CTk):
             best = max(pool, key=lambda s: int(s.get("seeders", 0)),
                        default=None)
             if best is not None:
-                badge = "✓ Official  •  " if best.get("uploader") == NYAA_OFFICIAL_UPLOADER else ""
-                detail = (f"{badge}{_fmt_size(best.get('size_bytes', 0))}  •  "
-                          f"⛵{best.get('seeders', 0)}"
-                          f"  ({len(sources)} torrent"
-                          f"{'s' if len(sources) != 1 else ''})")
+                if best.get("uploader") == NYAA_OFFICIAL_UPLOADER:
+                    chip_text, chip_style = "Official", CHIP_OK
+                detail = (f"{_fmt_size(best.get('size_bytes', 0))}  ·  "
+                          f"↑{best.get('seeders', 0)}")
             else:
-                detail = "(no torrents)"
+                detail = "no torrents"
         else:  # usenet
-            # No seeders / uploader concept — just pick the highest-quality
-            # release as the headline and surface the alternatives count.
             best = max(sources,
                        key=lambda s: _quality_rank(s.get("quality", "")),
                        default=None)
             if best is not None:
-                qual = best.get("quality", "?")
-                extras_count = len(sources) - 1
-                tail = (f"  (+{extras_count} more)" if extras_count > 0 else "")
-                detail = (f"{qual}  •  "
-                          f"{_fmt_size(best.get('size_bytes', 0))}{tail}")
+                chip_text = best.get("quality", "")
+                more = len(sources) - 1
+                detail = (_fmt_size(best.get("size_bytes", 0))
+                          + (f"  ·  +{more}" if more > 0 else ""))
             else:
-                detail = "(no NZB)"
-
-        # Title left, detail muted right. Compact rows — no extra pady on
-        # the labels (the row's height=32 + checkbox pack already breathes).
-        click_row = ctk.CTkFrame(row, fg_color="transparent")
-        click_row.pack(side="left", fill="x", expand=True, padx=(0, SP_XS))
+                detail = "no NZB"
 
         is_saved = self._is_episode_saved(ep, self.selected_arc)
-
-        # Truncate the row title to fit the narrow episode column — canonical
-        # titles can be 40+ chars and otherwise push the Saved chip and the
-        # quality/size detail off the right edge. Tooltip carries the full
-        # title for anyone who wants to read it.
         full_title = episode_title(ep)
-        row_title = episode_title(ep, max_len=28)
+        # Strip the leading "Arc NN" the display title may carry — the arc is
+        # already the column heading, the number has its own slot.
+        name = ep.get("canonical_title") or full_title
+        row_title = name if len(name) <= 38 else name[:37].rstrip() + "…"
 
-        # Saved chip is packed FIRST (side="right") so it claims its full
-        # width before detail_lbl + title_lbl get their parcels. That way,
-        # space pressure squeezes the longer text (title), not the chip.
+        # Right side first so it claims its width before the title.
         if is_saved:
-            saved_chip = ctk.CTkLabel(
-                click_row, text=" ✓ Saved ",
-                font=F_BOLD_XS,
-                fg_color=OFFICIAL_CHIP,
-                text_color=("white", "white"),
-                corner_radius=RADIUS_SM,
-            )
-            saved_chip.pack(side="right", padx=(0, SP_XS))
-        detail_lbl = ctk.CTkLabel(
-            click_row, text=detail, anchor="e",
-            font=F_XS,
-            text_color=TEXT_MUTED,
-        )
-        detail_lbl.pack(side="right", padx=(SP_SM, SP_SM))
+            self._chip(click_row, "✓ Saved", style=CHIP_OK).pack(
+                side="right", padx=(SP_XS, SP_SM))
+        detail_lbl = ctk.CTkLabel(click_row, text=detail, anchor="e",
+                                  font=F_XS, text_color=TEXT_DIM, width=58)
+        detail_lbl.pack(side="right", padx=(SP_XS, SP_SM if not is_saved else 0))
+        widgets_extra = [detail_lbl]
+        if chip_text:
+            chip = self._chip(click_row, chip_text, style=chip_style)
+            chip.pack(side="right")
+            widgets_extra.append(chip)
+        num_lbl = ctk.CTkLabel(click_row, text=f"{ep['num']:02d}", width=26,
+                               font=F_MONO_SM, text_color=TEXT_DIM, anchor="w")
+        num_lbl.pack(side="left", padx=(SP_XS, SP_XS))
         title_lbl = ctk.CTkLabel(
             click_row, text=row_title, anchor="w",
-            font=F_BOLD_BASE if is_active else F_BASE,
-            text_color=TEXT,
-        )
-        title_lbl.pack(side="left", padx=(SP_XS, SP_SM))
-        if full_title != row_title:
+            font=F_BOLD_BASE if is_active else F_BASE, text_color=TEXT)
+        title_lbl.pack(side="left", fill="x", expand=True)
+        if row_title != name or name != full_title:
             Tooltip(title_lbl, full_title)
 
         # Refs for _update_episode_selection — avoids re-rendering all 59
         # episodes when the user clicks one to view its sources.
-        self._ep_row_widgets[ep["num"]] = {
-            "row": row, "title_lbl": title_lbl,
-        }
+        self._ep_row_widgets[ep["num"]] = {"row": row, "title_lbl": title_lbl}
 
         def _click(_e=None, e=ep) -> None:
             self._on_episode_clicked(e)
@@ -3018,16 +2458,15 @@ class App(ctk.CTk):
             self._toggle_checkbox(e["num"])
 
         def _enter(_e=None) -> None:
-            active_ep = self.selected_ep_for_detail
-            if active_ep != ep["num"]:
-                click_row.configure(fg_color=SURFACE_HOVER)
+            if self.selected_ep_for_detail != ep["num"]:
+                row.configure(fg_color=SURFACE_HOVER)
 
         def _leave(_e=None) -> None:
-            active_ep = self.selected_ep_for_detail
-            active_bg = ("#FFF6E0", "#2A2010")
-            click_row.configure(fg_color=active_bg if active_ep == ep["num"] else "transparent")
+            row.configure(fg_color=SURFACE_SEL
+                          if self.selected_ep_for_detail == ep["num"]
+                          else "transparent")
 
-        for w in (click_row, title_lbl, detail_lbl):
+        for w in [click_row, num_lbl, title_lbl] + widgets_extra:
             w.bind("<Button-1>", _click)
             w.bind("<Double-Button-1>", _double_click)
             w.bind("<Enter>", _enter)
@@ -3069,7 +2508,8 @@ class App(ctk.CTk):
         ctk.CTkButton(
             line2, text="Open magnet", width=120, height=H_SM,
             font=F_BOLD_XS,
-            fg_color=INFO, hover_color=INFO_HOVER,
+            corner_radius=RADIUS_SM,
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
             command=lambda p=pack: self._open_magnet(
                 p["magnet"], p.get("torrent_title", "")),
         ).pack(side="right")
@@ -3108,7 +2548,6 @@ class App(ctk.CTk):
 
     def _update_episode_selection(self, prev_num: int | None,
                                   new_num: int | None) -> None:
-        active_bg = ("#FFF6E0", "#2A2010")
         for num, is_active in ((prev_num, False), (new_num, True)):
             if num is None:
                 continue
@@ -3116,7 +2555,7 @@ class App(ctk.CTk):
             if not widgets:
                 continue
             widgets["row"].configure(
-                fg_color=active_bg if is_active else "transparent")
+                fg_color=SURFACE_SEL if is_active else "transparent")
             widgets["title_lbl"].configure(
                 font=F_BOLD_BASE if is_active else F_BASE)
 
@@ -3185,15 +2624,12 @@ class App(ctk.CTk):
         for w in self.source_scroll.winfo_children():
             w.destroy()
         self._download_panel_widgets.clear()
-        # 1. Active download takes priority over everything — replaces the
-        # source/quality panel with a prominent download dashboard so users
-        # can actually see progress without squinting at the 4px footer bar.
+        # 1. Active download takes priority over everything.
         if self.download_title is not None:
             self._render_download_panel()
             return
         src = self.current_source
-        # 2. No episode selected — render a useful idle panel instead of
-        # leaving 380px of dead space.
+        # 2. No episode selected — welcome / arc overview.
         if not self.selected_arc or self.selected_ep_for_detail is None:
             self._render_idle_panel(src)
             return
@@ -3201,23 +2637,53 @@ class App(ctk.CTk):
                    if e["num"] == self.selected_ep_for_detail), None)
         if not ep:
             return
+        arc_title = self.selected_arc["title"]
         self.source_header.configure(
-            text=f"{_SRC_LABEL[src]}  —  {episode_title(ep)}")
-        # Only show the active source's rows — the other sources have their
-        # own tab.
-        sources = [s for s in ep.get("sources", []) if s.get("kind") == src]
-        card_header = {
-            "onepace": "ONE PACE",
-            "muhn":    "MUHN PACE  (English Dub)",
-            "nyaa":    "NYAA  (Torrents)",
-            "usenet":  "USENET  (NZB)",
-        }[src]
-        if sources:
-            self._build_source_card(card_header, sources, ep, src)
-        else:
+            text=f"{arc_title.upper()}  ·  EPISODE {ep['num']:02d}")
+
+        hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
+        hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_MD))
+        ctk.CTkLabel(
+            hero, text=ep.get("canonical_title") or episode_title(ep),
+            font=F_TITLE, text_color=TEXT, anchor="w", justify="left",
+            wraplength=360,
+        ).pack(fill="x")
+        tags = ctk.CTkFrame(hero, fg_color="transparent", height=1)
+        if self._is_episode_saved(ep, self.selected_arc):
+            self._chip(tags, "✓ In your library", style=CHIP_OK).pack(
+                side="left", padx=(0, SP_XS))
+        srcs = [s for s in ep.get("sources", []) if s.get("kind") == src]
+        if src == "onepace":
+            vers = {s.get("version") for s in srcs}
+            if any(is_dub(v) for v in vers):
+                self._chip(tags, "Dub available", style=CHIP_DUB).pack(
+                    side="left", padx=(0, SP_XS))
+            if "English Subtitles" in vers:
+                self._chip(tags, "Sub available", style=CHIP_SUB).pack(
+                    side="left", padx=(0, SP_XS))
+        if tags.winfo_children():
+            tags.pack(fill="x", pady=(SP_SM, 0))
+        plot = (ep.get("plot") or "").strip()
+        if plot:
+            if len(plot) > 420:
+                plot = plot[:419].rsplit(" ", 1)[0] + "…"
+            ctk.CTkLabel(
+                hero, text=plot, font=F_SM, text_color=TEXT_MUTED,
+                anchor="w", justify="left", wraplength=360,
+            ).pack(fill="x", pady=(SP_MD, 0))
+
+        if not srcs:
             self._build_placeholder_card(
-                card_header,
+                _SRC_LABEL[src].upper(),
                 f"No {_SRC_LABEL[src]} options for this episode.")
+            return
+        card_header = {
+            "onepace": "DOWNLOAD",
+            "muhn":    "DOWNLOAD  ·  MUHN PACE DUB",
+            "nyaa":    "TORRENTS",
+            "usenet":  "NZB RELEASES",
+        }[src]
+        self._build_source_card(card_header, srcs, ep, src)
 
     def _render_download_panel(self) -> None:
         """Hero download status panel — combines title, big percentage and
@@ -3229,8 +2695,8 @@ class App(ctk.CTk):
         # right now" at a glance.
         wrap = ctk.CTkFrame(
             self.source_scroll, corner_radius=RADIUS_LG,
-            fg_color=("#FFF5F5", "#2A1817"),
-            border_width=1, border_color=("#F2C8CC", "#5A2A2C"),
+            fg_color=SURFACE_INNER,
+            border_width=1, border_color=BORDER_STRONG,
         )
         wrap.pack(fill="x", padx=SP_SM, pady=SP_SM)
 
@@ -3261,8 +2727,8 @@ class App(ctk.CTk):
         bar = ctk.CTkProgressBar(
             wrap, height=10,
             progress_color=PRIMARY,
-            fg_color=("#F3E5DA", "#2A1817"),
-            border_width=0,
+            fg_color=BORDER,
+            border_width=0, corner_radius=5,
         )
         bar.pack(fill="x", padx=SP_LG, pady=(0, SP_SM))
         bar.set(0)
@@ -3300,8 +2766,9 @@ class App(ctk.CTk):
         # Big Cancel button (slightly less shouty than the prior brick red)
         ctk.CTkButton(
             wrap, text="Cancel download", height=H_MD,
-            font=F_BOLD_SM,
-            fg_color=DANGER, hover_color=DANGER_HOVER,
+            font=F_BOLD_SM, corner_radius=RADIUS_SM,
+            fg_color="transparent", hover_color=SURFACE_HOVER,
+            border_width=1, border_color=DANGER, text_color=DANGER,
             command=self._cancel,
         ).pack(fill="x", padx=SP_LG, pady=(0, SP_LG))
 
@@ -3437,267 +2904,411 @@ class App(ctk.CTk):
                     pass
 
     def _render_idle_panel(self, src: str) -> None:
-        """Right-column content when nothing is selected and nothing is
-        downloading. Quick-orient cards in the same elevation system as
-        every other card in the app."""
-        self.source_header.configure(text="QUICK GUIDE")
-
-        # ---- How to download ----
-        guide = ctk.CTkFrame(
-            self.source_scroll, corner_radius=RADIUS_LG,
-            fg_color=SURFACE_CARD,
-            border_width=1, border_color=BORDER,
-        )
-        guide.pack(fill="x", padx=SP_SM, pady=(SP_SM, SP_SM))
+        """Right column when nothing is selected and nothing is downloading:
+        a welcome with library stats, or an overview of the picked arc."""
+        arc = self.selected_arc
+        if arc is not None:
+            self._render_arc_overview(arc, src)
+            return
+        self.source_header.configure(text="WELCOME ABOARD")
+        hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
+        hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_LG))
+        ctk.CTkLabel(hero, text="Set sail through\nOne Piece, the fast way.",
+                     font=F_TITLE, text_color=TEXT, anchor="w",
+                     justify="left").pack(fill="x")
         ctk.CTkLabel(
-            guide, text="HOW TO DOWNLOAD",
-            font=F_BOLD_SM, text_color=TEXT_MUTED,
-            anchor="w",
-        ).pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
+            hero, text=_SRC_BLURB.get(src, ""), font=F_SM,
+            text_color=TEXT_MUTED, anchor="w", justify="left",
+            wraplength=360).pack(fill="x", pady=(SP_SM, 0))
+
+        # Library stats
+        arcs = [a for a in self.index.get("arcs", [])
+                if self._arc_has_source(a, src)]
+        total_eps = sum(self._arc_source_counts(a, src)[0] for a in arcs)
+        saved = sum(self._arc_saved_count(a)[0] for a in arcs) \
+            if src in ("onepace", "muhn") else None
+        stats = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
+        stats.pack(fill="x", padx=SP_LG - 2, pady=(0, SP_LG))
+        cells = [("Arcs", str(len(arcs))), ("Episodes", str(total_eps))]
+        if saved is not None:
+            cells.append(("Saved", str(saved)))
+        for i, (label, value) in enumerate(cells):
+            stats.grid_columnconfigure(i, weight=1, uniform="s")
+            tile = ctk.CTkFrame(stats, fg_color=SURFACE_INNER,
+                                corner_radius=RADIUS_LG,
+                                border_width=1, border_color=BORDER)
+            tile.grid(row=0, column=i, sticky="ew", padx=2)
+            ctk.CTkLabel(tile, text=value, font=(FAMILY, 22, "bold"),
+                         text_color=GOLD if label == "Saved" else TEXT).pack(
+                anchor="w", padx=SP_MD, pady=(SP_MD, 0))
+            ctk.CTkLabel(tile, text=label.upper(), font=F_EYEBROW,
+                         text_color=TEXT_DIM).pack(
+                anchor="w", padx=SP_MD, pady=(0, SP_MD))
+
+        # How it works
+        ctk.CTkLabel(self.source_scroll, text="HOW IT WORKS", font=F_EYEBROW,
+                     text_color=TEXT_DIM, anchor="w").pack(
+            fill="x", padx=SP_LG + SP_XS, pady=(0, SP_SM))
+        guide = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
+                             fg_color=SURFACE_INNER,
+                             border_width=1, border_color=BORDER)
+        guide.pack(fill="x", padx=SP_LG, pady=(0, SP_LG))
         steps = [
-            ("1", "Pick a source above (One Pace, Muhn Pace, Nyaa, or Usenet)."),
-            ("2", "Pick an arc from the list on the left."),
-            ("3", "Tick the episodes you want in the middle column."),
-            ("4", "Hit Download selected, choose quality, go."),
+            "Pick a source in the bar at the top.",
+            "Choose an arc on the left.",
+            "Tick the episodes you want.",
+            "Hit Download — pick a version and quality, done.",
         ]
-        for num, text in steps:
+        for i, text in enumerate(steps, 1):
             row = ctk.CTkFrame(guide, fg_color="transparent")
-            row.pack(fill="x", padx=SP_LG, pady=SP_XS)
-            # Solid gold circle + dark navy number — looks premium, doesn't
-            # read as muddy brown like the previous tinted version.
-            circle = ctk.CTkLabel(
-                row, text=num,
-                font=F_BOLD_BASE,
-                fg_color=HEADER_ACCENT,
-                text_color=HEADER_BG,
-                corner_radius=14,
-                width=28, height=28,
-            )
-            circle.pack(side="left")
-            ctk.CTkLabel(
-                row, text=text, font=F_BASE,
-                wraplength=320, justify="left", anchor="w",
-                text_color=TEXT,
-            ).pack(side="left", fill="x", expand=True, padx=(SP_MD, 0))
-        ctk.CTkLabel(guide, text="", height=2).pack()
+            row.pack(fill="x", padx=SP_MD,
+                     pady=(SP_MD if i == 1 else SP_XS,
+                           SP_MD if i == len(steps) else SP_XS))
+            ctk.CTkLabel(row, text=str(i), font=F_BOLD_SM,
+                         fg_color=HEADER_ACCENT, text_color=HEADER_BG,
+                         corner_radius=12, width=24, height=24).pack(side="left")
+            ctk.CTkLabel(row, text=text, font=F_SM, text_color=TEXT,
+                         anchor="w", justify="left", wraplength=300).pack(
+                side="left", fill="x", expand=True, padx=(SP_MD, 0))
 
-        # ---- Save folder ----
-        folder_card = ctk.CTkFrame(
-            self.source_scroll, corner_radius=RADIUS_LG,
-            fg_color=SURFACE_CARD,
-            border_width=1, border_color=BORDER,
-        )
-        folder_card.pack(fill="x", padx=SP_SM, pady=(0, SP_SM))
-        ctk.CTkLabel(
-            folder_card, text="SAVE FOLDER",
-            font=F_BOLD_SM,
-            text_color=TEXT_MUTED,
-            anchor="w",
-        ).pack(fill="x", padx=SP_LG, pady=(SP_MD, 0))
-        ctk.CTkLabel(
-            folder_card, text=self.save_dir.get() or "(not set)",
-            font=F_MONO_SM,
-            wraplength=340, justify="left", anchor="w",
-            text_color=TEXT,
-        ).pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_SM))
-        btn_row = ctk.CTkFrame(folder_card, fg_color="transparent")
-        btn_row.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
-        ctk.CTkButton(
-            btn_row, text="Browse", height=H_SM, width=90,
-            fg_color=SECONDARY, hover_color=SECONDARY_HOVER,
-            font=F_SM,
-            command=self._pick_folder,
-        ).pack(side="left", padx=(0, SP_XS))
-        ctk.CTkButton(
-            btn_row, text="Open", height=H_SM, width=70,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG,
-            text_color=LINK,
-            hover_color=SURFACE_HOVER,
-            font=F_SM,
-            command=self._open_folder,
-        ).pack(side="left")
-
-        # ---- Help links ----
-        help_card = ctk.CTkFrame(
-            self.source_scroll, corner_radius=RADIUS_LG,
-            fg_color=SURFACE_CARD,
-            border_width=1, border_color=BORDER,
-        )
-        help_card.pack(fill="x", padx=SP_SM, pady=(0, SP_SM))
-        ctk.CTkLabel(
-            help_card, text="NEED HELP?",
-            font=F_BOLD_SM,
-            text_color=TEXT_MUTED,
-            anchor="w",
-        ).pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_XS))
-        link_row = ctk.CTkFrame(help_card, fg_color="transparent")
+        # Community
+        ctk.CTkLabel(self.source_scroll, text="COMMUNITY", font=F_EYEBROW,
+                     text_color=TEXT_DIM, anchor="w").pack(
+            fill="x", padx=SP_LG + SP_XS, pady=(0, SP_SM))
+        link_row = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
         link_row.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
         for label in ("Discord", "Reddit", "GitHub"):
-            _make_brand_button(link_row, label, width=84).pack(
+            _make_brand_button(link_row, label, width=88).pack(
                 side="left", padx=(0, SP_XS))
+
+    def _build_source_tab(self, parent, key: str) -> None:
+        tab = ctk.CTkFrame(parent, width=1, height=1,
+                           fg_color="transparent", cursor="hand2")
+        tab.pack(side="left", padx=(0, SP_MD))
+        inner = ctk.CTkFrame(tab, width=1, height=1, fg_color="transparent")
+        inner.pack(padx=SP_SM, pady=(SP_XS, 0))
+        name = ctk.CTkLabel(inner, text=_SRC_LABEL[key], font=F_BOLD_SM,
+                            text_color=HEADER_MUTED)
+        name.pack(side="left")
+        count = ctk.CTkLabel(inner, text="", font=F_XS, width=22, height=18,
+                             corner_radius=9, fg_color=HEADER_LINE,
+                             text_color=HEADER_MUTED)
+        count.pack(side="left", padx=(SP_SM, 0))
+        line = ctk.CTkFrame(tab, width=1, height=3, corner_radius=2,
+                            fg_color="transparent")
+        line.pack(fill="x", padx=SP_XS, pady=(SP_SM, 0))
+        self._tab_widgets[key] = {"name": name, "count": count, "line": line,
+                                  "tab": tab}
+
+        def click(_e=None, k=key):
+            self._on_source_change(self._tab_labels.get(k, _SRC_LABEL[k]))
+
+        def enter(_e=None, k=key):
+            if k != self.current_source:
+                name.configure(text_color=HEADER_FG)
+
+        def leave(_e=None, k=key):
+            if k != self.current_source:
+                name.configure(text_color=HEADER_MUTED)
+
+        for w in (tab, inner, name, count, line):
+            w.bind("<Button-1>", click)
+            w.bind("<Enter>", enter)
+            w.bind("<Leave>", leave)
+
+    def _paint_source_tabs(self) -> None:
+        """Restyle the tab strip for the active source and arc counts."""
+        for key, w in getattr(self, "_tab_widgets", {}).items():
+            active = key == self.current_source
+            label = self._tab_labels.get(key, "")
+            n = label.rsplit("·", 1)[-1].strip() if "·" in label else ""
+            w["count"].configure(
+                text=n,
+                fg_color=HEADER_ACCENT if active else HEADER_LINE,
+                text_color=HEADER_BG if active else HEADER_MUTED)
+            if not n:
+                w["count"].pack_forget()
+            w["name"].configure(
+                text_color=HEADER_FG if active else HEADER_MUTED)
+            w["line"].configure(
+                fg_color=HEADER_ACCENT if active else "transparent")
+
+    def _paint_folder_btn(self) -> None:
+        path = self.save_dir.get() or "Choose a save folder"
+        shown = path if len(path) <= 54 else "…" + path[-53:]
+        try:
+            self._folder_btn.configure(text=f"  📁  {shown}  ")
+        except Exception:
+            pass
+
+    def _compute_arc_meta_styled(self, arc: dict) -> tuple[str, tuple]:
+        """Meta text for an arc row plus its colour: green tick when the
+        whole arc is saved, gold n/m while partly saved, muted otherwise."""
+        meta = self._compute_arc_meta(arc)
+        if self.current_source in ("onepace", "muhn"):
+            saved, total = self._arc_saved_count(arc)
+            if total and saved == total:
+                return "✓ saved", OK
+            if saved:
+                return f"{saved}/{total}", GOLD
+        return meta, TEXT_DIM
+
+    def _empty_state(self, parent, glyph: str, title: str, body: str) -> None:
+        box = ctk.CTkFrame(parent, fg_color="transparent")
+        box.pack(fill="x", pady=(SP_XXL * 2, SP_XL))
+        ctk.CTkLabel(box, text=glyph, font=(FAMILY, 28),
+                     text_color=TEXT_DIM).pack()
+        ctk.CTkLabel(box, text=title, font=F_BOLD_LG,
+                     text_color=TEXT).pack(pady=(SP_SM, SP_XS))
+        ctk.CTkLabel(box, text=body, font=F_SM, text_color=TEXT_MUTED,
+                     wraplength=300, justify="center").pack(padx=SP_XL)
+
+    def _build_quality_tiles(self, sources: list[dict], ep: dict,
+                             kind: str) -> None:
+        """One card per version, a button per quality. The pick that
+        matches the user's defaults is the filled red one."""
+        # Same file can be listed under several quality albums; show it once.
+        seen: set[str] = set()
+        uniq = []
+        for s in sources:
+            key = s.get("file_id") or f"{s.get('version')}|{s.get('quality')}"
+            if key not in seen:
+                seen.add(key)
+                uniq.append(s)
+        by_ver: dict[str, list[dict]] = {}
+        for s in uniq:
+            by_ver.setdefault(s.get("version") or "English Dub", []).append(s)
+        pref_ver = self.config_data.get("default_version", "English Subtitles")
+        pref_q = self.config_data.get("default_quality", "1080p")
+        best = self._best_source_for(
+            ep, kind, pref_ver if kind == "onepace" else "English Dub", pref_q)
+        order = [v for v in VERSIONS if v in by_ver] + \
+                [v for v in by_ver if v not in VERSIONS]
+        for ver in order:
+            card = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
+                                fg_color=SURFACE_INNER,
+                                border_width=1, border_color=BORDER)
+            card.pack(fill="x", padx=SP_LG, pady=(0, SP_SM))
+            top = ctk.CTkFrame(card, fg_color="transparent")
+            top.pack(fill="x", padx=SP_MD, pady=(SP_MD, SP_SM))
+            self._chip(top, _VER_SHORT.get(ver, "Dub"),
+                       style=CHIP_DUB if is_dub(ver) else CHIP_SUB).pack(side="left")
+            ctk.CTkLabel(top, text=_VER_LONG.get(ver, ver), font=F_BOLD_SM,
+                         text_color=TEXT).pack(side="left", padx=(SP_SM, 0))
+            grid = ctk.CTkFrame(card, fg_color="transparent")
+            grid.pack(fill="x", padx=SP_MD - 2, pady=(0, SP_MD))
+            items = sorted(by_ver[ver],
+                           key=lambda s: -_quality_rank(s.get("quality", "")))
+            for col in range(3):
+                grid.grid_columnconfigure(col, weight=1, uniform="q")
+            for i, s in enumerate(items):
+                is_best = best is not None and s is best or (
+                    best is not None and s.get("file_id") == best.get("file_id")
+                    and s.get("version") == best.get("version"))
+                btn = ctk.CTkButton(
+                    grid,
+                    text=f"{s.get('quality', '—')}\n{_fmt_size(s.get('size_bytes', 0))}",
+                    height=48, corner_radius=RADIUS_SM,
+                    font=F_BOLD_SM,
+                    fg_color=PRIMARY if is_best else SURFACE_CARD,
+                    hover_color=PRIMARY_HOVER if is_best else SURFACE_HOVER,
+                    text_color="white" if is_best else TEXT,
+                    border_width=0 if is_best else 1,
+                    border_color=BORDER_STRONG,
+                    command=lambda src=s, e=ep:
+                        self._download_single_episode_source(e, src),
+                )
+                btn.grid(row=i // 3, column=i % 3, sticky="ew",
+                         padx=2, pady=2)
+                Tooltip(btn, f"Download {_VER_LONG.get(ver, ver)} "
+                             f"{s.get('quality', '')}")
+
+    def _render_arc_overview(self, arc: dict, src: str) -> None:
+        """Right column after an arc is picked but before an episode is."""
+        idx = self._arc_index_for_title(arc["title"])
+        self.source_header.configure(
+            text=f"SEASON {idx + 1}" if idx is not None else "ARC")
+        hero = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
+        hero.pack(fill="x", padx=SP_LG, pady=(SP_XS, SP_LG))
+        ctk.CTkLabel(hero, text=arc["title"], font=F_TITLE, text_color=TEXT,
+                     anchor="w", justify="left", wraplength=360).pack(fill="x")
+        eps, packs = self._arc_source_counts(arc, src)
+        ctk.CTkLabel(
+            hero,
+            text=(f"{eps} episode{'s' if eps != 1 else ''}"
+                  + (f"  ·  {packs} pack{'s' if packs != 1 else ''}" if packs else "")
+                  + f"  ·  {_SRC_LABEL[src]}"),
+            font=F_SM, text_color=TEXT_MUTED, anchor="w").pack(
+            fill="x", pady=(SP_XS, 0))
+
+        if src in ("onepace", "muhn"):
+            saved, total = self._arc_saved_count(arc)
+            card = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
+                                fg_color=SURFACE_INNER,
+                                border_width=1, border_color=BORDER)
+            card.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
+            top = ctk.CTkFrame(card, fg_color="transparent")
+            top.pack(fill="x", padx=SP_LG, pady=(SP_MD, SP_SM))
+            ctk.CTkLabel(top, text="In your library", font=F_BOLD_SM,
+                         text_color=TEXT).pack(side="left")
+            ctk.CTkLabel(top, text=f"{saved} / {total}", font=F_BOLD_SM,
+                         text_color=OK if total and saved == total else GOLD
+                         ).pack(side="right")
+            pb = ctk.CTkProgressBar(card, height=6, corner_radius=3,
+                                    progress_color=OK if total and saved == total
+                                    else HEADER_ACCENT,
+                                    fg_color=SURFACE_ROW, border_width=0)
+            pb.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
+            pb.set(saved / total if total else 0)
+
+            if src == "onepace":
+                pref_q = self.config_data.get("default_quality", "1080p")
+                dub = sub = 0
+                size = 0
+                for ep in arc.get("episodes", []):
+                    vers = {s.get("version") for s in ep.get("sources", [])
+                            if s.get("kind") == "onepace"}
+                    dub += any(is_dub(v) for v in vers)
+                    sub += "English Subtitles" in vers
+                    b = self._best_source_for(
+                        ep, "onepace",
+                        self.config_data.get("default_version",
+                                             "English Subtitles"), pref_q)
+                    size += int((b or {}).get("size_bytes", 0))
+                facts = ctk.CTkFrame(self.source_scroll, fg_color="transparent")
+                facts.pack(fill="x", padx=SP_LG - 2, pady=(0, SP_MD))
+                cells = [("Subbed", f"{sub}/{eps}"), ("Dubbed", f"{dub}/{eps}"),
+                         ("Whole arc", _fmt_size(size))]
+                for i, (label, value) in enumerate(cells):
+                    facts.grid_columnconfigure(i, weight=1, uniform="f")
+                    tile = ctk.CTkFrame(facts, fg_color=SURFACE_INNER,
+                                        corner_radius=RADIUS_LG,
+                                        border_width=1, border_color=BORDER)
+                    tile.grid(row=0, column=i, sticky="ew", padx=2)
+                    ctk.CTkLabel(tile, text=value, font=F_BOLD_LG,
+                                 text_color=TEXT).pack(
+                        anchor="w", padx=SP_MD, pady=(SP_MD, 0))
+                    ctk.CTkLabel(tile, text=label.upper(), font=F_EYEBROW,
+                                 text_color=TEXT_DIM).pack(
+                        anchor="w", padx=SP_MD, pady=(0, SP_MD))
+
+        tip = ("Click an episode to see every version and quality, or tick "
+               "several and use Download.")
+        if src == "nyaa":
+            tip = ("Click an episode for its torrents, or switch to Packs "
+                   "for whole-arc downloads.")
+        ctk.CTkLabel(self.source_scroll, text=tip, font=F_SM,
+                     text_color=TEXT_MUTED, anchor="w", justify="left",
+                     wraplength=360).pack(fill="x", padx=SP_LG + SP_XS,
+                                          pady=(SP_XS, SP_MD))
 
     def _build_source_card(self, header: str, sources: list[dict],
                            ep: dict, kind: str) -> None:
         if not sources:
             return
-        card = ctk.CTkFrame(
-            self.source_scroll, corner_radius=RADIUS_LG,
-            fg_color=SURFACE_CARD,
-            border_width=1, border_color=BORDER,
-        )
-        card.pack(fill="x", padx=SP_SM, pady=SP_SM)
-        ctk.CTkLabel(card, text=header, font=F_BOLD_SM,
-                     text_color=TEXT_MUTED,
-                     anchor="w").pack(fill="x", padx=SP_LG,
-                                       pady=(SP_MD, SP_XS))
-        ctk.CTkFrame(card, height=1, fg_color=BORDER,
-                     corner_radius=0).pack(fill="x", padx=SP_LG)
-        for s in sources:
-            self._build_source_row(card, s, ep, kind)
+        ctk.CTkLabel(self.source_scroll, text=header, font=F_EYEBROW,
+                     text_color=TEXT_DIM, anchor="w").pack(
+            fill="x", padx=SP_LG + SP_XS, pady=(SP_SM, SP_XS))
+        if kind in ("onepace", "muhn"):
+            self._build_quality_tiles(sources, ep, kind)
+        else:
+            card = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
+                                fg_color=SURFACE_INNER,
+                                border_width=1, border_color=BORDER)
+            card.pack(fill="x", padx=SP_LG, pady=(0, SP_SM))
+            for i, s in enumerate(sources):
+                if i:
+                    ctk.CTkFrame(card, height=1, fg_color=BORDER,
+                                 corner_radius=0).pack(fill="x", padx=SP_MD)
+                self._build_source_row(card, s, ep, kind)
         if kind == "muhn":
-            self._build_muhn_gdrive_fallback(card)
-        ctk.CTkLabel(card, text="", height=2).pack()
+            self._build_muhn_gdrive_fallback(self.source_scroll)
 
-    def _build_muhn_gdrive_fallback(self, parent: ctk.CTkFrame) -> None:
-        """Emergency fallback row shown under Muhn Pace download options —
-        if pixeldrain is throttled or down, users can grab the same files
-        from a Google Drive mirror."""
-        ctk.CTkFrame(parent, height=1, fg_color=BORDER,
-                     corner_radius=0).pack(fill="x", padx=SP_LG,
-                                            pady=(SP_XS, 0))
+    def _build_muhn_gdrive_fallback(self, parent) -> None:
+        """Emergency fallback shown under Muhn Pace download options — if
+        pixeldrain is throttled or down, users can grab the same files from
+        a Google Drive mirror."""
         row = ctk.CTkFrame(parent, fg_color="transparent")
-        row.pack(fill="x", padx=SP_LG, pady=(SP_XS, 0))
-        ctk.CTkLabel(
-            row, text="Pixeldrain down?",
-            font=F_XS, text_color=TEXT_MUTED, anchor="w",
-        ).pack(side="left")
+        row.pack(fill="x", padx=SP_LG + SP_XS, pady=(SP_XS, SP_SM))
+        ctk.CTkLabel(row, text="Pixeldrain down?", font=F_XS,
+                     text_color=TEXT_MUTED, anchor="w").pack(side="left")
         ctk.CTkButton(
-            row, text="Open Google Drive mirror",
-            width=180, height=H_SM,
-            fg_color="transparent", border_width=1,
-            border_color=BORDER_STRONG,
-            text_color=LINK, hover_color=SURFACE_HOVER,
-            font=F_SM,
+            row, text="Google Drive mirror ↗", width=150, height=H_SM - 4,
+            corner_radius=RADIUS_SM,
+            fg_color="transparent", hover_color=SURFACE_HOVER,
+            text_color=LINK, font=F_BOLD_XS,
             command=lambda: webbrowser.open(MUHN_GDRIVE_MIRROR_URL),
-        ).pack(side="right")
+        ).pack(side="left", padx=(SP_XS, 0))
 
     def _build_placeholder_card(self, header: str, msg: str) -> None:
-        card = ctk.CTkFrame(
-            self.source_scroll, corner_radius=RADIUS_LG,
-            fg_color=SURFACE_PANEL,
-            border_width=1, border_color=BORDER,
-        )
-        card.pack(fill="x", padx=SP_SM, pady=SP_SM)
-        ctk.CTkLabel(card, text=header, font=F_BOLD_SM,
-                     anchor="w",
+        card = ctk.CTkFrame(self.source_scroll, corner_radius=RADIUS_LG,
+                            fg_color=SURFACE_INNER,
+                            border_width=1, border_color=BORDER)
+        card.pack(fill="x", padx=SP_LG, pady=SP_SM)
+        ctk.CTkLabel(card, text=header, font=F_EYEBROW, anchor="w",
                      text_color=TEXT_DIM).pack(
             fill="x", padx=SP_LG, pady=(SP_MD, 0))
-        ctk.CTkLabel(card, text=msg, font=F_XS, anchor="w",
-                     text_color=TEXT_MUTED, wraplength=360,
+        ctk.CTkLabel(card, text=msg, font=F_SM, anchor="w",
+                     text_color=TEXT_MUTED, wraplength=340,
                      justify="left").pack(
             fill="x", padx=SP_LG, pady=(SP_XS, SP_MD))
 
     def _build_source_row(self, parent: ctk.CTkFrame, s: dict, ep: dict,
                           kind: str) -> None:
         row = ctk.CTkFrame(parent, fg_color="transparent")
-        row.pack(fill="x", padx=SP_LG, pady=SP_XS)
+        row.pack(fill="x", padx=SP_MD, pady=SP_SM)
         size_str = _fmt_size(s.get("size_bytes", 0))
 
-        if kind == "onepace":
-            ver_short = {"English Subtitles": "Sub",
-                         "English Dub": "Dub",
-                         "English Dub with Closed Captions": "Dub-CC"}.get(
-                s.get("version", ""), "—")
-            self._chip(row, ver_short).pack(side="left")
-            ctk.CTkLabel(row, text=s.get("quality", "—"),
-                         font=F_BOLD_BASE, text_color=TEXT,
-                         anchor="w").pack(side="left", padx=(SP_SM, 0))
-            ctk.CTkButton(
-                row, text="Download", width=110, height=H_SM,
-                font=F_BOLD_XS,
-                fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-                command=lambda src=s, e=ep:
-                    self._download_single_episode_source(e, src),
-            ).pack(side="right", padx=(SP_SM, 0))
-            ctk.CTkLabel(row, text=size_str, font=F_SM,
-                         text_color=TEXT_MUTED, anchor="e").pack(
-                side="right", padx=(0, SP_SM))
-
-        elif kind == "muhn":
-            self._chip(row, "Dub").pack(side="left")
-            ctk.CTkLabel(row, text=s.get("quality", "varies"),
-                         font=F_BOLD_BASE, text_color=TEXT,
-                         anchor="w").pack(side="left", padx=(SP_SM, 0))
-            ctk.CTkButton(
-                row, text="Download", width=110, height=H_SM,
-                font=F_BOLD_XS,
-                fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
-                command=lambda src=s, e=ep:
-                    self._download_single_episode_source(e, src),
-            ).pack(side="right", padx=(SP_SM, 0))
-            ctk.CTkLabel(row, text=size_str, font=F_SM,
-                         text_color=TEXT_MUTED, anchor="e").pack(
-                side="right", padx=(0, SP_SM))
-
-        elif kind == "usenet":
+        if kind == "usenet":
             self._chip(row, s.get("quality", "—")).pack(side="left")
             release_title = s.get("release_title", "")
             # Truncated release-name hint so users can tell duplicates apart
-            short = release_title.split("]")[-1].strip()[:36] if release_title else ""
-            ctk.CTkLabel(
-                row, text=short or "NZB", font=F_BOLD_BASE,
-                text_color=TEXT, anchor="w",
-            ).pack(side="left", padx=(SP_SM, 0))
+            short = release_title.split("]")[-1].strip()[:30] if release_title else ""
+            ctk.CTkLabel(row, text=short or "NZB", font=F_SM,
+                         text_color=TEXT, anchor="w").pack(
+                side="left", padx=(SP_SM, 0))
             ctk.CTkButton(
-                row, text="Get NZB", width=110, height=H_SM,
-                font=F_BOLD_XS,
-                fg_color=INFO, hover_color=INFO_HOVER,
-                command=lambda src=s, e=ep:
-                    self._download_usenet_nzb(src, e),
+                row, text="Get NZB", width=92, height=H_SM - 2,
+                corner_radius=RADIUS_SM, font=F_BOLD_XS,
+                fg_color=INFO, hover_color=INFO_HOVER, text_color="white",
+                command=lambda src=s, e=ep: self._download_usenet_nzb(src, e),
             ).pack(side="right", padx=(SP_SM, 0))
-            ctk.CTkLabel(row, text=size_str, font=F_SM,
-                         text_color=TEXT_MUTED, anchor="e").pack(
-                side="right", padx=(0, SP_SM))
+            ctk.CTkLabel(row, text=size_str, font=F_XS,
+                         text_color=TEXT_DIM, anchor="e").pack(side="right")
 
         elif kind == "nyaa":
             seeders = s.get("seeders", 0)
             is_official = s.get("uploader") == NYAA_OFFICIAL_UPLOADER
             self._chip(row, s.get("quality", "—")).pack(side="left")
             if is_official:
-                badge = self._chip(
-                    row, "✓ Official",
-                    fg=OFFICIAL_CHIP,
-                    txt=("white", "white"),
-                )
-                badge.pack(side="left", padx=(SP_SM, 0))
+                badge = self._chip(row, "✓ Official", style=CHIP_OK)
+                badge.pack(side="left", padx=(SP_XS, 0))
                 Tooltip(badge,
                         "Uploaded by Galaxy9000 — the official One Pace "
                         "Nyaa account. Matches what onepace.net hosts.")
-            ctk.CTkLabel(row, text=f"↑ {seeders}",
-                         font=F_BOLD_XS, text_color=OK,
-                         anchor="w").pack(side="left", padx=(SP_SM, 0))
+            ctk.CTkLabel(row, text=f"↑ {seeders}", font=F_BOLD_XS,
+                         text_color=OK, anchor="w").pack(
+                side="left", padx=(SP_SM, 0))
             ctk.CTkButton(
-                row, text="Open magnet", width=120, height=H_SM,
-                font=F_BOLD_XS,
-                fg_color=INFO, hover_color=INFO_HOVER,
-                command=lambda m=s["magnet"],
-                               t=s.get("torrent_title", ""):
+                row, text="Open magnet", width=104, height=H_SM - 2,
+                corner_radius=RADIUS_SM, font=F_BOLD_XS,
+                fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color="white",
+                command=lambda m=s["magnet"], t=s.get("torrent_title", ""):
                     self._open_magnet(m, t),
             ).pack(side="right", padx=(SP_SM, 0))
-            ctk.CTkLabel(row, text=size_str, font=F_SM,
-                         text_color=TEXT_MUTED, anchor="e").pack(
-                side="right", padx=(0, SP_SM))
+            ctk.CTkLabel(row, text=size_str, font=F_XS,
+                         text_color=TEXT_DIM, anchor="e").pack(side="right")
 
     @staticmethod
-    def _chip(parent, text: str, *, fg=None, txt=None):
-        """Small rounded pill — used for Sub/Dub/quality/Official labels."""
+    def _chip(parent, text: str, *, fg=None, txt=None, style=None):
+        """Small rounded pill — Sub/Dub/quality/Official/Saved labels."""
+        bg, fgc = style if style is not None else CHIP_NEUTRAL
         return ctk.CTkLabel(
-            parent, text=f" {text} ",
+            parent, text=f"  {text}  ", height=20,
             font=F_BOLD_XS,
-            fg_color=fg if fg is not None else ("#E8EAF0", "#2C3340"),
-            text_color=txt if txt is not None else TEXT_MUTED,
-            corner_radius=RADIUS_SM,
+            fg_color=fg if fg is not None else bg,
+            text_color=txt if txt is not None else fgc,
+            corner_radius=6,
         )
 
     # ------------------------------------------------- download actions ---
@@ -3748,6 +3359,7 @@ class App(ctk.CTk):
                     on_log=lambda m: self.ui_queue.put(("log", m)),
                     cancel_evt=self.cancel_evt,
                     file_filter={file_id},
+                    expected_names={file_id: source.get("filename", "")},
                     subfolder=folder_name,
                 ).run()
                 self._organize_for_plex_layout(
@@ -3805,23 +3417,42 @@ class App(ctk.CTk):
             default_version=self.config_data.get("default_version",
                                                   "English Subtitles"),
             default_quality=self.config_data.get("default_quality", "1080p"),
+            allow_subs=self.config_data.get("allow_sub_fallback", False),
+            saved_nums={ep["num"] for ep in chosen_eps
+                        if self._is_episode_saved(ep, self.selected_arc)},
         )
         self.wait_window(dlg)
         if dlg.confirmed is not True:
             return
+        if dlg.skip_saved and dlg.saved_nums:
+            chosen_eps = [ep for ep in chosen_eps
+                          if ep["num"] not in dlg.saved_nums]
+            self._log(f"Skipping {len(dlg.saved_nums)} episode(s) already "
+                      f"in your library.")
+            if not chosen_eps:
+                self._set_status("Everything you picked is already saved")
+                return
         version_pref = dlg.chosen_version
         quality_pref = dlg.chosen_quality
+        allow_subs = dlg.allow_subs
+        if allow_subs != self.config_data.get("allow_sub_fallback", False):
+            self.config_data["allow_sub_fallback"] = allow_subs
+            save_config(self.config_data)
         src_kind = self.current_source
 
         plan_full: list[tuple[str, str, str, str]] = []
+        expected_names: dict[str, str] = {}
+        total_size = 0
         skipped: list[str] = []
-        for ep in self.selected_arc["episodes"]:
-            if ep["num"] not in chosen:
-                continue
-            src = self._best_source_for(ep, src_kind, version_pref, quality_pref)
+        for ep in chosen_eps:
+            src = self._best_source_for(ep, src_kind, version_pref,
+                                        quality_pref, allow_subs=allow_subs)
             if not src:
                 skipped.append(episode_title(ep))
                 continue
+            if src.get("version") and src["version"] != version_pref:
+                self._log(f"{episode_title(ep)}: no {version_pref} — "
+                          f"using {src['version']}")
             ver_short = {"English Subtitles": "Sub",
                          "English Dub": "Dub",
                          "English Dub with Closed Captions": "Dub-CC"}.get(
@@ -3831,16 +3462,19 @@ class App(ctk.CTk):
                    f"{ver_short} {src.get('quality', '')}").strip()
             plan_full.append((episode_title(ep), src["album_id"],
                               src["file_id"], sub))
+            expected_names[src["file_id"]] = src.get("filename", "")
+            total_size += int(src.get("size_bytes", 0))
 
+        wanted = (version_pref if src_kind == "onepace" and not allow_subs
+                  else f"{_SRC_LABEL[src_kind]} source")
         if not plan_full:
             messagebox.showinfo("No downloadable sources",
-                f"None of the selected episodes have a "
-                f"{_SRC_LABEL[src_kind]} source.")
+                f"None of the selected episodes have a {wanted}.")
             return
         if skipped:
             self._log(
                 f"Skipping {len(skipped)} episode(s) with no "
-                f"{_SRC_LABEL[src_kind]} source: {', '.join(skipped[:5])}"
+                f"{wanted}: {', '.join(skipped[:5])}"
                 f"{'…' if len(skipped) > 5 else ''}")
 
         dest = Path(self.save_dir.get())
@@ -3850,14 +3484,6 @@ class App(ctk.CTk):
             return
         self.cancel_evt.clear()
         self._set_cancel_visible(True)
-        total_size = sum(
-            int(self._best_source_for(ep, src_kind, version_pref,
-                                       quality_pref).get("size_bytes", 0))
-            for ep in self.selected_arc["episodes"]
-            if ep["num"] in chosen
-            and self._best_source_for(ep, src_kind, version_pref,
-                                       quality_pref) is not None
-        )
         # Surface the batch download in the right-column status panel
         self.download_title = (
             f"{self.selected_arc['title']}  —  "
@@ -3877,6 +3503,30 @@ class App(ctk.CTk):
             groups.setdefault((album_id, sub), set()).add(file_id)
 
         arc_for_organize = self.selected_arc
+        n_files = len(plan_full)
+        # The Downloader reports per file and restarts its counter for each
+        # album; turn that into one progress figure for the whole batch.
+        batch = {"files": 0, "bytes": 0, "cur": None, "cur_bytes": 0}
+
+        def flush_file():
+            if batch["cur"] is not None:
+                batch["files"] += 1
+                batch["bytes"] += batch["cur_bytes"]
+                batch["cur"] = None
+                batch["cur_bytes"] = 0
+
+        def batch_progress(frac, speed, idx, _total, bytes_now):
+            if batch["cur"] is not None and idx != batch["cur"]:
+                flush_file()
+            batch["cur"], batch["cur_bytes"] = idx, bytes_now
+            done = batch["bytes"] + bytes_now
+            if total_size:
+                overall = done / total_size
+            else:
+                overall = (batch["files"] + frac) / max(n_files, 1)
+            self._on_progress(min(overall, 1.0), speed,
+                              min(batch["files"] + 1, n_files), n_files, done)
+
         def task():
             for i, ((album_id, sub), file_ids) in enumerate(groups.items(), 1):
                 if self.cancel_evt.is_set():
@@ -3888,12 +3538,14 @@ class App(ctk.CTk):
                     Downloader(
                         album_id, dest,
                         on_status=lambda s: self.ui_queue.put(("status", s)),
-                        on_progress=self._on_progress,
+                        on_progress=batch_progress,
                         on_log=lambda m: self.ui_queue.put(("log", m)),
                         cancel_evt=self.cancel_evt,
                         file_filter=file_ids,
+                        expected_names=expected_names,
                         subfolder=sub,
                     ).run()
+                    flush_file()
                     self._organize_for_plex_layout(
                         dest / sanitize_filename(sub),
                         file_ids, arc_for_organize,
@@ -3915,29 +3567,37 @@ class App(ctk.CTk):
 
     @staticmethod
     def _best_source_for(ep: dict, kind: str, version_pref: str,
-                         quality_pref: str) -> dict | None:
-        """Pick the best `kind` source for an episode (onepace/muhn), falling
-        back across quality and version when the exact preference is missing."""
+                         quality_pref: str, *,
+                         allow_subs: bool = True) -> dict | None:
+        """Pick the best `kind` source for an episode (onepace/muhn).
+
+        Versions are tried closest-first (Dub and Dub-CC stand in for each
+        other before Subtitles), and within a version the preferred quality
+        wins, else the best one available. With `allow_subs=False` a Dub
+        preference never falls back to the subtitled release."""
         candidates = [s for s in ep.get("sources", []) if s.get("kind") == kind]
         if not candidates:
             return None
-        # Exact version + quality match wins
-        for s in candidates:
-            if (s.get("version") == version_pref
-                    and s.get("quality") == quality_pref):
-                return s
-        # Same version, best available quality
-        same_ver = [s for s in candidates if s.get("version") == version_pref]
-        if same_ver:
-            return max(same_ver,
+        if not any(s.get("version") for s in candidates):
+            # Muhn Pace: dub-only, no version field.
+            order = [None]
+        else:
+            order = _VERSION_FALLBACK.get(version_pref, [version_pref])
+            if not allow_subs and is_dub(version_pref):
+                order = [v for v in order if is_dub(v)]
+        for ver in order:
+            same_ver = [s for s in candidates if s.get("version") == ver]
+            for s in same_ver:
+                if s.get("quality") == quality_pref:
+                    return s
+            if same_ver:
+                return max(same_ver,
+                           key=lambda s: _quality_rank(s.get("quality", "")))
+        if allow_subs:
+            # A version label we don't know: anything beats nothing.
+            return max(candidates,
                        key=lambda s: _quality_rank(s.get("quality", "")))
-        # Quality match across any version
-        for s in candidates:
-            if s.get("quality") == quality_pref:
-                return s
-        # Whatever has the highest quality
-        return max(candidates,
-                   key=lambda s: _quality_rank(s.get("quality", "")))
+        return None
 
     def _send_selected_nyaa_magnets(self, chosen_ep_nums: list[int]) -> None:
         """Open the top Nyaa magnet for each selected episode (Nyaa tab only).
@@ -4287,12 +3947,12 @@ class App(ctk.CTk):
         try:
             if available:
                 btn.configure(
-                    text="↻  Refresh", text_color=HEADER_ACCENT,
+                    text="●  New episodes", text_color=HEADER_ACCENT,
                     border_color=HEADER_ACCENT)
             else:
                 btn.configure(
-                    text="Refresh", text_color=HEADER_FG,
-                    border_color="#2C3D5C")
+                    text="⟳  Refresh", text_color=HEADER_FG,
+                    border_color=HEADER_LINE)
         except Exception:
             pass
 
@@ -4325,6 +3985,41 @@ class App(ctk.CTk):
                 pass
 
         threading.Thread(target=task, daemon=True).start()
+        threading.Thread(target=self._check_app_release, daemon=True).start()
+
+    def _check_app_release(self) -> None:
+        """Look up the latest GitHub release; if it's newer than this
+        build, show a button in the header. Silent on any failure."""
+        try:
+            req = urllib.request.Request(
+                RELEASES_API_URL,
+                headers={"User-Agent": f"OnePaceDownloader/{APP_VERSION}",
+                         "Accept": "application/vnd.github+json"})
+            with tls_trust.urlopen(req, timeout=15) as r:
+                rel = json.loads(r.read())
+            tag = str(rel.get("tag_name") or "")
+            if version_tuple(tag) > version_tuple(APP_VERSION):
+                self.ui_queue.put((
+                    "app_update",
+                    (tag.lstrip("vV"),
+                     rel.get("html_url") or f"{GITHUB_URL}/releases/latest")))
+        except Exception:
+            pass
+
+    def _show_app_update(self, version: str, url: str) -> None:
+        box = getattr(self, "_header_btn_box", None)
+        if box is None or getattr(self, "_app_update_btn", None) is not None:
+            return
+        self._app_update_btn = ctk.CTkButton(
+            box, text=f"✦  Version {version} is out", height=H_SM,
+            corner_radius=RADIUS_SM, font=F_BOLD_SM,
+            fg_color=HEADER_ACCENT, hover_color="#E0AE3A",
+            text_color=HEADER_BG,
+            command=lambda: webbrowser.open(url))
+        first = box.winfo_children()[0]
+        self._app_update_btn.pack(side="left", padx=(0, SP_SM), before=first)
+        Tooltip(self._app_update_btn, "Open the download page for the new version")
+        self._log(f"Version {version} is available: {url}")
 
     def _refresh_all(self) -> None:
         if self.worker and self.worker.is_alive():
@@ -4385,7 +4080,7 @@ class App(ctk.CTk):
         The catalog is small (~500 KB) so a full GET is fast and we don't
         bother with HEAD + ETag — the request itself is the check."""
         self.ui_queue.put(("log",
-            f"Fetching latest index from GitHub (data branch)…"))
+            "Fetching latest index from GitHub (data branch)…"))
         try:
             req = urllib.request.Request(
                 REMOTE_INDEX_URL,
@@ -4418,7 +4113,7 @@ class App(ctk.CTk):
                 f"Remote payload looks malformed ({e}) — falling back."))
             return False
 
-        INDEX_FILE.write_bytes(blob)
+        atomic_write(INDEX_FILE, blob)
         rc = dict(self.config_data.get("refresh_cache", {}))
         if etag:
             rc["remote_etag"] = etag
@@ -4585,7 +4280,7 @@ class App(ctk.CTk):
         broken."""
         try:
             if visible and not self.cancel_btn.winfo_ismapped():
-                self.cancel_btn.pack(side="left")
+                self.cancel_btn.pack(side="right", padx=(0, SP_SM))
             elif not visible and self.cancel_btn.winfo_ismapped():
                 self.cancel_btn.pack_forget()
         except Exception:
@@ -4647,7 +4342,8 @@ class App(ctk.CTk):
                     try:
                         self.progress.set(0)
                         if not self.progress.winfo_ismapped():
-                            self.progress.pack(fill="x")
+                            self.progress.pack(fill="x",
+                                               before=self._footer_bar)
                     except Exception:
                         pass
                     # Re-scan save folder so the just-completed episode
@@ -4660,8 +4356,7 @@ class App(ctk.CTk):
                     self.index = load_episode_index()
                     self._tab_labels = self._compute_tab_labels()
                     self._tab_key_by_label = {v: k for k, v in self._tab_labels.items()}
-                    self.source_tabs.configure(values=list(self._tab_labels.values()))
-                    self.source_tabs.set(self._tab_labels[self.current_source])
+                    self._paint_source_tabs()
                     # Drop the cached coverage so it recomputes against the new index
                     self._global_cov_cache = None
                     self._render_arc_list()
@@ -4673,6 +4368,8 @@ class App(ctk.CTk):
                     self._on_usenet_nzb_error(payload)
                 elif kind == "updates_available":
                     self._set_refresh_badge(bool(payload))
+                elif kind == "app_update":
+                    self._show_app_update(*payload)
                 elif kind == "usenet_test_result":
                     success, msg = payload
                     if hasattr(self, "_settings_panel_ref") and self._settings_panel_ref and self._settings_panel_ref.winfo_exists():
@@ -4746,7 +4443,7 @@ class ModalOverlay(ctk.CTkFrame):
     and centers a card containing the modal panel's content."""
     
     def __init__(self, parent, title_text: str, width: int = 560, height: int = 480) -> None:
-        overlay_color = ("#D0D4DC", "#0A101D")
+        overlay_color = ("#C9CED8", "#03050B")
         super().__init__(parent, fg_color=overlay_color)
         
         self.parent_app = parent
@@ -4759,7 +4456,7 @@ class ModalOverlay(ctk.CTkFrame):
             fg_color=SURFACE_PANEL,
             corner_radius=RADIUS_LG,
             border_width=1,
-            border_color=BORDER,
+            border_color=BORDER_STRONG,
         )
         self.card.place(relx=0.5, rely=0.5, anchor="center")
         self.card.grid_propagate(False)
@@ -4793,13 +4490,18 @@ class BatchDownloadDialog(ModalOverlay):
     estimate computed from the episode index."""
 
     def __init__(self, parent, *, source: str, episodes: list[dict],
-                 default_version: str, default_quality: str) -> None:
-        super().__init__(parent, "Confirm batch download", width=560, height=480)
+                 default_version: str, default_quality: str,
+                 allow_subs: bool = False,
+                 saved_nums: set[int] | None = None) -> None:
+        super().__init__(parent, "Confirm batch download", width=560, height=580)
         self.source = source
         self.episodes = episodes
+        self.saved_nums = saved_nums or set()
+        self.skip_saved = bool(self.saved_nums)
         self.confirmed = False
         self.chosen_version = default_version
         self.chosen_quality = default_quality
+        self.allow_subs = allow_subs
 
         btn_row = ctk.CTkFrame(self.card, fg_color="transparent")
         btn_row.pack(side="bottom", pady=(SP_LG, SP_MD))
@@ -4876,18 +4578,18 @@ class BatchDownloadDialog(ModalOverlay):
         ).pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
 
         size_card = ctk.CTkFrame(
-            self.card, fg_color=("#FBF6E8", "#1F2A18"),
+            self.card, fg_color=SURFACE_CARD,
             corner_radius=RADIUS_LG,
             border_width=1, border_color=BORDER,
         )
         size_card.pack(fill="x", padx=SP_XL, pady=SP_SM)
         ctk.CTkLabel(
             size_card, text="TOTAL DOWNLOAD SIZE",
-            font=F_BOLD_SM, text_color=TEXT_MUTED, anchor="w",
+            font=F_EYEBROW, text_color=GOLD, anchor="w",
         ).pack(fill="x", padx=SP_LG, pady=(SP_MD, 0))
         self.size_lbl = ctk.CTkLabel(
             size_card, text="—",
-            font=F_BOLD_LG, text_color=TEXT, anchor="w",
+            font=F_HERO_BOLD, text_color=TEXT, anchor="w",
         )
         self.size_lbl.pack(fill="x", padx=SP_LG, pady=(0, 2))
         self.skipped_lbl = ctk.CTkLabel(
@@ -4896,29 +4598,72 @@ class BatchDownloadDialog(ModalOverlay):
             wraplength=440, justify="left",
         )
         self.skipped_lbl.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
+        # Only shown when a Dub is picked and some episodes have no dub.
+        self.allow_subs_var = ctk.BooleanVar(value=allow_subs)
+        self.allow_subs_chk = ctk.CTkCheckBox(
+            size_card, text="Get the subtitled version of those instead",
+            variable=self.allow_subs_var, font=F_SM, text_color=TEXT,
+            fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+            command=self._update_size_preview,
+        )
+        n_saved = len(self.saved_nums)
+        self.skip_saved_var = ctk.BooleanVar(value=self.skip_saved)
+        if n_saved:
+            ctk.CTkCheckBox(
+                self.card,
+                text=(f"Skip the {n_saved} episode"
+                      f"{'s' if n_saved != 1 else ''} already in your library"),
+                variable=self.skip_saved_var, font=F_SM, text_color=TEXT,
+                fg_color=PRIMARY, hover_color=PRIMARY_HOVER,
+                command=self._update_size_preview,
+            ).pack(fill="x", padx=SP_XL, pady=(SP_SM, 0))
 
         self._update_size_preview()
 
     def _update_size_preview(self) -> None:
         ver = self.version_var.get()
         qual = self.quality_var.get()
+        allow_subs = self.allow_subs_var.get()
         total_bytes = 0
         skipped = 0
+        sub_only = 0
+        skip_saved = self.skip_saved_var.get() if hasattr(
+            self, "skip_saved_var") else False
         for ep in self.episodes:
+            if skip_saved and ep.get("num") in self.saved_nums:
+                continue
             best = App._best_source_for(ep, self.source, ver, qual)
+            if best and is_dub(ver) and not is_dub(best.get("version")) \
+                    and best.get("version"):
+                sub_only += 1
+                if not allow_subs:
+                    continue
             if best:
                 total_bytes += int(best.get("size_bytes", 0))
             else:
                 skipped += 1
         self.size_lbl.configure(
             text=_fmt_size(total_bytes) if total_bytes else "—")
-        self.skipped_lbl.configure(
-            text=(f"⚠ {skipped} episode(s) have no matching source — "
-                   "will be skipped." if skipped else ""))
+        notes = []
+        if sub_only:
+            notes.append(
+                f"⚠ {sub_only} episode(s) have no English dub yet — "
+                + ("they'll download with Japanese audio and English "
+                   "subtitles." if allow_subs else "they'll be skipped."))
+        if skipped:
+            notes.append(f"⚠ {skipped} episode(s) have no matching source — "
+                         "will be skipped.")
+        self.skipped_lbl.configure(text="\n".join(notes))
+        if sub_only:
+            self.allow_subs_chk.pack(fill="x", padx=SP_LG, pady=(0, SP_MD))
+        else:
+            self.allow_subs_chk.pack_forget()
 
     def _confirm(self) -> None:
         self.chosen_version = self.version_var.get()
         self.chosen_quality = self.quality_var.get()
+        self.allow_subs = self.allow_subs_var.get()
+        self.skip_saved = self.skip_saved_var.get()
         self.confirmed = True
         self.destroy()
 

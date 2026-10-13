@@ -34,6 +34,10 @@ RUN chmod +x /entrypoint.sh
 VOLUME ["/config", "/media"]
 EXPOSE 7654
 
+# Lets Docker / Portainer / Unraid show whether the web UI is really up.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD python -c "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:%s/api/health' % os.environ.get('PORT', '7654'), timeout=4)" || exit 1
+
 # ── Run ──────────────────────────────────────────────────────────────
 # The entrypoint makes /config writable by PUID:PGID, then runs the app
 # as that user — so downloads and config aren't owned by root.

@@ -128,6 +128,15 @@ pre-seed these via environment variables — see the commented block in
 | Usenet | Handed off to your **SABnzbd** — it downloads to its own folder. |
 | Nyaa torrents | Handed off to your **qBittorrent** — it downloads to its own folder. |
 
+Saved API keys and passwords are never shown again in the web UI. Leave the
+box empty to keep the saved one.
+
+### Password protection
+
+Anyone who can reach port 7654 can use the web UI. To require a password,
+add `-e WEB_PASSWORD=choose-something` (or uncomment it in
+`docker-compose.yml`). Your browser will ask for it once; any username works.
+
 ---
 
 ## Build from source

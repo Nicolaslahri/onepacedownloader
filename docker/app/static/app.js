@@ -124,7 +124,7 @@ function renderArcs(filter = "") {
   list.innerHTML = filtered
     .map((a) => {
       const isActive = activeArc === a.title;
-      const seasonNum = arcs.indexOf(a) + 1;
+      const seasonNum = a.season || arcs.indexOf(a) + 1;
       const prefix = `s${String(seasonNum).padStart(2, "0")}e`;
       let downloaded = 0;
       for (const k of savedKeys) if (k.startsWith(prefix)) downloaded++;
@@ -210,7 +210,7 @@ function renderEpisodes() {
     `Select all (${selectable})`;
 
   const arcObj = arcs.find((a) => a.title === activeArc);
-  const seasonNum = arcObj ? arcs.indexOf(arcObj) + 1 : 0;
+  const seasonNum = arcObj ? (arcObj.season || arcs.indexOf(arcObj) + 1) : 0;
 
   list.innerHTML = episodes
     .map((ep) => {
@@ -329,6 +329,14 @@ async function downloadSelected() {
 
   const version = settings.version || "English Subtitles";
   const quality = settings.quality || "1080p";
+
+  // Episodes already in the library are skipped unless the user asks
+  // for them again.
+  const arcObj = arcs.find((a) => a.title === activeArc);
+  const seasonNum = arcObj ? (arcObj.season || arcs.indexOf(arcObj) + 1) : 0;
+  const pad = (n) => String(n).padStart(2, "0");
+  const savedNums = nums.filter((n) => savedKeys.has(`s${pad(seasonNum)}e${pad(n)}`));
+  let skipSaved = savedNums.length > 0;
   const payload = {
     arc_title: activeArc,
     episode_nums: nums,
@@ -336,24 +344,58 @@ async function downloadSelected() {
     version,
     quality,
   };
+  const wanted = () => ({
+    ...payload,
+    episode_nums: skipSaved ? nums.filter((n) => !savedNums.includes(n)) : nums,
+  });
 
   // Ask the server for an accurate size — it picks the exact source per
   // episode (matches what we'll actually download).
-  let est = { total_bytes: 0, matched: nums.length, missing: 0 };
-  try {
-    est = await api("/api/downloads/estimate", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-  } catch (e) {}
+  const fetchEstimate = async () => {
+    const p = wanted();
+    if (!p.episode_nums.length) return { total_bytes: 0, matched: 0, missing: 0 };
+    try {
+      return await api("/api/downloads/estimate", {
+        method: "POST",
+        body: JSON.stringify(p),
+      });
+    } catch (e) {
+      return { total_bytes: 0, matched: p.episode_nums.length, missing: 0 };
+    }
+  };
+  let est = await fetchEstimate();
 
-  const sizeText = est.total_bytes ? fmtBytes(est.total_bytes) : "—";
   const missingNote = est.missing
     ? `<div class="row"><span class="key">Unavailable</span> <span class="val" style="color:var(--red-soft)">${est.missing} episode${est.missing !== 1 ? "s" : ""} have no ${esc(activeSource)} source — will be skipped</span></div>`
     : "";
+  // A Dub was picked but some episodes only exist subtitled: say so, and
+  // let the user choose instead of silently swapping the audio language.
+  let allowSubs = false;
+  try { allowSubs = localStorage.getItem("allowSubFallback") === "1"; } catch (e) {}
+  const savedNote = savedNums.length
+    ? `<div class="row sub-only"><span class="key">In library</span> <span class="val">
+         <label class="sub-only-toggle"><input type="checkbox" id="skipSavedChk" checked> Skip the ${savedNums.length} episode${savedNums.length !== 1 ? "s" : ""} you already have</label>
+       </span></div>`
+    : "";
+  const subOnly = est.sub_only || 0;
+  const subOnlyNote = subOnly
+    ? `<div class="row sub-only"><span class="key">No dub yet</span> <span class="val">
+         <span id="subOnlyText"></span>
+         <label class="sub-only-toggle"><input type="checkbox" id="allowSubsChk"${allowSubs ? " checked" : ""}> Get the subtitled version of those instead</label>
+       </span></div>`
+    : "";
+
+  const counts = () => {
+    const extra = allowSubs ? est.sub_only || 0 : 0;
+    return {
+      n: (est.matched || 0) + extra,
+      bytes: (est.total_bytes || 0) + (allowSubs ? est.sub_only_bytes || 0 : 0),
+    };
+  };
+  const plural = (n) => `${n} episode${n !== 1 ? "s" : ""}`;
 
   confirmDialog({
-    title: `Download ${est.matched} episode${est.matched !== 1 ? "s" : ""}`,
+    title: `Download ${plural(counts().n)}`,
     body: `
       <div class="confirm-summary">
         <div class="row"><span class="key">Arc</span>     <span class="val">${esc(activeArc)}</span></div>
@@ -361,21 +403,53 @@ async function downloadSelected() {
         <div class="row"><span class="key">Version</span> <span class="val">${esc(version)}</span></div>
         <div class="row"><span class="key">Quality</span> <span class="val">${esc(quality)}</span></div>
         ${missingNote}
-        <div class="row"><span class="key">Total size</span> <span class="size-big">${sizeText}</span></div>
+        ${savedNote}
+        ${subOnlyNote}
+        <div class="row"><span class="key">Total size</span> <span class="size-big" id="confirmSize"></span></div>
       </div>`,
     okText: "Start download",
     onOk: async () => {
+      const { n } = counts();
+      if (!n) return toast("Nothing to download with these settings", "error");
       try {
         await api("/api/downloads", {
           method: "POST",
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ ...wanted(), allow_subs: allowSubs }),
         });
-        toast(`Download started: ${activeArc} (${est.matched} episodes)`, "info");
+        toast(`Download started: ${activeArc} (${plural(n)})`, "info");
       } catch (e) {
         toast("Download failed: " + e.message, "error");
       }
     },
   });
+
+  const render = () => {
+    const { n, bytes } = counts();
+    document.getElementById("confirmTitle").textContent = `Download ${plural(n)}`;
+    document.getElementById("confirmSize").textContent = bytes ? fmtBytes(bytes) : "—";
+    const t = document.getElementById("subOnlyText");
+    if (t) {
+      t.textContent = `${plural(est.sub_only || 0)} only exist with Japanese audio and English subtitles — ` +
+        (allowSubs ? "those will be downloaded subtitled." : "those will be skipped.");
+    }
+  };
+  const skipChk = document.getElementById("skipSavedChk");
+  if (skipChk) {
+    skipChk.onchange = async () => {
+      skipSaved = skipChk.checked;
+      est = await fetchEstimate();
+      render();
+    };
+  }
+  const chk = document.getElementById("allowSubsChk");
+  if (chk) {
+    chk.onchange = () => {
+      allowSubs = chk.checked;
+      try { localStorage.setItem("allowSubFallback", allowSubs ? "1" : "0"); } catch (e) {}
+      render();
+    };
+  }
+  render();
 }
 
 /* Usenet → SABnzbd */
@@ -516,11 +590,16 @@ function renderDownloads() {
     histCard.style.display = "";
     histEl.innerHTML = pixDone
       .map(
-        (d) => `
+        (d) => {
+          const warn = d.status === "done" && (d.warnings || []).length;
+          const label = warn ? `done · ${d.warnings.length} warning${d.warnings.length !== 1 ? "s" : ""}` : d.status;
+          const tip = warn ? ` title="${escapeAttr(d.warnings.join("\n"))}"` : "";
+          return `
         <div class="dl-hist-row">
           <span>${esc(d.arc_title)}</span>
-          <span class="dl-status-pill ${d.status}">${d.status}</span>
-        </div>`
+          <span class="dl-status-pill ${d.status}${warn ? " warn" : ""}"${tip}>${esc(label)}</span>
+        </div>`;
+        }
       )
       .join("");
   } else {
@@ -570,17 +649,25 @@ function connectSSE() {
   es.onmessage = (ev) => {
     try {
       const data = JSON.parse(ev.data);
+      // Only announce a job finishing that we saw running. Jobs that were
+      // already finished arrive again on every page load and reconnect.
+      const prev = downloads[data.id];
+      const finishedNow = prev && prev.status !== data.status &&
+        (prev.status === "queued" || prev.status === "downloading");
       downloads[data.id] = data;
       renderDownloads();
-      if (data.status === "done" && !data._toasted) {
-        toast(`Completed: ${data.arc_title}`);
-        data._toasted = true;
+      if (finishedNow && data.status === "done") {
+        const w = (data.warnings || []).length;
+        if (w) {
+          toast(`Completed with ${w} warning${w !== 1 ? "s" : ""}: ${data.arc_title} — ${data.warnings[0]}`, "error");
+        } else {
+          toast(`Completed: ${data.arc_title}`);
+        }
         loadStats();
         loadDownloaded();  // refresh saved chips + arc progress
       }
-      if (data.status === "error" && !data._toasted) {
+      if (finishedNow && data.status === "error") {
         toast(`Error: ${data.arc_title} — ${data.error || "unknown"}`, "error");
-        data._toasted = true;
       }
     } catch (e) {}
   };
@@ -658,9 +745,28 @@ async function loadSettings() {
       .map((q) =>
         `<option value="${escapeAttr(q)}"${q === settings.quality ? " selected" : ""}>${esc(q)}</option>`)
       .join("");
+    const org = document.getElementById("settingsOrganize");
+    org.checked = settings.organize !== false;
+    const media = settings.media_dir || "/media";
+    const hint = () => {
+      document.getElementById("organizeHint").textContent = org.checked
+        ? `Episodes are renamed into ${media}/One Pace/Season N/ so Plex and Jellyfin pick them up.`
+        : `Episodes stay as downloaded, in a folder per arc under ${media}/.`;
+    };
+    org.onchange = hint;
+    hint();
     for (const [elId, key] of Object.entries(SETTINGS_FIELDS)) {
       const el = document.getElementById(elId);
-      if (el) el.value = settings[key] || "";
+      if (!el) continue;
+      el.value = settings[key] || "";
+      // Saved secrets never come back from the server — just whether one
+      // is set. Leaving the box empty keeps it.
+      if (key + "_set" in settings) {
+        el.dataset.placeholder ??= el.placeholder;
+        el.placeholder = settings[key + "_set"]
+          ? "Saved (leave blank to keep)"
+          : el.dataset.placeholder;
+      }
     }
     // About section
     document.getElementById("aboutVersion").textContent =
@@ -684,6 +790,7 @@ function settingsPayload() {
   const p = {
     version: document.getElementById("settingsVersion").value,
     quality: document.getElementById("settingsQuality").value,
+    organize: document.getElementById("settingsOrganize").checked,
   };
   for (const [elId, key] of Object.entries(SETTINGS_FIELDS)) {
     const el = document.getElementById(elId);
@@ -698,10 +805,9 @@ async function saveSettings() {
       method: "PUT",
       body: JSON.stringify(settingsPayload()),
     });
-    settings = { ...settings, ...settingsPayload() };
+    await loadSettings();
     toast("Settings saved");
     closeSettings();
-    startClientPolling();
   } catch (e) {
     toast("Failed to save: " + e.message, "error");
   }

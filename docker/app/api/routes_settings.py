@@ -9,6 +9,7 @@ from ..config import (
     DEFAULT_QUALITY,
     DEFAULT_VERSION,
     GIT_SHA,
+    MEDIA_DIR,
     QUALITIES,
     VERSIONS,
     get_setting,
@@ -26,6 +27,10 @@ _INTEGRATION_KEYS = (
     "qbittorrent_category",
     "nzbgeek_url", "nzbgeek_api_key",
 )
+# Never sent back to the browser: anyone who can open the page could read
+# them. GET reports only whether each is set, and an empty value on PUT
+# leaves the saved one alone.
+_SECRET_KEYS = ("sabnzbd_api_key", "qbittorrent_pass", "nzbgeek_api_key")
 
 
 @router.get("")
@@ -37,6 +42,8 @@ def get_settings():
     out = {
         "version": cfg.get("default_version", DEFAULT_VERSION),
         "quality": cfg.get("default_quality", DEFAULT_QUALITY),
+        "organize": cfg.get("organize", True),
+        "media_dir": str(MEDIA_DIR),
         "available_versions": VERSIONS,
         "available_qualities": QUALITIES,
         "app_version": APP_VERSION,
@@ -44,7 +51,11 @@ def get_settings():
         "last_refresh": (cfg.get("refresh_cache") or {}).get("last_refresh", ""),
     }
     for key in _INTEGRATION_KEYS:
-        out[key] = get_setting(cfg, key)
+        if key in _SECRET_KEYS:
+            out[key] = ""
+            out[f"{key}_set"] = bool(get_setting(cfg, key))
+        else:
+            out[key] = get_setting(cfg, key)
     return out
 
 
@@ -56,9 +67,12 @@ def update_settings(payload: SettingsPayload):
         cfg["default_version"] = payload.version
     if payload.quality is not None:
         cfg["default_quality"] = payload.quality
+    if payload.organize is not None:
+        cfg["organize"] = payload.organize
     for key in _INTEGRATION_KEYS:
         val = getattr(payload, key, None)
-        if val is not None:
-            cfg[key] = val
+        if val is None or (key in _SECRET_KEYS and val == ""):
+            continue
+        cfg[key] = val
     save_config(cfg)
     return {"saved": True}

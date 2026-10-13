@@ -8,7 +8,11 @@ import json
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
-from ..core.episode_index import best_source_for, load_episode_index
+from ..core.episode_index import (
+    best_source_for,
+    is_sub_fallback,
+    load_episode_index,
+)
 from ..core.models import DownloadEstimate, DownloadRequest
 from ..download_manager import manager
 
@@ -40,6 +44,7 @@ def start_download(req: DownloadRequest):
         source_kind=req.source,
         version=req.version,
         quality=req.quality,
+        allow_subs=req.allow_subs,
         index=index,
     )
     return {"job_id": job_id}
@@ -54,17 +59,21 @@ def estimate(req: DownloadRequest) -> DownloadEstimate:
                 if a.get("title") == req.arc_title), None)
     if not arc:
         raise HTTPException(404, f"Arc {req.arc_title!r} not found")
-    total = matched = missing = 0
+    est = DownloadEstimate()
     for ep in arc.get("episodes", []):
         if ep.get("num") not in req.episode_nums:
             continue
         src = best_source_for(ep, req.source, req.version, req.quality)
-        if src:
-            matched += 1
-            total += int(src.get("size_bytes", 0) or 0)
+        size = int((src or {}).get("size_bytes", 0) or 0)
+        if is_sub_fallback(src, req.version):
+            est.sub_only += 1
+            est.sub_only_bytes += size
+        elif src:
+            est.matched += 1
+            est.total_bytes += size
         else:
-            missing += 1
-    return DownloadEstimate(total_bytes=total, matched=matched, missing=missing)
+            est.missing += 1
+    return est
 
 
 @router.get("")

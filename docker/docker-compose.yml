@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   onepace:
     # Pre-built image from GitHub Container Registry — nothing to compile.
@@ -26,6 +24,9 @@ services:
       - DEFAULT_VERSION=English Subtitles
       - DEFAULT_QUALITY=1080p
       - AUTO_REFRESH=true
+      #
+      # Require a password for the web UI (any username works):
+      # - WEB_PASSWORD=choose-something
       #
       # ── Optional integrations ──────────────────────────────────────
       # You can pre-seed these here, or just fill them in via the
