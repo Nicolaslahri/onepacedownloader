@@ -47,6 +47,23 @@ SPYKER_LATEST_COMMIT_API = (
     "https://api.github.com/repos/SpykerNZ/one-pace-for-plex/commits/main")
 
 
+def dedupe_sources(sources: list[dict]) -> list[dict]:
+    """Drop repeats of the same Pixeldrain file. One Pace albums sometimes
+    list one file under several quality albums, which shows up as several
+    identical "sources" with different quality labels."""
+    seen: set[tuple] = set()
+    out = []
+    for s in sources:
+        fid = s.get("file_id")
+        if fid:
+            key = (s.get("kind"), fid)
+            if key in seen:
+                continue
+            seen.add(key)
+        out.append(s)
+    return out
+
+
 def hash_arcs(arcs: list[dict]) -> str:
     """Stable hash of (title, album_id) tuples across all arcs. Changes only
     when the arc list or any album ID changes — i.e. exactly the things that
@@ -500,7 +517,7 @@ def build(log=print, cancel_evt=None, cache: dict | None = None,
             eps.append({
                 "num": ep,
                 "display_title": f"{title} {ep:02d}",
-                "sources": sources,
+                "sources": dedupe_sources(sources),
             })
         out_arcs.append({
             "title": title,

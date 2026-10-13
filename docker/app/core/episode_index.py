@@ -24,6 +24,31 @@ from . import tls_trust
 
 # ── Loading ───────────────────────────────────────────────────────────
 
+def dedupe_sources(sources: list[dict]) -> list[dict]:
+    """Drop repeats of the same Pixeldrain file. One Pace albums sometimes
+    list one file under several quality albums, which shows up as several
+    identical "sources" with different quality labels."""
+    seen: set[tuple] = set()
+    out = []
+    for s in sources:
+        fid = s.get("file_id")
+        if fid:
+            key = (s.get("kind"), fid)
+            if key in seen:
+                continue
+            seen.add(key)
+        out.append(s)
+    return out
+
+
+def _dedupe_index(data: dict) -> dict:
+    for arc in data.get("arcs", []):
+        for ep in arc.get("episodes", []):
+            if "sources" in ep:
+                ep["sources"] = dedupe_sources(ep["sources"])
+    return data
+
+
 def load_episode_index() -> dict:
     """Load the unified per-episode index (v2). Returns the envelope with
     'arcs' (each containing 'episodes' and 'arc_packs') and 'specials'.
@@ -31,7 +56,8 @@ def load_episode_index() -> dict:
     for p in (INDEX_FILE, BUNDLED_INDEX_FILE):
         if p.exists():
             try:
-                return json.loads(p.read_text(encoding="utf-8"))
+                return _dedupe_index(
+                    json.loads(p.read_text(encoding="utf-8")))
             except json.JSONDecodeError:
                 pass
     return {"arcs": [], "specials": []}

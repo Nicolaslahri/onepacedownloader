@@ -1,0 +1,28 @@
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install pyflakes pytest customtkinter==5.2.2 "certifi>=2026.7.22"
+
+      - name: Lint (pyflakes)
+        run: pyflakes _source docker/app tests
+
+      - name: Unit tests
+        run: pytest -q tests
+
+      - name: Web UI syntax
+        run: node --check docker/app/static/app.js
