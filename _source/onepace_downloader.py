@@ -3579,11 +3579,9 @@ class App(ctk.CTk):
             ctk.CTkLabel(row, text=short or "NZB", font=F_SM,
                          text_color=TEXT, anchor="w").pack(
                 side="left", padx=(SP_SM, 0))
-            ctk.CTkButton(
-                row, text="Get NZB", width=92, height=H_SM - 2,
-                corner_radius=RADIUS_SM, font=F_BOLD_XS,
-                fg_color=INFO, hover_color=INFO_HOVER, text_color=ON_ACCENT,
-                command=lambda src=s, e=ep: self._download_usenet_nzb(src, e),
+            self._button(
+                row, "NZB", lambda src=s, e=ep: self._download_usenet_nzb(src, e),
+                style="accent", glyph="download",
             ).pack(side="right", padx=(SP_SM, 0))
             ctk.CTkLabel(row, text=size_str, font=F_XS,
                          text_color=TEXT_DIM, anchor="e").pack(side="right")
@@ -3593,7 +3591,7 @@ class App(ctk.CTk):
             is_official = s.get("uploader") == NYAA_OFFICIAL_UPLOADER
             self._chip(row, s.get("quality", "—")).pack(side="left")
             if is_official:
-                badge = self._chip(row, "✓ Official", style=CHIP_OK)
+                badge = self._chip(row, "Official", style=CHIP_OK)
                 badge.pack(side="left", padx=(SP_XS, 0))
                 Tooltip(badge,
                         "Uploaded by Galaxy9000 — the official One Pace "
@@ -3601,13 +3599,13 @@ class App(ctk.CTk):
             ctk.CTkLabel(row, text=f"↑ {seeders}", font=F_BOLD_XS,
                          text_color=OK, anchor="w").pack(
                 side="left", padx=(SP_SM, 0))
-            ctk.CTkButton(
-                row, text="Open magnet", width=104, height=H_SM - 2,
-                corner_radius=RADIUS_SM, font=F_BOLD_XS,
-                fg_color=PRIMARY, hover_color=PRIMARY_HOVER, text_color=ON_ACCENT,
-                command=lambda m=s["magnet"], t=s.get("torrent_title", ""):
+            mbtn = self._button(
+                row, "Magnet",
+                lambda m=s["magnet"], t=s.get("torrent_title", ""):
                     self._open_magnet(m, t),
-            ).pack(side="right", padx=(SP_SM, 0))
+                style="accent", glyph="open")
+            mbtn.pack(side="right", padx=(SP_SM, 0))
+            Tooltip(mbtn, "Open this torrent in your torrent app")
             ctk.CTkLabel(row, text=size_str, font=F_XS,
                          text_color=TEXT_DIM, anchor="e").pack(side="right")
 
