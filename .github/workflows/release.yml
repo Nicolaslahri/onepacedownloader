@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release, e.g. 2.1.0"
+        description: "Version to release, e.g. 3.0.0"
         required: true
 
 permissions:
@@ -19,33 +19,34 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-dotnet@v4
         with:
-          python-version: "3.13"
+          dotnet-version: "8.0.x"
 
       - name: Check version matches the app
         shell: pwsh
         run: |
           $v = "${{ inputs.version }}"
-          if (-not (Select-String -Path _source/onepace_downloader.py -Pattern "APP_VERSION = `"$v`"" -Quiet)) {
-            throw "APP_VERSION in onepace_downloader.py is not $v"
+          if (-not (Select-String -Path desktop/Directory.Build.props -Pattern "<Version>$v</Version>" -Quiet)) {
+            throw "<Version> in desktop/Directory.Build.props is not $v"
           }
-
-      - name: Install
-        run: pip install -r _source/requirements.txt
 
       - name: Bundle the latest episode index
         shell: pwsh
         continue-on-error: true
         run: |
           Invoke-WebRequest -Uri "https://raw.githubusercontent.com/${{ github.repository }}/data/episode_index.json" -OutFile _source/episode_index.new.json
-          python -c "import json; d=json.load(open('_source/episode_index.new.json', encoding='utf-8')); assert d['arcs']"
-          if ($LASTEXITCODE -eq 0) { Move-Item -Force _source/episode_index.new.json _source/episode_index.json }
+          $d = Get-Content _source/episode_index.new.json -Raw | ConvertFrom-Json
+          if ($d.arcs.Count -gt 0) { Move-Item -Force _source/episode_index.new.json _source/episode_index.json }
+
+      - name: Test
+        run: dotnet test desktop/tests/OnePace.Core.Tests -c Release
 
       - name: Build
-        shell: pwsh
-        working-directory: _source
-        run: .\build.ps1
+        run: >
+          dotnet publish desktop/src/OnePace.App -c Release -r win-x64 --self-contained
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true -p:DebugType=none -o dist
 
       - name: Publish release
         shell: pwsh
@@ -53,7 +54,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $v = "${{ inputs.version }}"
-          $exe = "_source/dist/OnePaceDownloader.exe"
+          $exe = "dist/OnePaceDownloader.exe"
           $sha = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLower()
           $notes = "release-notes/v$v.md"
           if (-not (Test-Path $notes)) { $notes = $null }
