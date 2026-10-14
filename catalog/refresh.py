@@ -1,11 +1,11 @@
 """CI entry point — refresh every catalog and rebuild the episode index.
 
-Run by .github/workflows/refresh-index.yml on a weekly cron. Does exactly
-what the in-app "Force full rebuild" does, except it does NOT scrape Usenet
+Run by .github/workflows/refresh-index.yml on a weekly cron. It does not
+scrape Usenet
 (that needs a private NZBGeek API key). The committed usenet_arcs.json is
-merged in as-is by build_episode_index.
+merged in as-is by build_index.
 
-Writes the refreshed files into _source/. The workflow then publishes them
+Writes the refreshed files into catalog/. The workflow then publishes them
 to the `data` branch.
 """
 from __future__ import annotations
@@ -17,9 +17,7 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parent
 sys.path.insert(0, str(SRC))
 
-# These imports pull in onepace_downloader (which imports customtkinter) —
-# the workflow installs that before running this script.
-from onepace_downloader import (  # noqa: E402
+from sources import (  # noqa: E402
     ARCS_FILE,
     NYAA_FILE,
     REMOTE_ARCS_URL,
@@ -29,7 +27,7 @@ from onepace_downloader import (  # noqa: E402
     refresh_nyaa_from_web,
     load_arcs,
 )
-import build_episode_index  # noqa: E402
+import build_index  # noqa: E402
 
 
 def warn(msg: str) -> None:
@@ -91,7 +89,7 @@ def main() -> int:
         restore_published(REMOTE_NYAA_URL, NYAA_FILE)
 
     print("== Build episode index (full rebuild) ==", flush=True)
-    out = build_episode_index.build(
+    out = build_index.build(
         log=lambda m: print(f"   {m}", flush=True),
         force=True,
     )

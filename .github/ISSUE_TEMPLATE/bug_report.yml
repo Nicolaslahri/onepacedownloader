@@ -12,8 +12,8 @@ body:
     id: app-version
     attributes:
       label: App version
-      description: Shown in the GitHub Release name (e.g. v1.0.0). Check by hovering the .exe → Properties.
-      placeholder: v1.0.0
+      description: Shown in Settings → About, or right-click the .exe → Properties → Details.
+      placeholder: v3.0.0
     validations:
       required: true
 

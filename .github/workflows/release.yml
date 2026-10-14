@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
 
@@ -35,9 +35,9 @@ jobs:
         shell: pwsh
         continue-on-error: true
         run: |
-          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/${{ github.repository }}/data/episode_index.json" -OutFile _source/episode_index.new.json
-          $d = Get-Content _source/episode_index.new.json -Raw | ConvertFrom-Json
-          if ($d.arcs.Count -gt 0) { Move-Item -Force _source/episode_index.new.json _source/episode_index.json }
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/${{ github.repository }}/data/episode_index.json" -OutFile catalog/episode_index.new.json
+          $d = Get-Content catalog/episode_index.new.json -Raw | ConvertFrom-Json
+          if ($d.arcs.Count -gt 0) { Move-Item -Force catalog/episode_index.new.json catalog/episode_index.json }
 
       - name: Test
         run: dotnet test desktop/tests/OnePace.Core.Tests -c Release

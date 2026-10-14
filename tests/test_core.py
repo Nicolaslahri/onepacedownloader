@@ -1,4 +1,7 @@
-"""Checks for the pure helpers both apps rely on. Run with: pytest tests"""
+"""Checks for the Docker app's pure helpers against the real catalog.
+
+Run with: pytest tests
+"""
 
 import json
 import sys
@@ -9,13 +12,12 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "docker"))
-sys.path.insert(0, str(ROOT / "_source"))
 
 from app.core import downloader as dk_dl  # noqa: E402
 from app.core import episode_index as dk_idx  # noqa: E402
 from app.core import seasons  # noqa: E402
 
-INDEX = json.loads((ROOT / "_source" / "episode_index.json").read_text("utf-8"))
+INDEX = json.loads((ROOT / "catalog" / "episode_index.json").read_text("utf-8"))
 
 
 # ── episode_key ───────────────────────────────────────────────────────
@@ -120,19 +122,6 @@ def test_verify_crc(tmp_path):
     dk_dl.Downloader._verify_crc(f, f"[One Pace] Jaya 01 [{crc}].mkv")
     with pytest.raises(Exception):
         dk_dl.Downloader._verify_crc(f, "[One Pace] Jaya 01 [00000000].mkv")
-
-
-# ── desktop app helpers (skipped where tkinter isn't available) ──────
-
-def test_desktop_helpers_match_docker():
-    od = pytest.importorskip("onepace_downloader")
-    assert od.version_tuple("v2.1.0") > od.version_tuple("2.0.5")
-    assert od.version_tuple("2.0.10") > od.version_tuple("2.0.9")
-    name = "[One Pace][1-3] Romance Dawn 01 [1080p][En Sub][ABCD1234].mkv"
-    assert od.episode_key(name) == dk_dl.episode_key(name)
-    for arc in INDEX["arcs"]:
-        assert (od.season_for_arc(INDEX, arc["title"])
-                == seasons.season_for_arc(INDEX, arc["title"]))
 
 
 # ── qBittorrent login ─────────────────────────────────────────────────
