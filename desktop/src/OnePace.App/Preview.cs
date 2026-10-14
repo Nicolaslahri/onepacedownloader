@@ -97,6 +97,12 @@ public sealed class PreviewSpec
         // Dialogs stay open while the shot is taken, so they're not awaited.
         if (Extra.Contains("batch")) _ = vm.DownloadSelectedCommand.ExecuteAsync(null);
         if (Extra.Contains("dns")) _ = vm.OpenDnsCommand.ExecuteAsync(null);
+        if (Extra.Contains("refresh"))
+        {
+            await vm.RefreshCommand.ExecuteAsync(null);
+            Directory.CreateDirectory(Out);
+            File.WriteAllText(Path.Combine(Out, Name + ".log.txt"), vm.LogText + "\nSTATUS: " + vm.Status);
+        }
         if (Extra.Contains("toast")) window.Toast("Download complete", "3 episodes saved to your library.", Services.ToastKind.Success);
 
         await Task.Delay(Extra.Contains("dns") ? 4000 : 1800);

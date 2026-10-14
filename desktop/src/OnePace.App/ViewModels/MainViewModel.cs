@@ -921,7 +921,7 @@ public sealed partial class MainViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            Log($"Refresh failed: {e.Message}");
+            Log($"Refresh failed: {e}");
             Status = "Couldn't reach GitHub. Check your connection and try again.";
             _ui.Toast("Couldn't refresh", "GitHub didn't answer. Check your connection.", ToastKind.Danger);
         }
