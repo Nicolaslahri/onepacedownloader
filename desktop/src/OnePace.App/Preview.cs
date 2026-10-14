@@ -10,7 +10,8 @@ using OnePace.Core;
 namespace OnePace.App;
 
 /// <summary>Screenshot mode for CI: opens the app in a given state with a
-/// throwaway config and no network calls, saves a PNG of the window, exits.
+/// throwaway config and no network calls (except --extra refresh, which runs
+/// a real catalog refresh and saves the log), saves a PNG of the window, exits.
 ///
 ///   OnePaceDownloader.exe --preview main-dark --out shots --theme Dark
 ///       --source onepace --arc Alabasta --ep 3 --ticks 1,2,3 --extra dl,saved
@@ -97,6 +98,12 @@ public sealed class PreviewSpec
         // Dialogs stay open while the shot is taken, so they're not awaited.
         if (Extra.Contains("batch")) _ = vm.DownloadSelectedCommand.ExecuteAsync(null);
         if (Extra.Contains("dns")) _ = vm.OpenDnsCommand.ExecuteAsync(null);
+        if (Extra.Contains("refresh"))
+        {
+            await vm.RefreshCommand.ExecuteAsync(null);
+            Directory.CreateDirectory(Out);
+            File.WriteAllText(Path.Combine(Out, Name + ".log.txt"), vm.LogText + "\nSTATUS: " + vm.Status);
+        }
         if (Extra.Contains("toast")) window.Toast("Download complete", "3 episodes saved to your library.", Services.ToastKind.Success);
 
         await Task.Delay(Extra.Contains("dns") ? 4000 : 1800);
