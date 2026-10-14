@@ -1,16 +1,14 @@
-"""Offline tool that builds episode_index.json — the unified episode-level
-data file the v2 UI is driven from.
+"""Builds episode_index.json, the episode-level catalog both apps read.
 
-Run this manually before each release:
-
-    python _source/build_episode_index.py
+    python catalog/build_index.py
 
 It walks every One Pace and Muhn Pace Pixeldrain album, fetches the file
 list (with sizes + file IDs), parses each filename to extract
 (arc, episode_num, version, quality), then merges per-episode Nyaa
 torrents from nyaa_arcs.json and Usenet releases from usenet_arcs.json.
 
-Output: _source/episode_index.json — bundled into the .exe by PyInstaller.
+Output: catalog/episode_index.json. The weekly refresh publishes it to the
+`data` branch, and the Windows app bundles a copy as its offline fallback.
 """
 
 from __future__ import annotations
@@ -26,10 +24,9 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-# Reuse helpers + constants from the main app
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import tls_trust  # noqa: E402
-from onepace_downloader import (  # noqa: E402
+from sources import (  # noqa: E402
     PIXELDRAIN_API,
     _NYAA_ARC_ALIASES,
     http_get,
@@ -80,15 +77,9 @@ def hash_arcs(arcs: list[dict]) -> str:
 
 
 def _existing_index_has_data() -> bool:
-    """True if the user-writable INDEX_FILE has a non-empty 'arcs' list with
+    """True if episode_index.json has a non-empty 'arcs' list with
     real source entries. Used to decide if the fast path can reuse it."""
-    try:
-        from onepace_downloader import INDEX_FILE as _USER_INDEX_FILE
-        path = _USER_INDEX_FILE
-        if not path.exists():
-            path = OUT_FILE
-    except Exception:
-        path = OUT_FILE
+    path = OUT_FILE
     if not path.exists():
         return False
     try:
@@ -110,11 +101,7 @@ def _existing_index_has_data() -> bool:
 def _load_existing_index() -> dict:
     """Load the current episode_index.json — caller is expected to have
     confirmed via _existing_index_has_data() first."""
-    try:
-        from onepace_downloader import INDEX_FILE as _USER_INDEX_FILE
-        path = _USER_INDEX_FILE if _USER_INDEX_FILE.exists() else OUT_FILE
-    except Exception:
-        path = OUT_FILE
+    path = OUT_FILE
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -594,14 +581,7 @@ def build(log=print, cancel_evt=None, cache: dict | None = None,
         if spyker_latest:
             cache["spyker_sha"] = spyker_latest
         cache["last_refresh"] = payload["scraped_at"]
-    # When called from the running app, write into the user-writable INDEX_FILE
-    # location (next to the .exe) so subsequent launches pick it up. The CLI
-    # entry below still writes into _source/ for dev builds.
-    try:
-        from onepace_downloader import INDEX_FILE as _USER_INDEX_FILE
-        out_path = _USER_INDEX_FILE
-    except Exception:
-        out_path = OUT_FILE
+    out_path = OUT_FILE
     out_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
     total_eps = sum(len(a["episodes"]) for a in out_arcs)
@@ -614,7 +594,6 @@ def build(log=print, cancel_evt=None, cache: dict | None = None,
 
 
 def main() -> None:
-    """CLI entry point — keep writing into _source/ for the dev workflow."""
     build(log=print)
 
 

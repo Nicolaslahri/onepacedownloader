@@ -225,6 +225,29 @@ Most engines clean &mdash; Bitdefender, ESET, Sophos, Symantec, Avast, AVG, Malw
 
 ---
 
+## Building From Source
+
+| Folder | What's in it |
+|---|---|
+| [`desktop/`](desktop/) | The Windows app (C# / WPF, .NET 8), its unit tests, and a tool that checks every catalog file is still downloadable |
+| [`docker/`](docker/) | The self-hosted web app (Python / FastAPI) |
+| [`catalog/`](catalog/) | The episode catalog and the scripts that rebuild it every week |
+| [`release-notes/`](release-notes/) | Notes published with each release |
+
+```bash
+# Windows app (build and run on Windows with the .NET 8 SDK)
+dotnet test desktop/tests/OnePace.Core.Tests
+dotnet run --project desktop/src/OnePace.App
+
+# Rebuild the catalog
+pip install -r catalog/requirements.txt
+python catalog/refresh.py
+```
+
+Releases are built by GitHub Actions: bump `<Version>` in `desktop/Directory.Build.props`, add `release-notes/vX.Y.Z.md`, then run the **Release** workflow.
+
+---
+
 ## Credits
 
 This app is just a downloader &mdash; none of the actual content is mine. Huge thanks to:

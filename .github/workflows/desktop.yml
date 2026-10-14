@@ -6,7 +6,7 @@ on:
   pull_request:
     paths:
       - "desktop/**"
-      - "_source/episode_index.json"
+      - "catalog/episode_index.json"
       - ".github/workflows/desktop.yml"
   push:
     branches: [main]
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
 
@@ -79,13 +79,13 @@ jobs:
           }
           if ($failed) { throw "Screenshots failed: $($failed -join ', ')" }
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: ui-previews
           path: previews
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: OnePaceDownloader
           path: publish/OnePaceDownloader.exe
