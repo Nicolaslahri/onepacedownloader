@@ -33,3 +33,9 @@ Thumbs.db
 
 # Release binary lives on GitHub Releases, not in git
 /OnePaceDownloader.exe
+
+# .NET
+bin/
+obj/
+*.user
+TestResults/

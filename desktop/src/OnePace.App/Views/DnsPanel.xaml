@@ -1,0 +1,43 @@
+<UserControl
+    x:Class="OnePace.App.DnsPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Width="460">
+    <StackPanel>
+        <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,0,16"
+                   Text="Get around internet providers that block the download servers." />
+
+        <Border Style="{StaticResource CardBorder}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse x:Name="StateDot" Width="10" Height="10" Margin="0,0,10,0" VerticalAlignment="Center"
+                             Fill="{DynamicResource SystemFillColorSuccessBrush}" Visibility="Collapsed" />
+                    <TextBlock x:Name="StateText" Style="{StaticResource BodyStrongText}" FontSize="16" Text="Checking your connection…" />
+                </StackPanel>
+                <TextBlock x:Name="IfaceText" Style="{StaticResource CaptionText}" Margin="0,8,0,0" FontFamily="Cascadia Mono, Consolas" />
+                <TextBlock x:Name="DnsText" Style="{StaticResource CaptionText}" Margin="0,2,0,0" FontFamily="Cascadia Mono, Consolas" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+
+        <ui:Button x:Name="CloudflareButton" Margin="0,16,0,0" HorizontalAlignment="Stretch" Height="40" Appearance="Primary"
+                   Content="Switch to Cloudflare (1.1.1.1)" Click="OnCloudflare" IsEnabled="False" />
+        <UniformGrid Columns="2" Margin="0,8,0,0">
+            <ui:Button x:Name="GoogleButton" Margin="0,0,4,0" HorizontalAlignment="Stretch" Content="Use Google (8.8.8.8)"
+                       Click="OnGoogle" IsEnabled="False" />
+            <ui:Button x:Name="RevertButton" Margin="4,0,0,0" HorizontalAlignment="Stretch" Content="Back to automatic"
+                       Click="OnRevert" IsEnabled="False" />
+        </UniformGrid>
+        <TextBlock x:Name="StatusText" Style="{StaticResource CaptionText}" Margin="0,10,0,0" TextWrapping="Wrap"
+                   HorizontalAlignment="Center" TextAlignment="Center" />
+
+        <Expander Margin="0,14,0,0" Header="Why might I need this?">
+            <StackPanel Margin="0,8,0,0">
+                <TextBlock Style="{StaticResource CaptionText}" TextWrapping="Wrap"
+                           Text="Some internet providers (Jio, Airtel, BSNL and ACT in India, for example) block the Pixeldrain servers at the DNS level: the app opens fine but downloads never start. Switching to Cloudflare or Google DNS gets around that. Windows will ask for permission. If one stops working, try the other." />
+                <Button Style="{StaticResource LinkButton}" Margin="-8,6,0,0" HorizontalAlignment="Left"
+                        Content="Full troubleshooting guide ↗" Click="OnGuide" />
+            </StackPanel>
+        </Expander>
+    </StackPanel>
+</UserControl>
