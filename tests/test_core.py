@@ -133,3 +133,56 @@ def test_desktop_helpers_match_docker():
     for arc in INDEX["arcs"]:
         assert (od.season_for_arc(INDEX, arc["title"])
                 == seasons.season_for_arc(INDEX, arc["title"]))
+
+
+# ── qBittorrent login ─────────────────────────────────────────────────
+
+def _fake_qbittorrent(login_status, login_body):
+    import http.server
+    import threading
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def _send(self, status, body=b""):
+            self.send_response(status)
+            if status == 200 and self.path.endswith("/auth/login"):
+                self.send_header("Set-Cookie", "SID=abc; path=/")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_POST(self):
+            self.rfile.read(int(self.headers.get("Content-Length", 0)))
+            self._send(login_status, login_body)
+
+        def do_GET(self):
+            self._send(200, b"v5.1.0")
+
+        def log_message(self, *args):
+            pass
+
+    srv = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv
+
+
+@pytest.mark.parametrize("status,body", [(200, b"Ok."), (204, b"")])
+def test_qbittorrent_login_accepts_old_and_new_success(status, body):
+    from app.core.clients import QBittorrentClient
+    srv = _fake_qbittorrent(status, body)
+    try:
+        c = QBittorrentClient(f"http://127.0.0.1:{srv.server_port}", "u", "p")
+        assert c.test() == "v5.1.0"
+    finally:
+        srv.shutdown()
+
+
+@pytest.mark.parametrize("status,body", [(200, b"Fails."), (401, b""), (403, b"")])
+def test_qbittorrent_login_rejects_bad_credentials(status, body):
+    from app.core.clients import ClientError, QBittorrentClient
+    srv = _fake_qbittorrent(status, body)
+    try:
+        c = QBittorrentClient(f"http://127.0.0.1:{srv.server_port}", "u", "p")
+        with pytest.raises(ClientError):
+            c.test()
+    finally:
+        srv.shutdown()
