@@ -116,6 +116,14 @@ class SABnzbdClient:
 
 # ── qBittorrent ────────────────────────────────────────────────────────
 
+def _login_ok(status: int, body: str) -> bool:
+    """qBittorrent answers a good login with 200 "Ok." on older versions and
+    204 No Content (empty body) on newer ones; a bad one is 200 "Fails."."""
+    if body == "Ok.":
+        return True
+    return 200 <= status < 300 and body == ""
+
+
 class QBittorrentClient:
     """Talks to qBittorrent's Web API (v2). Needs the Web UI URL plus the
     Web UI username/password (Tools -> Options -> Web UI)."""
@@ -149,15 +157,16 @@ class QBittorrentClient:
         )
         try:
             with self._opener.open(req, timeout=_TIMEOUT) as r:
+                status = r.status
                 body = r.read().decode(errors="ignore").strip()
         except urllib.error.HTTPError as e:
-            if e.code == 403:
-                raise ClientError("qBittorrent rejected login (HTTP 403). "
+            if e.code in (401, 403):
+                raise ClientError(f"qBittorrent rejected login (HTTP {e.code}). "
                                   "Check the username/password.") from e
             raise ClientError(f"qBittorrent HTTP {e.code}") from e
         except Exception as e:
             raise ClientError(f"Can't reach qBittorrent: {e}") from e
-        if body != "Ok.":
+        if not _login_ok(status, body):
             raise ClientError("qBittorrent login failed — wrong username "
                               "or password.")
 
