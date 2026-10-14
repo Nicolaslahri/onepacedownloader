@@ -1,0 +1,4456 @@
+[
+  {
+    "episodes": [],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace] Amazon Lily [720p]",
+        "guid": "228cb14f795e9a91281121d016647d3d",
+        "size_bytes": 1577488000,
+        "pub_date": "Sun, 10 Apr 2016 20:30:51 +0000",
+        "anime_eps": "",
+        "extended": false
+      }
+    ],
+    "title": "Amazon Lily"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][71-73].Arlong.Park.02.[480p][97677F37]",
+            "guid": "b27221b490f0fab8ddc99e8940d8dd8e",
+            "size_bytes": 190223000,
+            "pub_date": "Sun, 13 Sep 2020 02:13:30 +0000",
+            "anime_eps": "71-73",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][74-76].Arlong.Park.03.[480p][1C80414F]",
+            "guid": "9720a27534ead9fb84cc8ef80728230a",
+            "size_bytes": 209018000,
+            "pub_date": "Sun, 13 Sep 2020 02:32:08 +0000",
+            "anime_eps": "74-76",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][79-81].Arlong.Park.05.[480p][038E3A4B]",
+            "guid": "8e427b90750dfca3abed102807356a25",
+            "size_bytes": 226330000,
+            "pub_date": "Sun, 13 Sep 2020 02:32:08 +0000",
+            "anime_eps": "79-81",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][82-84] Arlong Park 06 [1080p][FCF6BA63]",
+            "guid": "0788d6533edec4ef6e2d837f57e880a7",
+            "size_bytes": 699300000,
+            "pub_date": "Sun, 11 Jan 2026 00:44:22 +0000",
+            "anime_eps": "82-84",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][82-84].Arlong.Park.06.[480p][7A559716]",
+            "guid": "e5ddc035775d83aa5133015fa37f91f1",
+            "size_bytes": 165862000,
+            "pub_date": "Thu, 14 May 2020 06:32:32 +0000",
+            "anime_eps": "82-84",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][85-88] Arlong Park 07 [1080p][4DDEFE2B]",
+            "guid": "5c05afac21cea17b0362eeb5c0123a59",
+            "size_bytes": 760160000,
+            "pub_date": "Sun, 18 Jan 2026 21:41:11 +0000",
+            "anime_eps": "85-88",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][85-87].Arlong.Park.07.[480p][AE7B08F2]",
+            "guid": "1ee69795e48aede7cdf885217a9db059",
+            "size_bytes": 177484000,
+            "pub_date": "Wed, 27 May 2020 04:46:55 +0000",
+            "anime_eps": "85-87",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][88-90].Arlong.Park.08.[480p][83E6D2A7]",
+            "guid": "8ce27fde7b6537f54596f4cb47f07ea7",
+            "size_bytes": 187753000,
+            "pub_date": "Sun, 13 Sep 2020 02:19:04 +0000",
+            "anime_eps": "88-90",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][91-94].Arlong.Park.09.[480p][EB1B1AA6]",
+            "guid": "47dfd4021f38850d46ad5f9dc96aafb1",
+            "size_bytes": 199794000,
+            "pub_date": "Fri, 19 Jun 2020 05:41:08 +0000",
+            "anime_eps": "91-94",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][94-95].Arlong.Park.10.[480p][5AF7A9B1]",
+            "guid": "d97353dab1e5b7f2139a91e836269cdf",
+            "size_bytes": 149885000,
+            "pub_date": "Sun, 13 Sep 2020 02:19:03 +0000",
+            "anime_eps": "94-95",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Arlong Park"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][42-44] Baratie 01 [1080p][CC37D6C6]",
+            "guid": "3128e6b84b13c007055a8f5dd360d7da",
+            "size_bytes": 397769000,
+            "pub_date": "Sun, 21 Nov 2021 12:40:20 +0000",
+            "anime_eps": "42-44",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][45-47] Baratie 02 [1080p][9BD35F80]",
+            "guid": "1172db86d9ac4cc3c29325ff96296154",
+            "size_bytes": 816320000,
+            "pub_date": "Sun, 10 Aug 2025 00:09:57 +0000",
+            "anime_eps": "45-47",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][48-52] Baratie 03 [1080p][E90342F6]",
+            "guid": "828b920a7bfef8680b53130d33ff583c",
+            "size_bytes": 996221000,
+            "pub_date": "Sun, 10 Aug 2025 00:25:02 +0000",
+            "anime_eps": "48-52",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][50-52] Baratie 04 [1080p][15D77CB3]",
+            "guid": "f3d99949d30bb6c65c9b56d619e71613",
+            "size_bytes": 569902000,
+            "pub_date": "Tue, 02 May 2023 02:30:14 +0000",
+            "anime_eps": "50-52",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][56-59] Baratie 05 [1080p][ACEA0537]",
+            "guid": "e7df8021cc5fd72cfeda2f6b98873475",
+            "size_bytes": 832201000,
+            "pub_date": "Sun, 24 Aug 2025 02:58:27 +0000",
+            "anime_eps": "56-59",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][56-59] Baratie 06 [1080p][757AF173]",
+            "guid": "2d6288847cd1f97e34fd65b2bab73ece",
+            "size_bytes": 616447000,
+            "pub_date": "Sun, 28 May 2023 20:57:51 +0000",
+            "anime_eps": "56-59",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][59-63] Baratie 07 [1080p][A1039182]",
+            "guid": "36e7ab0eb5c0d3b3659ca816b24224bc",
+            "size_bytes": 686472000,
+            "pub_date": "Sun, 02 Jul 2023 20:48:53 +0000",
+            "anime_eps": "59-63",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][67-68] Baratie 08 [1080p][A6F61DEE]",
+            "guid": "32bf88b082c9b52b83e8339586eaee0a",
+            "size_bytes": 539337000,
+            "pub_date": "Sun, 28 Sep 2025 00:24:05 +0000",
+            "anime_eps": "67-68",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][67-68] Baratie 09 [1080p][D8C1FD62]",
+            "guid": "19b85d217b46cbefec198c4ff3bb92be",
+            "size_bytes": 434861000,
+            "pub_date": "Sat, 29 Jul 2023 08:37:03 +0000",
+            "anime_eps": "67-68",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Baratie"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 26,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][750-751] Dressrosa 26 [720p][71CA89FC]",
+            "guid": "b03d24342e40bf2dc40351ba0bafa4de",
+            "size_bytes": 214395000,
+            "pub_date": "Tue, 09 Aug 2016 02:39:55 +0000",
+            "anime_eps": "750-751",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 27,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][752-753] Dressrosa 27 [720p][DC6C3C54]",
+            "guid": "cbfeea1d955b2754b42f736cb746ef97",
+            "size_bytes": 237052000,
+            "pub_date": "Tue, 23 Aug 2016 06:24:45 +0000",
+            "anime_eps": "752-753",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 28,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][754-755] Dressrosa 28 [720p][04186119]",
+            "guid": "0f8d4337de34c9f564aedfac6190d5c5",
+            "size_bytes": 259139000,
+            "pub_date": "Fri, 02 Sep 2016 01:15:50 +0000",
+            "anime_eps": "754-755",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 29,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][756-757] Dressrosa 29 [720p][ACC7852E]",
+            "guid": "7e8f98eed8fe4f5679c2fe3d0b1aab39",
+            "size_bytes": 267050000,
+            "pub_date": "Sun, 18 Sep 2016 03:12:58 +0000",
+            "anime_eps": "756-757",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 30,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][758-759] Dressrosa 30 [720p][4F16C5DC]",
+            "guid": "3641915cf6f20aa9ede2c28c6c4e9a1b",
+            "size_bytes": 202847000,
+            "pub_date": "Fri, 23 Sep 2016 21:25:50 +0000",
+            "anime_eps": "758-759",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 31,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][760-761] Dressrosa 31 [720p][98100F9C]",
+            "guid": "90fe4e9ff9346f2d1e7e2904a7f0bea3",
+            "size_bytes": 321464000,
+            "pub_date": "Thu, 13 Oct 2016 19:11:38 +0000",
+            "anime_eps": "760-761",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 32,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][762-763] Dressrosa 32 [720p][E98F852E]",
+            "guid": "6509630314d059f0cc7d836e60d01300",
+            "size_bytes": 236608000,
+            "pub_date": "Sat, 15 Oct 2016 23:37:53 +0000",
+            "anime_eps": "762-763",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 33,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][764-765].Dressrosa.33.[720p][53AEB13C]",
+            "guid": "a33155f038cd7ec0e9a1e33a641cb438",
+            "size_bytes": 253316000,
+            "pub_date": "Sat, 05 Nov 2016 03:51:09 +0000",
+            "anime_eps": "764-765",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 35,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][768-769].Dressrosa.35.[720p][1B5DC33C]",
+            "guid": "40b0045b7e71db4896b929a736bcbc22",
+            "size_bytes": 223416000,
+            "pub_date": "Sun, 18 Dec 2016 14:05:02 +0000",
+            "anime_eps": "768-769",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 36,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][770-771].Dressrosa.36.[720p][F218F0E4]",
+            "guid": "1cf20ea291ccdb0fd2a87133e995e71f",
+            "size_bytes": 244389000,
+            "pub_date": "Sat, 14 Jan 2017 21:38:51 +0000",
+            "anime_eps": "770-771",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 37,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][772-773] Dressrosa 37 [720p][777A9A6A]",
+            "guid": "07f84a66ca8fd8e889e8753ee8f60994",
+            "size_bytes": 241670000,
+            "pub_date": "Fri, 24 Feb 2017 23:14:25 +0000",
+            "anime_eps": "772-773",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 39,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][776-778].Dressrosa.39.[720p][7391ECD4]",
+            "guid": "74ea8e467a6cda2feb8b05c6f63d0760",
+            "size_bytes": 407163000,
+            "pub_date": "Mon, 20 Mar 2017 09:01:51 +0000",
+            "anime_eps": "776-778",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 40,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][779-781] Dressrosa 40 [720p][ECD80B22]",
+            "guid": "67d41e43baf39c428b361ba8eaa04982",
+            "size_bytes": 325296000,
+            "pub_date": "Mon, 27 Mar 2017 00:16:15 +0000",
+            "anime_eps": "779-781",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 41,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][782-783] Dressrosa 41 [720p][3E9F11F9]",
+            "guid": "e72e82de504f176f5e042f6beacc842d",
+            "size_bytes": 254247000,
+            "pub_date": "Wed, 26 Apr 2017 23:38:55 +0000",
+            "anime_eps": "782-783",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 42,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][784-785].Dressrosa.42.[720p][55292D1C]",
+            "guid": "91ef5a1851475ebf3643671709d8322a",
+            "size_bytes": 273593000,
+            "pub_date": "Mon, 22 May 2017 22:38:41 +0000",
+            "anime_eps": "784-785",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 43,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][786-787].Dressrosa.43.[720p][CAA32C42]",
+            "guid": "e855d7d8ab461c7b729274b2217a82c9",
+            "size_bytes": 260851000,
+            "pub_date": "Mon, 22 May 2017 22:21:10 +0000",
+            "anime_eps": "786-787",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 44,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][788-790].Dressrosa.44.[720p][4DDF4C07]",
+            "guid": "084f49ee3eaec4b196f6da7150507a3e",
+            "size_bytes": 355667000,
+            "pub_date": "Sun, 28 May 2017 18:55:55 +0000",
+            "anime_eps": "788-790",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 45,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][791-793].Dressrosa.45.[720p][15344804]",
+            "guid": "b61ec9a377c3b02ab83c42e3d735be6f",
+            "size_bytes": 291958000,
+            "pub_date": "Sat, 10 Jun 2017 09:18:08 +0000",
+            "anime_eps": "791-793",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 46,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][794-795] Dressrosa 46 [720p][81C4666C]",
+            "guid": "fc8cab1e6a90ea62b0abdecae761e464",
+            "size_bytes": 286211000,
+            "pub_date": "Wed, 28 Jun 2017 05:05:22 +0000",
+            "anime_eps": "794-795",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 47,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][796-797].Dressrosa.47.[720p][01C40FA1]",
+            "guid": "06a83d833cfd643d47a51656ce1c3b4b",
+            "size_bytes": 285689000,
+            "pub_date": "Sun, 20 Aug 2017 08:49:50 +0000",
+            "anime_eps": "796-797",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One.Pace].Paced.One.Piece-Dressrosa.Episode.01.[720p][2A35B710]",
+        "guid": "7d82d05899f8cee34dcb6dbfb9cba5ce",
+        "size_bytes": 465764000,
+        "pub_date": "Wed, 26 Nov 2014 07:19:59 +0000",
+        "anime_eps": "",
+        "extended": false
+      }
+    ],
+    "title": "Dressrosa"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][129-132].Drum.Island.01.[480p][4583E3C7]",
+            "guid": "c62cb7899e707b5b518fb2ada15b0bfe",
+            "size_bytes": 152969000,
+            "pub_date": "Wed, 21 Oct 2020 23:50:18 +0000",
+            "anime_eps": "129-132",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][141-145] Drum Island 05 [1080p][E7044DBE]",
+            "guid": "1cb65c459e6cf263a48f6d274070628a",
+            "size_bytes": 1051037000,
+            "pub_date": "Wed, 22 Mar 2023 03:29:46 +0000",
+            "anime_eps": "141-145",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][145-148] Drum Island 06 [1080p][A5145C90]",
+            "guid": "4faed2c914ffe572e186c8ce50c1e2b9",
+            "size_bytes": 669391000,
+            "pub_date": "Tue, 16 May 2023 05:42:42 +0000",
+            "anime_eps": "145-148",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][149-152] Drum Island 07 [1080p][B1D913B9]",
+            "guid": "b199152402ff3ad94c426832b5e82759",
+            "size_bytes": 940378000,
+            "pub_date": "Sun, 18 Jun 2023 07:24:16 +0000",
+            "anime_eps": "149-152",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Drum Island"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1058-1059].Egghead.01.[1080p][1B5D9178]",
+            "guid": "afe2853ac5eb1b4b84f33ee77c46ccea",
+            "size_bytes": 554312000,
+            "pub_date": "Fri, 12 Jan 2024 18:16:14 +0000",
+            "anime_eps": "1058-1059",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1059-1060].Egghead.02.[1080p][01B6EE9A]",
+            "guid": "b8f8060e5e82086ef2c51cfeafad9903",
+            "size_bytes": 683094000,
+            "pub_date": "Sat, 20 Jan 2024 00:17:52 +0000",
+            "anime_eps": "1059-1060",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1060-1061].Egghead.03.[1080p][979285FE]",
+            "guid": "3b5bceea698d1b97ba35e3694b115c76",
+            "size_bytes": 897060000,
+            "pub_date": "Fri, 09 Feb 2024 22:33:04 +0000",
+            "anime_eps": "1060-1061",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1062-1063].Egghead.04.[1080p][92F9FD5D]",
+            "guid": "69810479353f3f620a1d78d73a74fa05",
+            "size_bytes": 817231000,
+            "pub_date": "Sat, 09 Mar 2024 14:14:54 +0000",
+            "anime_eps": "1062-1063",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1064-1065].Egghead.05.[1080p][E80E4B80]",
+            "guid": "54b2adc9fcc84e54b46a9816ebc2ddd7",
+            "size_bytes": 833726000,
+            "pub_date": "Sat, 23 Mar 2024 02:17:01 +0000",
+            "anime_eps": "1064-1065",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1066].Egghead.06.[1080p][C9D76388]",
+            "guid": "f05a5961f90d6294fd5107bb78061788",
+            "size_bytes": 413273000,
+            "pub_date": "Fri, 19 Apr 2024 23:26:50 +0000",
+            "anime_eps": "1066",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1067-1068].Egghead.07.[1080p][713FF32B]",
+            "guid": "9a7632f7ba201ce9394cb6b3c37c777f",
+            "size_bytes": 728477000,
+            "pub_date": "Sat, 04 May 2024 00:38:45 +0000",
+            "anime_eps": "1067-1068",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1069-1070].Egghead.08.[1080p][126ECF70]",
+            "guid": "2b3d9d1d4610fc7ddebfac2b5958ebd0",
+            "size_bytes": 893834000,
+            "pub_date": "Fri, 31 May 2024 23:16:30 +0000",
+            "anime_eps": "1069-1070",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1071-1072].Egghead.09.[1080p][ED808618]",
+            "guid": "73d195cddeeb55ad941854cd50be9e44",
+            "size_bytes": 740777000,
+            "pub_date": "Sat, 22 Jun 2024 02:46:10 +0000",
+            "anime_eps": "1071-1072",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 14,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][1080-1081] Egghead 14 Extended [1080p][CA3683BA]",
+            "guid": "4873ebe11549b292627d4e34358a67a1",
+            "size_bytes": 1793978000,
+            "pub_date": "Sun, 10 Aug 2025 00:40:52 +0000",
+            "anime_eps": "1080-1081",
+            "extended": true
+          }
+        ]
+      },
+      {
+        "ep": 15,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][1082-1083] Egghead 15 [1080p][21BF9495]",
+            "guid": "b7ba174f5c48defba0dad7f323c2c79e",
+            "size_bytes": 1164009000,
+            "pub_date": "Sun, 24 Aug 2025 03:04:00 +0000",
+            "anime_eps": "1082-1083",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Egghead"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][381-382] Enies Lobby 04 [1080p][90B6D40E]",
+            "guid": "7e156a13a8dfd1e029a44077dbede69d",
+            "size_bytes": 1330219000,
+            "pub_date": "Sat, 20 Dec 2025 22:05:12 +0000",
+            "anime_eps": "381-382",
+            "extended": false
+          },
+          {
+            "quality": "720p",
+            "title": "[One Pace][381-382] Enies Lobby 04 [720p][194603B0]",
+            "guid": "35e43a254a3b252f25367062ecfab3f5",
+            "size_bytes": 257263000,
+            "pub_date": "Fri, 25 Jan 2019 10:55:51 +0000",
+            "anime_eps": "381-382",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][383-385] Enies Lobby 05 [1080p][07F7124B]",
+            "guid": "416de3f2744688e03ae1b246b7769738",
+            "size_bytes": 1103232000,
+            "pub_date": "Mon, 02 Mar 2026 03:50:29 +0000",
+            "anime_eps": "383-385",
+            "extended": false
+          },
+          {
+            "quality": "720p",
+            "title": "[One Pace][383-384] Enies Lobby 05 [720p][56E89B6A]",
+            "guid": "02245eb1bf1da666a6f7b33f7b923e87",
+            "size_bytes": 316675000,
+            "pub_date": "Fri, 29 Mar 2019 02:37:37 +0000",
+            "anime_eps": "383-384",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][385-387] Enies Lobby 06 [1080p][46C9CFF8]",
+            "guid": "1edf4ed33a33d79b0791e698637c8244",
+            "size_bytes": 818009000,
+            "pub_date": "Mon, 02 Mar 2026 03:50:29 +0000",
+            "anime_eps": "385-387",
+            "extended": false
+          },
+          {
+            "quality": "720p",
+            "title": "[One Pace][385-387] Enies Lobby 06 [720p][0E201E28]",
+            "guid": "ed8460e1ce5a93619208075491d87bc2",
+            "size_bytes": 304912000,
+            "pub_date": "Mon, 29 Apr 2019 19:54:49 +0000",
+            "anime_eps": "385-387",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][388-390] Enies Lobby 07 [1080p][3CA69C29]",
+            "guid": "b8d4bf40fdb48dbb4cb18466a013814e",
+            "size_bytes": 854943000,
+            "pub_date": "Sun, 08 Mar 2026 23:00:37 +0000",
+            "anime_eps": "388-390",
+            "extended": false
+          },
+          {
+            "quality": "720p",
+            "title": "[One.Pace][388-390].Enies.Lobby.07.[720p][3BBE532B]",
+            "guid": "8cc9c495f9660b3ac6d94bb6348d317b",
+            "size_bytes": 269215000,
+            "pub_date": "Mon, 13 May 2019 05:29:37 +0000",
+            "anime_eps": "388-390",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][391-393].Enies.Lobby.08.[720p][DECF4267]",
+            "guid": "0ad78c94049b081961f9f78b0cfd03e7",
+            "size_bytes": 282224000,
+            "pub_date": "Tue, 04 Jun 2019 02:32:02 +0000",
+            "anime_eps": "391-393",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][394-396].Enies.Lobby.09.[720p][952F5BEB]",
+            "guid": "bf0814f9199471aa650202950f124981",
+            "size_bytes": 381298000,
+            "pub_date": "Tue, 02 Jul 2019 03:51:29 +0000",
+            "anime_eps": "394-396",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][397-398].Enies.Lobby.10.[720p][6C908F32]",
+            "guid": "010d36358ecfe4b049e7279dd35c11f9",
+            "size_bytes": 338548000,
+            "pub_date": "Wed, 21 Aug 2019 22:43:38 +0000",
+            "anime_eps": "397-398",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 11,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][399-400].Enies.Lobby.11.[720p][CF6F1505]",
+            "guid": "3ac0b52e328d6656fa5af7f0ffd432db",
+            "size_bytes": 431300000,
+            "pub_date": "Wed, 21 Aug 2019 22:43:38 +0000",
+            "anime_eps": "399-400",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 12,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][401-402].Enies.Lobby.12.[720p][DA166192]",
+            "guid": "c93b6678132c32efd3497f59b3ea3fce",
+            "size_bytes": 193624000,
+            "pub_date": "Thu, 12 Mar 2020 01:52:35 +0000",
+            "anime_eps": "401-402",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 13,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][403-404].Enies.Lobby.13.[720p][FE0F64E2]",
+            "guid": "c28c2ed18cbdcb8b94d70e39391e985c",
+            "size_bytes": 369636000,
+            "pub_date": "Sat, 04 Apr 2020 05:24:14 +0000",
+            "anime_eps": "403-404",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 14,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][405-406].Enies.Lobby.14.[1080p][A9C9701B]",
+            "guid": "eb78e647f14f2e08a758721f83929b73",
+            "size_bytes": 414526000,
+            "pub_date": "Thu, 16 Apr 2020 04:44:55 +0000",
+            "anime_eps": "405-406",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 15,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][407-408].Enies.Lobby.15.[1080p][160B1E51]",
+            "guid": "9ac07c11abacaea199be7c05eca4fcad",
+            "size_bytes": 409871000,
+            "pub_date": "Thu, 23 Apr 2020 00:20:10 +0000",
+            "anime_eps": "407-408",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 16,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][409-411].Enies.Lobby.16.[1080p][158476AB]",
+            "guid": "2228c41aed1a2ec6290de272bce610e5",
+            "size_bytes": 970744000,
+            "pub_date": "Thu, 30 Apr 2020 03:38:19 +0000",
+            "anime_eps": "409-411",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 17,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][412-413].Enies.Lobby.17.[1080p][7562EF8D]",
+            "guid": "50ab2607a963db1a6375657946495afa",
+            "size_bytes": 917839000,
+            "pub_date": "Fri, 08 May 2020 05:52:10 +0000",
+            "anime_eps": "412-413",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 18,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][414-415].Enies.Lobby.18.[1080p][64207B1A]",
+            "guid": "76b053d91811c1691a285f4608ef8945",
+            "size_bytes": 707281000,
+            "pub_date": "Fri, 15 May 2020 06:32:29 +0000",
+            "anime_eps": "414-415",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 19,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][416-418].Enies.Lobby.19.[1080p][C4106519]",
+            "guid": "23dffb769838eba85c93a000cba8b857",
+            "size_bytes": 1081977000,
+            "pub_date": "Sat, 23 May 2020 05:12:09 +0000",
+            "anime_eps": "416-418",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 20,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][419-420].Enies.Lobby.20.[1080p][5AC534CA]",
+            "guid": "bb78a637e1c7867c399ae617880c1bd8",
+            "size_bytes": 896560000,
+            "pub_date": "Fri, 29 May 2020 05:10:57 +0000",
+            "anime_eps": "419-420",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 22,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][423-424].Enies.Lobby.22.[1080p][C0B33E05]",
+            "guid": "c426e155d6531c1fd1664480401f83d8",
+            "size_bytes": 892044000,
+            "pub_date": "Mon, 15 Jun 2020 12:21:35 +0000",
+            "anime_eps": "423-424",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 23,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][425-427].Enies.Lobby.23.[1080p][25AFC3E5]",
+            "guid": "3c8b14f2f205150f2a2ca0f2d51c050b",
+            "size_bytes": 1362050000,
+            "pub_date": "Mon, 10 Aug 2020 20:23:32 +0000",
+            "anime_eps": "425-427",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 24,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][428-429].Enies.Lobby.24.[1080p][7F76CDD9]",
+            "guid": "79a6e36f55ea6f2d2f4d2d745d85406b",
+            "size_bytes": 1122952000,
+            "pub_date": "Sat, 15 Aug 2020 23:01:41 +0000",
+            "anime_eps": "428-429",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 25,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][430].Enies.Lobby.25.[1080p][3251D51B]",
+            "guid": "36a64d85791a06f265d19fa80b3b273c",
+            "size_bytes": 569329000,
+            "pub_date": "Thu, 27 Aug 2020 22:51:38 +0000",
+            "anime_eps": "430",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Enies Lobby"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 13,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][627-629].Fishman.Island.13.[720p][04C7B716]",
+            "guid": "954ca640ff2a3c469ac060600373d46a",
+            "size_bytes": 783634000,
+            "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+            "anime_eps": "627-629",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 14,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][630-631].Fishman.Island.14.[720p][35A189E2]",
+            "guid": "48bd394922fe7a3f854dbf3380472a79",
+            "size_bytes": 635663000,
+            "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+            "anime_eps": "630-631",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 15,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][632-633].Fishman.Island.15.[720p][8014A332]",
+            "guid": "e728a42a8e060de26528ea8b947f5b3e",
+            "size_bytes": 670847000,
+            "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+            "anime_eps": "632-633",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 16,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][634-635].Fishman.Island.16.[720p][DF3A7006]",
+            "guid": "9d4f2e40ebd4eb563b535bd697e7a836",
+            "size_bytes": 738831000,
+            "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+            "anime_eps": "634-635",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 17,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][636-637].Fishman.Island.17.[720p][EB0BC95C]",
+            "guid": "4d83d0badd83ba7f71edb509ea6732e6",
+            "size_bytes": 609664000,
+            "pub_date": "Sun, 29 Apr 2018 23:38:09 +0000",
+            "anime_eps": "636-637",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 18,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][638-639].Fishman.Island.18.[720p][B6BD1A60]",
+            "guid": "85c42091fde161e6e4cfd5681107f308",
+            "size_bytes": 535171000,
+            "pub_date": "Sun, 29 Apr 2018 23:34:34 +0000",
+            "anime_eps": "638-639",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 19,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][640-641].Fishman.Island.19.[720p][C19D5680]",
+            "guid": "622f495286e7a249a21c5785563cad85",
+            "size_bytes": 655483000,
+            "pub_date": "Sun, 29 Apr 2018 23:34:44 +0000",
+            "anime_eps": "640-641",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 20,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][642-645].Fishman.Island.20.[720p][94E2099D]",
+            "guid": "3a2c5a844abc227b4cd28fba857a3bf8",
+            "size_bytes": 655768000,
+            "pub_date": "Sun, 29 Apr 2018 23:34:45 +0000",
+            "anime_eps": "642-645",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 21,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][643-646].Fishman.Island.21.[720p][85AD9C81]",
+            "guid": "c78f84571a5a13e140c38699b577c8dc",
+            "size_bytes": 615185000,
+            "pub_date": "Sun, 29 Apr 2018 23:34:27 +0000",
+            "anime_eps": "643-646",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 22,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][647-649].Fishman.Island.22.[720p][7DBBFA18]",
+            "guid": "a6b56f79e69b5738a2771570de6b27ec",
+            "size_bytes": 937731000,
+            "pub_date": "Sun, 29 Apr 2018 23:34:27 +0000",
+            "anime_eps": "647-649",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 23,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][650-651].Fishman.Island.23.[720p][65BD682D]",
+            "guid": "7c374994d55e6380924c6fdb25bb6173",
+            "size_bytes": 679357000,
+            "pub_date": "Sun, 29 Apr 2018 23:34:42 +0000",
+            "anime_eps": "650-651",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 24,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][652-653].Fishman.Island.24.[720p][99A61805]",
+            "guid": "9f958e6cf909ff6367ac940dbd29b052",
+            "size_bytes": 708794000,
+            "pub_date": "Sun, 29 Apr 2018 23:34:45 +0000",
+            "anime_eps": "652-653",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][603-653] Fishman Island [720p]",
+        "guid": "f5aabb17394ba26e1e0700eeab79cefc",
+        "size_bytes": 15643964000,
+        "pub_date": "Sun, 29 Apr 2018 19:58:19 +0000",
+        "anime_eps": "603-653",
+        "extended": false
+      }
+    ],
+    "title": "Fishman Island"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][525-526].Impel.Down.01.[720p][C1FA3347]",
+            "guid": "0d222827c9bf288cbacad80e0bc67b77",
+            "size_bytes": 201190000,
+            "pub_date": "Sat, 31 Dec 2016 13:51:46 +0000",
+            "anime_eps": "525-526",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][527-528] Impel Down 02 [720p][7306EDA1]",
+            "guid": "15709f4f83b6830aa2a247388e8a002e",
+            "size_bytes": 397770000,
+            "pub_date": "Fri, 30 Dec 2016 14:33:31 +0000",
+            "anime_eps": "527-528",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][529-531] Impel Down 03 [720p][ECA0E5A1]",
+            "guid": "9cb2385c324eb5f2b4f8cfb7b5b7c80c",
+            "size_bytes": 346758000,
+            "pub_date": "Sat, 07 Jan 2017 17:59:08 +0000",
+            "anime_eps": "529-531",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][532-533].Impel.Down.04.[720p][38C7B3F3]",
+            "guid": "1a4e5d92c5c4caadaa0da80b1314385e",
+            "size_bytes": 258632000,
+            "pub_date": "Fri, 20 Jan 2017 16:42:38 +0000",
+            "anime_eps": "532-533",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][537-538] Impel Down 06 [720p][710A0767]",
+            "guid": "aa1f53ed7ec5c21a3e8cafdcf0d421b8",
+            "size_bytes": 288166000,
+            "pub_date": "Fri, 17 Feb 2017 23:32:03 +0000",
+            "anime_eps": "537-538",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][525-548] Impel Down [720p]",
+        "guid": "a7aaf559a09fc92c854a6d53ce2e6a64",
+        "size_bytes": 2024275000,
+        "pub_date": "Wed, 28 Jun 2017 04:28:57 +0000",
+        "anime_eps": "525-548",
+        "extended": false
+      }
+    ],
+    "title": "Impel Down"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][227-228] Jaya 04 [1080p][86DC8F38]",
+            "guid": "55ab4a53ea6d3294c6e0536919568ad1",
+            "size_bytes": 544337000,
+            "pub_date": "Sat, 12 Aug 2023 03:47:43 +0000",
+            "anime_eps": "227-228",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][229-230] Jaya 05 [1080p][E468A31D]",
+            "guid": "71ad7e12bb9ba069cdda7390730ee55f",
+            "size_bytes": 510483000,
+            "pub_date": "Sat, 19 Aug 2023 00:59:20 +0000",
+            "anime_eps": "229-230",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][231-232] Jaya 06 [1080p][8783E1B0]",
+            "guid": "60a6eb463230940e116684507d6b2d0c",
+            "size_bytes": 419158000,
+            "pub_date": "Sat, 09 Sep 2023 07:13:03 +0000",
+            "anime_eps": "231-232",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][232-234] Jaya 07 [1080p][580A0C3B]",
+            "guid": "714b05e2f66c6c289808e8a5c1fec615",
+            "size_bytes": 544630000,
+            "pub_date": "Sat, 16 Sep 2023 16:04:23 +0000",
+            "anime_eps": "232-234",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][235-236].Jaya.08.[1080p][FA2E5ADD]",
+            "guid": "2fa6af16465b2d0b9755b1d40be54a66",
+            "size_bytes": 477813000,
+            "pub_date": "Sat, 30 Sep 2023 06:14:03 +0000",
+            "anime_eps": "235-236",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Jaya"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][115-117].Little.Garden.01.[480p][A7C806EA]",
+            "guid": "79314f69e0cdc5b9c641e71dc83d2400",
+            "size_bytes": 216165000,
+            "pub_date": "Mon, 27 Jul 2020 11:59:04 +0000",
+            "anime_eps": "115-117",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][117-118].Little.Garden.02.[480p][6E765449]",
+            "guid": "bfdf792b6dc6a5948870da19ff3e257a",
+            "size_bytes": 154410000,
+            "pub_date": "Tue, 04 Aug 2020 21:32:50 +0000",
+            "anime_eps": "117-118",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][119-122].Little.Garden.03.[480p][B5D2AC50]",
+            "guid": "12dad71bb3d76e163fdc26ff83c7a52b",
+            "size_bytes": 284455000,
+            "pub_date": "Fri, 20 Nov 2020 04:56:49 +0000",
+            "anime_eps": "119-122",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][121-124].Little.Garden.04.[480p][E5C873C7]",
+            "guid": "8762b88328b86ab4ef87e659049c6c6b",
+            "size_bytes": 320625000,
+            "pub_date": "Fri, 09 Oct 2020 22:38:39 +0000",
+            "anime_eps": "121-124",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][127-129].Little.Garden.05.[1080p][51105EBB]",
+            "guid": "f00ca813f4050898658ccb5b00476ced",
+            "size_bytes": 764672000,
+            "pub_date": "Sat, 19 Jul 2025 03:39:56 +0000",
+            "anime_eps": "127-129",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][127-129].Little.Garden.05.[480p][0DAE9783]",
+            "guid": "ad34d7e1c124dc3a4d8fd93344973242",
+            "size_bytes": 204565000,
+            "pub_date": "Mon, 19 Oct 2020 11:56:37 +0000",
+            "anime_eps": "127-129",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Little Garden"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][96-97].Loguetown.01.[480p][4200CE0D]",
+            "guid": "3972aee0e955a7880e9982e429116464",
+            "size_bytes": 194830000,
+            "pub_date": "Tue, 22 Sep 2020 23:34:20 +0000",
+            "anime_eps": "96-97",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][97].Loguetown.02.[480p][8E970FD4]",
+            "guid": "80caca6cda05fa91427c400acd7d0e4f",
+            "size_bytes": 209970000,
+            "pub_date": "Tue, 22 Sep 2020 23:36:46 +0000",
+            "anime_eps": "97",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][98-100].Loguetown.03.[480p][23E3E489]",
+            "guid": "61c8e99410ad7dd7a2ebda9ee6bc74d5",
+            "size_bytes": 381946000,
+            "pub_date": "Tue, 22 Sep 2020 23:24:45 +0000",
+            "anime_eps": "98-100",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Loguetown"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][304-306].Long.Ring.Long.Land.01.[720p][E5705D35]",
+            "guid": "e76afebb325bab66eff80f2686470826",
+            "size_bytes": 496824000,
+            "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+            "anime_eps": "304-306",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][307-309].Long.Ring.Long.Land.02.[720p][57F75027]",
+            "guid": "80cf783d956fb253074b13f94bef8173",
+            "size_bytes": 465751000,
+            "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+            "anime_eps": "307-309",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][310-312].Long.Ring.Long.Land.03.[720p][24351CC0]",
+            "guid": "1dc6524f21bfdc3ab48256fd52352de9",
+            "size_bytes": 576874000,
+            "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+            "anime_eps": "310-312",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][313-316].Long.Ring.Long.Land.04.[720p][72C0B595]",
+            "guid": "e5c02d7f9bb6707df1c0a635fd6fcb8b",
+            "size_bytes": 522485000,
+            "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+            "anime_eps": "313-316",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][317-318].Long.Ring.Long.Land.05.[720p][BCF2E97B]",
+            "guid": "17049b963da2241adfd14240f48741b2",
+            "size_bytes": 292068000,
+            "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+            "anime_eps": "317-318",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][318-321].Long.Ring.Long.Land.06.[720p][A65C20C2]",
+            "guid": "ff652acdfeb44622edf225ca2056e992",
+            "size_bytes": 458269000,
+            "pub_date": "Thu, 03 Nov 2016 19:09:36 +0000",
+            "anime_eps": "318-321",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][304-321] Long Ring Long Land [720p]",
+        "guid": "91d77eb8147df42071b816b12d588daa",
+        "size_bytes": 2811407000,
+        "pub_date": "Thu, 03 Nov 2016 19:31:58 +0000",
+        "anime_eps": "304-321",
+        "extended": false
+      }
+    ],
+    "title": "Long Ring Long Land"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][549-550].Marineford.01.[720p][C9143FCD]",
+            "guid": "0faf712fd66c419655bbc743214d9125",
+            "size_bytes": 369361000,
+            "pub_date": "Sat, 29 Feb 2020 03:06:18 +0000",
+            "anime_eps": "549-550",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][551-552].Marineford.02.[720p][4F5151F2]",
+            "guid": "3159ac139fb0f9893a0ba84811544970",
+            "size_bytes": 242282000,
+            "pub_date": "Wed, 07 Oct 2020 22:56:35 +0000",
+            "anime_eps": "551-552",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][553-554].Marineford.03.[720p][D16C3A7A]",
+            "guid": "f6e287bfa9f66180341d72f5a2233daf",
+            "size_bytes": 268331000,
+            "pub_date": "Wed, 07 Oct 2020 21:54:12 +0000",
+            "anime_eps": "553-554",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][555-556].Marineford.04.[720p][738B1A3B]",
+            "guid": "7b80c3758ed83b3c721f8e07e5024f18",
+            "size_bytes": 191488000,
+            "pub_date": "Wed, 07 Oct 2020 21:40:07 +0000",
+            "anime_eps": "555-556",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][557-558].Marineford.05.[720p][66006702]",
+            "guid": "2a39fec1ff23394dcd59321617f829c2",
+            "size_bytes": 211372000,
+            "pub_date": "Wed, 07 Oct 2020 21:58:29 +0000",
+            "anime_eps": "557-558",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][559-560].Marineford.06.[720p][E46F5F07]",
+            "guid": "1463587f2bd640b8a8edd306983ff22c",
+            "size_bytes": 233680000,
+            "pub_date": "Wed, 07 Oct 2020 21:54:12 +0000",
+            "anime_eps": "559-560",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][561-562] Marineford 07 [720p][F6171492]",
+            "guid": "2c24e028bc7d88f965b0123dfb7c9dcd",
+            "size_bytes": 289664000,
+            "pub_date": "Wed, 18 Jul 2018 21:58:11 +0000",
+            "anime_eps": "561-562",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][563-564].Marineford.08.[720p][2A3B3264]",
+            "guid": "ba2452718bbfc9c0525dd71286093637",
+            "size_bytes": 245617000,
+            "pub_date": "Wed, 07 Oct 2020 21:58:29 +0000",
+            "anime_eps": "563-564",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][565-566].Marineford.09.[720p][1638FE88]",
+            "guid": "cec503d0e242f4392264650efd212312",
+            "size_bytes": 262534000,
+            "pub_date": "Wed, 07 Oct 2020 21:40:08 +0000",
+            "anime_eps": "565-566",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][567].Marineford.10.[720p][B9690B6D]",
+            "guid": "04c6811d2efdcec068d87bab17c7510b",
+            "size_bytes": 129233000,
+            "pub_date": "Wed, 26 Dec 2018 18:36:57 +0000",
+            "anime_eps": "567",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 11,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][568-569] Marineford 11 [720p][12732A0B]",
+            "guid": "8ce21b5cf2f9d17d7a3b7acb1cad5cc3",
+            "size_bytes": 213685000,
+            "pub_date": "Sun, 06 Jan 2019 21:31:06 +0000",
+            "anime_eps": "568-569",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 12,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][570-571].Marineford.12.[720p][6BD41435]",
+            "guid": "58ee87c8c62df0fda848fe74b68017d5",
+            "size_bytes": 243825000,
+            "pub_date": "Wed, 07 Oct 2020 21:40:09 +0000",
+            "anime_eps": "570-571",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 13,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][572-573].Marineford.13.[720p][66E68054]",
+            "guid": "71f3063f1798f2678967f26e0fc33589",
+            "size_bytes": 228632000,
+            "pub_date": "Wed, 07 Oct 2020 21:58:29 +0000",
+            "anime_eps": "572-573",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 14,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][574].Marineford.14.[720p][364FAA9A]",
+            "guid": "1123c04eea4b9d6bbbdc487ae664f8bd",
+            "size_bytes": 133876000,
+            "pub_date": "Tue, 12 Feb 2019 17:43:53 +0000",
+            "anime_eps": "574",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 15,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][575-576].Marineford.15.[720p][00768DB7]",
+            "guid": "6ad1d81f24021afc3788f73b4a312a87",
+            "size_bytes": 298361000,
+            "pub_date": "Wed, 07 Oct 2020 21:54:07 +0000",
+            "anime_eps": "575-576",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 16,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][577-578].Marineford.16.[720p][91EEA92E]",
+            "guid": "0c8ab6b1e927728f19d7fc62aba024d6",
+            "size_bytes": 227861000,
+            "pub_date": "Wed, 07 Oct 2020 21:45:30 +0000",
+            "anime_eps": "577-578",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 17,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][579-580].Marineford.17.[720p][2DC3ECF7]",
+            "guid": "1ace5594449293a6847bd8c02bc40a7f",
+            "size_bytes": 208293000,
+            "pub_date": "Wed, 07 Oct 2020 22:56:35 +0000",
+            "anime_eps": "579-580",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][549-580] Marineford [720p]",
+        "guid": "8958e264f3c2bec6d94759fdb91f52c7",
+        "size_bytes": 3788880000,
+        "pub_date": "Sat, 06 Jul 2019 17:12:12 +0000",
+        "anime_eps": "549-580",
+        "extended": false
+      }
+    ],
+    "title": "Marineford"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][8-11] Orange Town 01 [1080p][2388DB63]",
+            "guid": "6572d349c8a32590da5fc82f1cd01481",
+            "size_bytes": 442188000,
+            "pub_date": "Sun, 08 Aug 2021 03:12:07 +0000",
+            "anime_eps": "8-11",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One Pace][8-11] Orange Town 01 [480p][A2F5F372]",
+            "guid": "b172cbfb0f9a5c46be6b4c15926616ef",
+            "size_bytes": 162167000,
+            "pub_date": "Wed, 07 Nov 2018 01:30:00 +0000",
+            "anime_eps": "8-11",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][12-19] Orange Town 02 [1080p][C0A5D51D]",
+            "guid": "ce92f053c2390dd1151cbf644fff8ae3",
+            "size_bytes": 728198000,
+            "pub_date": "Sun, 08 Aug 2021 03:08:37 +0000",
+            "anime_eps": "12-19",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][11-16].Orange.Town.02.[480p][3D7957D8]",
+            "guid": "a21075f87d776582dabe516bb38c990a",
+            "size_bytes": 194931000,
+            "pub_date": "Mon, 30 Apr 2018 19:12:09 +0000",
+            "anime_eps": "11-16",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][19-21] Orange Town 03 [1080p][86CC0CCF]",
+            "guid": "dbe56035beec94cc80edac1d78cb3475",
+            "size_bytes": 406845000,
+            "pub_date": "Sun, 08 Aug 2021 03:12:07 +0000",
+            "anime_eps": "19-21",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][17-21].Orange.Town.03.[480p][800263CF]",
+            "guid": "4779e9716da2c3f1531d406913d9704a",
+            "size_bytes": 242369000,
+            "pub_date": "Mon, 30 Apr 2018 19:12:08 +0000",
+            "anime_eps": "17-21",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "480p",
+        "title": "[One Pace][8-21] Orange Town [480p]",
+        "guid": "a666d6c2c557b284a3881913c41c7832",
+        "size_bytes": 594894000,
+        "pub_date": "Sat, 04 May 2019 14:04:05 +0000",
+        "anime_eps": "8-21",
+        "extended": false
+      }
+    ],
+    "title": "Orange Town"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][431-432].Post-Enies.Lobby.01.[720p][216595EE]",
+            "guid": "fc8973ba8426251c98e834ed32c15647",
+            "size_bytes": 407162000,
+            "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+            "anime_eps": "431-432",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][433-435].Post-Enies.Lobby.02.[720p][344EA844]",
+            "guid": "09314d83f59f076a8976ac4824c11344",
+            "size_bytes": 521251000,
+            "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+            "anime_eps": "433-435",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][436-437].Post-Enies.Lobby.03.[720p][2C843A0F]",
+            "guid": "a2dcfeb1bad9b62e9406bed453f4f995",
+            "size_bytes": 473384000,
+            "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+            "anime_eps": "436-437",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][438-439].Post-Enies.Lobby.04.[720p][659EF70C]",
+            "guid": "b4c19bc124ee68ec8b8422f4c472ba39",
+            "size_bytes": 566224000,
+            "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+            "anime_eps": "438-439",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][440-441].Post-Enies.Lobby.05.[720p][CEF78887]",
+            "guid": "766fc2e9476967aa3f9a5ef757bcc688",
+            "size_bytes": 400780000,
+            "pub_date": "Mon, 19 Aug 2019 13:15:05 +0000",
+            "anime_eps": "440-441",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][431-441] Post-Enies Lobby [720p]",
+        "guid": "462ff0070d5aae030e64d2dabb14c753",
+        "size_bytes": 2351156000,
+        "pub_date": "Mon, 19 Aug 2019 10:19:35 +0000",
+        "anime_eps": "431-441",
+        "extended": false
+      }
+    ],
+    "title": "Post-Enies Lobby"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][581-582].Post-War.01.[720p][D1EC78C6]",
+            "guid": "edc3a9646d41a368527f09e116beb29a",
+            "size_bytes": 389718000,
+            "pub_date": "Tue, 03 Sep 2019 05:39:15 +0000",
+            "anime_eps": "581-582",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][583-584].Post-War.02.[1080p][1A183CBE]",
+            "guid": "117f49dc81432469f43bc8e5084c3977",
+            "size_bytes": 508684000,
+            "pub_date": "Mon, 27 Jul 2020 09:58:15 +0000",
+            "anime_eps": "583-584",
+            "extended": false
+          },
+          {
+            "quality": "720p",
+            "title": "[One.Pace][583-584].Post-War.02.[720p][5374DDDE]",
+            "guid": "c2d9c7b348156dfab48d6c16a4e2d134",
+            "size_bytes": 510898000,
+            "pub_date": "Wed, 04 Sep 2019 05:20:28 +0000",
+            "anime_eps": "583-584",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][585-586].Post-War.03.[1080p][9DEAD0F3]",
+            "guid": "23ad51406acde8f16f39dbb6ac98eb91",
+            "size_bytes": 588640000,
+            "pub_date": "Sun, 26 Jul 2020 09:22:10 +0000",
+            "anime_eps": "585-586",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][587-588].Post-War.04.[1080p][5FA1920A]",
+            "guid": "f1a39b30e0c765ad554ca0cb29dad6bd",
+            "size_bytes": 533390000,
+            "pub_date": "Mon, 27 Jul 2020 09:10:25 +0000",
+            "anime_eps": "587-588",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][593-594].Post-War.07.[1080p][D85BC22C]",
+            "guid": "4c5799ea6db3edc64a7441108b418882",
+            "size_bytes": 513341000,
+            "pub_date": "Mon, 21 Dec 2020 00:41:35 +0000",
+            "anime_eps": "593-594",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][595-597] Post-War 08 [1080p][178190BC]",
+            "guid": "663342e861be965bb0ea2c887ef6f0c6",
+            "size_bytes": 1775726000,
+            "pub_date": "Mon, 18 Jan 2021 18:15:41 +0000",
+            "anime_eps": "595-597",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Post-War"
+  },
+  {
+    "episodes": [],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][654-699] Punk Hazard [720p]",
+        "guid": "4f4b80eb927171573a03f188b7c68e8c",
+        "size_bytes": 11559114000,
+        "pub_date": "Sat, 04 May 2019 16:56:25 +0000",
+        "anime_eps": "654-699",
+        "extended": false
+      }
+    ],
+    "title": "Punk Hazard"
+  },
+  {
+    "episodes": [],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][598-602] Return to Sabaody [720p]",
+        "guid": "85316efc5e7a2139f0e703c69870cd71",
+        "size_bytes": 1079615000,
+        "pub_date": "Sun, 29 Apr 2018 19:15:16 +0000",
+        "anime_eps": "598-602",
+        "extended": false
+      }
+    ],
+    "title": "Return to Sabaody"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][903-904].Reverie.01.[720p][728FD8D8]",
+            "guid": "2a82d9aba8aedab31f3e45a5960cb7d5",
+            "size_bytes": 236641000,
+            "pub_date": "Tue, 30 Apr 2019 07:39:36 +0000",
+            "anime_eps": "903-904",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][905-906].Reverie.02.[720p][202E6B32]",
+            "guid": "69b0fc710327a8bde5ccf02e1ecda610",
+            "size_bytes": 260343000,
+            "pub_date": "Sat, 15 Jun 2019 08:40:06 +0000",
+            "anime_eps": "905-906",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][907-908].Reverie.03.[720p][A760D82E]",
+            "guid": "f246880d9341537f5eb9aa3f36e1e778",
+            "size_bytes": 345233000,
+            "pub_date": "Tue, 02 Jul 2019 03:54:02 +0000",
+            "anime_eps": "907-908",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][903-908] Reverie [720p]",
+        "guid": "970a215e9279e1c006346089711fbfee",
+        "size_bytes": 835910000,
+        "pub_date": "Sun, 07 Jul 2019 16:45:22 +0000",
+        "anime_eps": "903-908",
+        "extended": false
+      }
+    ],
+    "title": "Reverie"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][101-103] Reverse Mountain 01 [1080p][CE01A533]",
+            "guid": "24a17c206f44dcd43bc1ed25747b6224",
+            "size_bytes": 678640000,
+            "pub_date": "Sat, 06 Jan 2024 09:09:07 +0000",
+            "anime_eps": "101-103",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][101-103].Reverse.Mountain.01.[480p][43A88918]",
+            "guid": "7ae13a3b04fe25f5cfea456428a02d59",
+            "size_bytes": 252438000,
+            "pub_date": "Mon, 28 May 2018 14:24:42 +0000",
+            "anime_eps": "101-103",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][103-105] Reverse Mountain 02 [1080p][5195CDBC]",
+            "guid": "55bce2458f7fe5e3c22cff22d272ea91",
+            "size_bytes": 820662000,
+            "pub_date": "Sat, 06 Jan 2024 09:10:58 +0000",
+            "anime_eps": "103-105",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][104-105].Reverse.Mountain.02.[480p][775B819E]",
+            "guid": "00f2904e3a1c2035daf99bdce9f84a4d",
+            "size_bytes": 136402000,
+            "pub_date": "Mon, 28 May 2018 14:24:43 +0000",
+            "anime_eps": "104-105",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "480p",
+        "title": "[One Pace][101-105] Reverse Mountain [480p]",
+        "guid": "ff9051f090dcfdc7ab7954fc72866373",
+        "size_bytes": 388460000,
+        "pub_date": "Mon, 28 May 2018 12:12:59 +0000",
+        "anime_eps": "101-105",
+        "extended": false
+      }
+    ],
+    "title": "Reverse Mountain"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][1].Romance.Dawn.01.[1080p][956E3544]",
+            "guid": "94d906546934fd824305ad69449cca61",
+            "size_bytes": 410177000,
+            "pub_date": "Thu, 03 Dec 2020 02:31:05 +0000",
+            "anime_eps": "1",
+            "extended": false
+          },
+          {
+            "quality": "720p",
+            "title": "[One.Pace][1].Romance.Dawn.01.[720p][9FE150E1]",
+            "guid": "5621f0a0e11ceda28f8345649052454e",
+            "size_bytes": 331197000,
+            "pub_date": "Sat, 31 Dec 2016 14:11:13 +0000",
+            "anime_eps": "1",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][2] Romance Dawn 02 [1080p][667784D2]",
+            "guid": "3f1ebc5e1d1fb8260f571932e821c1c8",
+            "size_bytes": 491991000,
+            "pub_date": "Mon, 27 Dec 2021 07:39:51 +0000",
+            "anime_eps": "2",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][2].Romance.Dawn.02.[480p][B5576056]",
+            "guid": "34b6d79cae605c4ece8182e3db07ba19",
+            "size_bytes": 144829000,
+            "pub_date": "Thu, 03 Dec 2020 02:36:42 +0000",
+            "anime_eps": "2",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][3-5] Romance Dawn 03 [1080p][8F0ACC44]",
+            "guid": "c90bb72394b51521d6045076e4edb439",
+            "size_bytes": 639055000,
+            "pub_date": "Mon, 27 Dec 2021 07:40:32 +0000",
+            "anime_eps": "3-5",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][3-5].Romance.Dawn.03.[480p][C62C6617]",
+            "guid": "a44821510344afbe439bd5d020cfc8d7",
+            "size_bytes": 177752000,
+            "pub_date": "Thu, 03 Dec 2020 02:31:05 +0000",
+            "anime_eps": "3-5",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][5-7] Romance Dawn 04 [1080p][9A48E3EB]",
+            "guid": "1414d1858e0bc3513ea936c26dac457a",
+            "size_bytes": 445609000,
+            "pub_date": "Mon, 27 Dec 2021 07:41:22 +0000",
+            "anime_eps": "5-7",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][5-7].Romance.Dawn.04.[480p][690ABED5]",
+            "guid": "63b25a49e6ea91efe583c541ecc85464",
+            "size_bytes": 123891000,
+            "pub_date": "Thu, 03 Dec 2020 02:36:42 +0000",
+            "anime_eps": "5-7",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "480p",
+        "title": "[One Pace][1-7] Romance Dawn [480p]",
+        "guid": "6c08a5ea27eb28bcbf3ff7d4e3bc5997",
+        "size_bytes": 598266000,
+        "pub_date": "Sat, 31 Dec 2016 12:03:15 +0000",
+        "anime_eps": "1-7",
+        "extended": false
+      }
+    ],
+    "title": "Romance Dawn"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][490-491].Sabaody.Archipelago.01.[720p][066FD68B]",
+            "guid": "889df2b6e6a5e30f35c1f70209d9bc4d",
+            "size_bytes": 324529000,
+            "pub_date": "Fri, 16 Aug 2019 06:03:33 +0000",
+            "anime_eps": "490-491",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][492-493].Sabaody.Archipelago.02.[720p][F0334710]",
+            "guid": "c9247b134f5b7fe44bf4c21379de6e0d",
+            "size_bytes": 283749000,
+            "pub_date": "Fri, 16 Aug 2019 06:03:33 +0000",
+            "anime_eps": "492-493",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][494-495].Sabaody.Archipelago.03.[720p][C19CADF5]",
+            "guid": "6430aeae093534041afca29a08235e92",
+            "size_bytes": 322789000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "494-495",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][496-497].Sabaody.Archipelago.04.[720p][76D21468]",
+            "guid": "a8979054a1c6c1472c65e91bac9a419d",
+            "size_bytes": 325930000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "496-497",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][498-500].Sabaody.Archipelago.05.[720p][7D6E8499]",
+            "guid": "7e661052729a5525b3ef75d2e754b3bb",
+            "size_bytes": 485295000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "498-500",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][501-502].Sabaody.Archipelago.06.[720p][234CBFDC]",
+            "guid": "fab94be2d0dc591342742610e489fef5",
+            "size_bytes": 330265000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "501-502",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][503-504].Sabaody.Archipelago.07.[720p][63A829E4]",
+            "guid": "4d9053bb5d9ea932f65513289b714962",
+            "size_bytes": 245391000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "503-504",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][505-506].Sabaody.Archipelago.08.[720p][873CB57E]",
+            "guid": "4e3baf3a6568956af792ea3fbfe28ea3",
+            "size_bytes": 302621000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "505-506",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][507-508].Sabaody.Archipelago.09.[720p][0E0C5A82]",
+            "guid": "47e32ca8231850ad885ff96af6a9b9a3",
+            "size_bytes": 263658000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "507-508",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][509-511].Sabaody.Archipelago.10.[720p][20ADEE90]",
+            "guid": "7e660bb7757528e84e043c9d16a0386c",
+            "size_bytes": 451807000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "509-511",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 11,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][512-513].Sabaody.Archipelago.11.[720p][1306F53D]",
+            "guid": "e7559f844bce882f24b36beb5cd34238",
+            "size_bytes": 354033000,
+            "pub_date": "Fri, 16 Aug 2019 06:01:41 +0000",
+            "anime_eps": "512-513",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][490-513] Sabaody Archipelago [720p]",
+        "guid": "93e7672bbdd1fa02adf228c91cf7e281",
+        "size_bytes": 3662893000,
+        "pub_date": "Fri, 16 Aug 2019 03:47:20 +0000",
+        "anime_eps": "490-513",
+        "extended": false
+      }
+    ],
+    "title": "Sabaody Archipelago"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][237-238] Skypiea 01 [1080p][CA5552FC]",
+            "guid": "bf00ffcac9088a70151b2f7d91f7c839",
+            "size_bytes": 473734000,
+            "pub_date": "Mon, 12 Jun 2023 10:09:17 +0000",
+            "anime_eps": "237-238",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][239-240] Skypiea 02 [1080p][EB6E8FF5]",
+            "guid": "5ad49da8dc7e07840ef63a830455fea5",
+            "size_bytes": 451735000,
+            "pub_date": "Mon, 12 Jun 2023 10:28:54 +0000",
+            "anime_eps": "239-240",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][241-242] Skypiea 03 [1080p][A50167E6]",
+            "guid": "6016c164c093eef8d9630f14a5f50e81",
+            "size_bytes": 656422000,
+            "pub_date": "Mon, 12 Jun 2023 10:33:16 +0000",
+            "anime_eps": "241-242",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][243-244] Skypiea 04 [1080p][C6120876]",
+            "guid": "ff161ff7acc2aaeab94f680edb9b3092",
+            "size_bytes": 674770000,
+            "pub_date": "Mon, 12 Jun 2023 09:02:52 +0000",
+            "anime_eps": "243-244",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][245-246] Skypiea 05 [1080p][FEA121C3]",
+            "guid": "d1ad99055bab74abaf01e6e3fe0023d1",
+            "size_bytes": 642990000,
+            "pub_date": "Tue, 13 Jun 2023 03:53:38 +0000",
+            "anime_eps": "245-246",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][247-249] Skypiea 06 [1080p][BF59EB14]",
+            "guid": "6ae9901e09d9237fec8eaaa9601471f4",
+            "size_bytes": 992752000,
+            "pub_date": "Sat, 14 Oct 2023 08:20:09 +0000",
+            "anime_eps": "247-249",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][250-251] Skypiea 07 [1080p][3C665F73]",
+            "guid": "f2e807bef5484ebe283ab3e11d98285e",
+            "size_bytes": 597722000,
+            "pub_date": "Fri, 20 Oct 2023 23:38:28 +0000",
+            "anime_eps": "250-251",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][252-254] Skypiea 08 [1080p][236CCF51]",
+            "guid": "a8b1f1dbb8aec8d29530dfe7bbdb7e0c",
+            "size_bytes": 867762000,
+            "pub_date": "Sat, 28 Oct 2023 09:09:17 +0000",
+            "anime_eps": "252-254",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][255-257] Skypiea 09 [1080p][CF0B1E5A]",
+            "guid": "84004e54c5711bfee0fed6b19648491e",
+            "size_bytes": 956628000,
+            "pub_date": "Fri, 17 Nov 2023 22:31:52 +0000",
+            "anime_eps": "255-257",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][258-260] Skypiea 10 [1080p][602704E6]",
+            "guid": "79b1953531fdef01e95f47ab8768b8ca",
+            "size_bytes": 627779000,
+            "pub_date": "Sat, 02 Dec 2023 00:21:36 +0000",
+            "anime_eps": "258-260",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 11,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][261-263].Skypiea.11.[1080p][F0EF6382]",
+            "guid": "e38422d4f8cc2771c67211284a81812f",
+            "size_bytes": 870122000,
+            "pub_date": "Sat, 13 Apr 2024 03:13:31 +0000",
+            "anime_eps": "261-263",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 13,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][266-269].Skypiea.13.[1080p][460CC2CD]",
+            "guid": "0cc17e90865bb4c0f76880a0a6395c38",
+            "size_bytes": 765699000,
+            "pub_date": "Sat, 25 May 2024 02:07:32 +0000",
+            "anime_eps": "266-269",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 14,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][270-273].Skypiea.14.[1080p][702231E9]",
+            "guid": "af5d5cc8324ff7e06b517648684b0f51",
+            "size_bytes": 663134000,
+            "pub_date": "Sat, 22 Jun 2024 02:45:45 +0000",
+            "anime_eps": "270-273",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Skypiea"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][23-25].Syrup.Village.01.[480p][AF592982]",
+            "guid": "4010a3c97353a6ee39a6ca089efec4cf",
+            "size_bytes": 127019000,
+            "pub_date": "Sat, 04 Feb 2017 06:39:27 +0000",
+            "anime_eps": "23-25",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][26-27].Syrup.Village.02.[480p][B487B92A]",
+            "guid": "c91daa3215cfa953b0965679f29ba4d9",
+            "size_bytes": 96720000,
+            "pub_date": "Sat, 04 Feb 2017 06:39:27 +0000",
+            "anime_eps": "26-27",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One Pace][28-30] Syrup Village 03 [480p][BB8FBDB3]",
+            "guid": "8737a361acf5114d88fe7ec18eae142f",
+            "size_bytes": 115525000,
+            "pub_date": "Thu, 22 Jun 2017 17:03:48 +0000",
+            "anime_eps": "28-30",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One Pace][31-34] Syrup Village 04 [480p]3D7C1118]",
+            "guid": "823dcb2c8ae73d7942a93b6841d525f5",
+            "size_bytes": 141114000,
+            "pub_date": "Sun, 16 Jul 2017 07:51:32 +0000",
+            "anime_eps": "31-34",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "480p",
+            "title": "[One.Pace][35-39].Syrup.Village.05.[480p][5498C538]",
+            "guid": "769111eb3ca2c35405d9eff3b422f497",
+            "size_bytes": 176626000,
+            "pub_date": "Mon, 28 May 2018 15:29:35 +0000",
+            "anime_eps": "35-39",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][38-39].Syrup.Village.06.[1080p][D08B41AE]",
+            "guid": "d76a65e0656a2bc72f088f51d10b034b",
+            "size_bytes": 601045000,
+            "pub_date": "Sat, 19 Jul 2025 03:44:59 +0000",
+            "anime_eps": "38-39",
+            "extended": false
+          },
+          {
+            "quality": "480p",
+            "title": "[One.Pace][40-41].Syrup.Village.06.[480p][D1742A98]",
+            "guid": "a0811bbdbd51457b97a3184bd359d47e",
+            "size_bytes": 88226000,
+            "pub_date": "Mon, 28 May 2018 15:29:35 +0000",
+            "anime_eps": "40-41",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][40-41] Syrup Village 07 [1080p][EFCC14E1]",
+            "guid": "e8448ce3290d3d2eb4af1f63882bb0d7",
+            "size_bytes": 606129000,
+            "pub_date": "Sun, 27 Jul 2025 23:54:43 +0000",
+            "anime_eps": "40-41",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "480p",
+        "title": "[One Pace][023-041] Syrup Village [480p]",
+        "guid": "96d66433e39298a47354dfff713caac6",
+        "size_bytes": 757629000,
+        "pub_date": "Wed, 07 Feb 2018 07:26:44 +0000",
+        "anime_eps": "023-041",
+        "extended": false
+      }
+    ],
+    "title": "Syrup Village"
+  },
+  {
+    "episodes": [],
+    "packs": [
+      {
+        "quality": "1080p",
+        "title": "[One Pace][35-75] The Adventures of Buggys Crew [1080p][1177A2B6]",
+        "guid": "771952bbd9feb9fece004caa31d9b015",
+        "size_bytes": 706095000,
+        "pub_date": "Sat, 21 Feb 2026 06:39:06 +0000",
+        "anime_eps": "35-75",
+        "extended": false
+      }
+    ],
+    "title": "The Adventures of Buggy's Crew"
+  },
+  {
+    "episodes": [],
+    "packs": [
+      {
+        "quality": "1080p",
+        "title": "[One Pace][83-119] The Trials of Koby-Meppo [1080p][4B56844F]",
+        "guid": "24505b9cf072c949cbf0b89282d76765",
+        "size_bytes": 392711000,
+        "pub_date": "Sun, 04 Jun 2023 20:07:28 +0000",
+        "anime_eps": "83-119",
+        "extended": false
+      }
+    ],
+    "title": "The Trials of Koby-Meppo"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][909-910].Wano.01.[1080p][F9F0F488]",
+            "guid": "afa8b89f362cec8dadc19a447894e466",
+            "size_bytes": 583407000,
+            "pub_date": "Wed, 08 Apr 2020 04:51:05 +0000",
+            "anime_eps": "909-910",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][909-911].Wano.02.[1080p][453DCC92]",
+            "guid": "779d83d9654389bd3b4fafed2f0ecba5",
+            "size_bytes": 1001512000,
+            "pub_date": "Wed, 08 Apr 2020 04:51:05 +0000",
+            "anime_eps": "909-911",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][911-912].Wano.03.[1080p][6E4E501E]",
+            "guid": "462b7f4d78df60296419a4a407873321",
+            "size_bytes": 1075757000,
+            "pub_date": "Wed, 08 Apr 2020 04:51:05 +0000",
+            "anime_eps": "911-912",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][913].Wano.04.[1080p][23CF2FA6]",
+            "guid": "f306ae454de74ee8dbba2f197406662d",
+            "size_bytes": 762119000,
+            "pub_date": "Wed, 08 Apr 2020 04:51:06 +0000",
+            "anime_eps": "913",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][914-915].Wano.05.[1080p][B51C53E9]",
+            "guid": "9053d9c0fbec4881868dfbd00f880e7b",
+            "size_bytes": 842840000,
+            "pub_date": "Wed, 08 Apr 2020 04:51:06 +0000",
+            "anime_eps": "914-915",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][915-916].Wano.06.[1080p][13E4ABCF]",
+            "guid": "d05f3fcae2cfaebb72c998efc2a04b39",
+            "size_bytes": 777332000,
+            "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+            "anime_eps": "915-916",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][916-917].Wano.07.[1080p][F71F9B71]",
+            "guid": "c9ccf499609341678d411d0c2f66f9a5",
+            "size_bytes": 822082000,
+            "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+            "anime_eps": "916-917",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][918-919].Wano.08.[1080p][6DA86F5F]",
+            "guid": "ecd7738496c1f7b8d2c2c6a2ffee9b60",
+            "size_bytes": 1109485000,
+            "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+            "anime_eps": "918-919",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][919-920].Wano.09.[1080p][5A5E65B1]",
+            "guid": "b78025065af1bab67f34ba0b2aa7de93",
+            "size_bytes": 713973000,
+            "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+            "anime_eps": "919-920",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][921-922].Wano.10.[1080p][0C83A6A1]",
+            "guid": "d50ba410be2de0da2257f6c634bb52a6",
+            "size_bytes": 1045528000,
+            "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+            "anime_eps": "921-922",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 11,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][922-923].Wano.11.[1080p][6A9CF454]",
+            "guid": "25d733ce3922bb8e87928f56fa1c2db8",
+            "size_bytes": 782044000,
+            "pub_date": "Wed, 08 Apr 2020 04:47:48 +0000",
+            "anime_eps": "922-923",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 12,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][924].Wano.12.[1080p][5ACE812A]",
+            "guid": "c5789a7d9d8f989dfaa45d3c5020d8e2",
+            "size_bytes": 643569000,
+            "pub_date": "Wed, 08 Apr 2020 04:47:49 +0000",
+            "anime_eps": "924",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 13,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][925-926].Wano.13.[1080p][DCF7AD65]",
+            "guid": "3370966bd5383f2457c087fcfbe936c5",
+            "size_bytes": 935118000,
+            "pub_date": "Wed, 06 May 2020 12:15:40 +0000",
+            "anime_eps": "925-926",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 14,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][926-927].Wano.14.[1080p][BF92DCAF]",
+            "guid": "8aed1277020f3f6a3c050dd6fde44833",
+            "size_bytes": 1241063000,
+            "pub_date": "Thu, 25 Jun 2020 03:19:19 +0000",
+            "anime_eps": "926-927",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 16,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][930-931].Wano.16.[1080p][9FA61F60]",
+            "guid": "cf6dce0b6b28a0a7f393b3b34f415e95",
+            "size_bytes": 1348462000,
+            "pub_date": "Mon, 27 Jul 2020 09:39:28 +0000",
+            "anime_eps": "930-931",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 17,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][932-933].Wano.17.[1080p][D2E02F36]",
+            "guid": "606ff26bcc0fbe903e0e8674f191d594",
+            "size_bytes": 1721066000,
+            "pub_date": "Fri, 31 Jul 2020 23:20:12 +0000",
+            "anime_eps": "932-933",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 18,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][934-935].Wano.18.[1080p][94F78CF3]",
+            "guid": "18e6bfcae16149cb33b8a91599171b54",
+            "size_bytes": 1367481000,
+            "pub_date": "Wed, 09 Dec 2020 23:34:04 +0000",
+            "anime_eps": "934-935",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 19,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][936-938].Wano.19.[1080p][6C9E8055]",
+            "guid": "6d4a2abf65623437c06d75d8bb664a31",
+            "size_bytes": 1646494000,
+            "pub_date": "Wed, 09 Dec 2020 23:22:41 +0000",
+            "anime_eps": "936-938",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 23,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][943-944] Wano 23 [1080p][37670A03]",
+            "guid": "36e2fcba23c0a86a11b230a0f63e177b",
+            "size_bytes": 2251777000,
+            "pub_date": "Tue, 18 Jan 2022 22:54:10 +0000",
+            "anime_eps": "943-944",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 24,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][944-945] Wano 24 [1080p][1F083723]",
+            "guid": "10055a8380c7530d22dbdc36289579f1",
+            "size_bytes": 1665017000,
+            "pub_date": "Tue, 29 Jun 2021 03:36:47 +0000",
+            "anime_eps": "944-945",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 25,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][946-947] Wano 25 [1080p][C3825063]",
+            "guid": "6e25c4b71ed976728e3977102d825cdb",
+            "size_bytes": 1748441000,
+            "pub_date": "Fri, 10 Sep 2021 06:07:17 +0000",
+            "anime_eps": "946-947",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 26,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][948-949] Wano 26 [1080p][F3E829E8]",
+            "guid": "017ea016d6c7c3f30d0d54ce7364c10d",
+            "size_bytes": 2025761000,
+            "pub_date": "Tue, 18 Jan 2022 22:54:11 +0000",
+            "anime_eps": "948-949",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 31,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][956] Wano 31 [1080p][F6C7EB83]",
+            "guid": "995d51dbf00d392b03526117e14996bf",
+            "size_bytes": 1042691000,
+            "pub_date": "Tue, 27 Jun 2023 03:29:16 +0000",
+            "anime_eps": "956",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 32,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][957] Wano 32 [1080p][29B91F56]",
+            "guid": "d75a61690f19b84cb04c61f96e82b95e",
+            "size_bytes": 854633000,
+            "pub_date": "Sat, 22 Jul 2023 02:44:10 +0000",
+            "anime_eps": "957",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 33,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][958-959] Wano 33 [1080p][E3AB2BA0]",
+            "guid": "e76a5e5a577b8c4940f211aff7034499",
+            "size_bytes": 1617711000,
+            "pub_date": "Sat, 02 Sep 2023 00:10:08 +0000",
+            "anime_eps": "958-959",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 34,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][960-961].Wano.34.[1080p][224B7846]",
+            "guid": "0fe4846257cc1a6c5d6975fc152fdc88",
+            "size_bytes": 1417748000,
+            "pub_date": "Sun, 24 Sep 2023 09:51:08 +0000",
+            "anime_eps": "960-961",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 35,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][962-963] Wano 35 [1080p][98B5E26D]",
+            "guid": "27bb40436adf6cea74ceae06c5bc46a5",
+            "size_bytes": 2063721000,
+            "pub_date": "Sat, 11 Nov 2023 04:36:59 +0000",
+            "anime_eps": "962-963",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 36,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][964-965] Wano 36 [1080p][BAFFE801]",
+            "guid": "88e34b2ed13021d799d71580f38cd4fc",
+            "size_bytes": 1883024000,
+            "pub_date": "Sat, 09 Dec 2023 03:39:12 +0000",
+            "anime_eps": "964-965",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 37,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][965-966] Wano 37 [1080p][AD8C9C16]",
+            "guid": "ff394bd90837f9e78dc84efa3c8e9485",
+            "size_bytes": 2246183000,
+            "pub_date": "Sat, 16 Dec 2023 04:05:14 +0000",
+            "anime_eps": "965-966",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 38,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][967].Wano.38.[1080p][298A4284]",
+            "guid": "68655c116000f48eeef289887c7324f4",
+            "size_bytes": 1199407000,
+            "pub_date": "Sat, 27 Jan 2024 02:41:40 +0000",
+            "anime_eps": "967",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 40,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][970-972].Wano.40.[1080p][713F7916]",
+            "guid": "ff24a17ba84edca390363dbb602b6dfd",
+            "size_bytes": 2714889000,
+            "pub_date": "Sat, 11 May 2024 04:03:09 +0000",
+            "anime_eps": "970-972",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 53,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][996-997].Wano.53.[1080p][C99E7631]",
+            "guid": "6ab452987e6673266181221f5680a95e",
+            "size_bytes": 1816655000,
+            "pub_date": "Sat, 19 Jul 2025 03:39:56 +0000",
+            "anime_eps": "996-997",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 54,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][998-999] Wano 54 [1080p][79C6DC33]",
+            "guid": "dc3c52696390f68faf9cda3f5cc023a6",
+            "size_bytes": 1883099000,
+            "pub_date": "Mon, 15 Sep 2025 08:16:32 +0000",
+            "anime_eps": "998-999",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 55,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][1000] Wano 55 Extended [1080p][425F93B9]",
+            "guid": "b75587b7bb884dd02cfc6f4902e66596",
+            "size_bytes": 853325000,
+            "pub_date": "Sun, 28 Sep 2025 00:24:05 +0000",
+            "anime_eps": "1000",
+            "extended": true
+          }
+        ]
+      },
+      {
+        "ep": 58,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][1005-1006] Wano 58 [1080p][A0FCAB46]",
+            "guid": "da7cd864ee207730a8803ed8654443d3",
+            "size_bytes": 1697084000,
+            "pub_date": "Sat, 21 Feb 2026 06:32:57 +0000",
+            "anime_eps": "1005-1006",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 59,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][1007-1008] Wano 59 [1080p][2ED1FD82]",
+            "guid": "e2717ac6c22e6b325319261cc13a332d",
+            "size_bytes": 1615939000,
+            "pub_date": "Mon, 23 Mar 2026 00:09:23 +0000",
+            "anime_eps": "1007-1008",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Wano"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][322-324].Water.Seven.01.[1080p][9101CF0E]",
+            "guid": "e72326af82e466d3dc9f1df1245cd9a5",
+            "size_bytes": 941616000,
+            "pub_date": "Fri, 04 Sep 2020 02:23:11 +0000",
+            "anime_eps": "322-324",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][324-326].Water.Seven.02.[1080p][763C1FA8]",
+            "guid": "ef7609f02c286d41ed3eb5f3ebc8aaf8",
+            "size_bytes": 999917000,
+            "pub_date": "Mon, 22 Feb 2021 07:22:03 +0000",
+            "anime_eps": "324-326",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][326-329].Water.Seven.03.[1080p][01874097]",
+            "guid": "96ec560d8cb872d4cc0e3b47ec671906",
+            "size_bytes": 1451667000,
+            "pub_date": "Mon, 22 Feb 2021 07:25:04 +0000",
+            "anime_eps": "326-329",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][340-342] Water Seven 08 [1080p][6E2DB1B9]",
+            "guid": "dd466b20d5af2f9201f39151328cffbc",
+            "size_bytes": 756200000,
+            "pub_date": "Tue, 22 Jun 2021 06:25:06 +0000",
+            "anime_eps": "340-342",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][342-345].Water.Seven.09.[1080p][F96F0A4A]",
+            "guid": "a279b6ceccf1c2321058cfd45703620b",
+            "size_bytes": 1170043000,
+            "pub_date": "Tue, 27 Jul 2021 06:09:42 +0000",
+            "anime_eps": "342-345",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][346-348] Water Seven 10 [1080p][BAFD9522]",
+            "guid": "c62f889c8959b38bfc77558365f9e949",
+            "size_bytes": 947740000,
+            "pub_date": "Sun, 05 Dec 2021 15:37:21 +0000",
+            "anime_eps": "346-348",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 11,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][349-352] Water Seven 11 [1080p][0D273612]",
+            "guid": "5d1183849615181ae11c327dee38ae5b",
+            "size_bytes": 1155115000,
+            "pub_date": "Fri, 28 Jan 2022 10:14:37 +0000",
+            "anime_eps": "349-352",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 14,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][358-359] Water Seven 14 [1080p][203E5D6E]",
+            "guid": "a9f21e7db8fb9fb5c5e97a291f765819",
+            "size_bytes": 715577000,
+            "pub_date": "Sat, 04 Nov 2023 07:39:40 +0000",
+            "anime_eps": "358-359",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 15,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One Pace][360-362] Water Seven 15 [1080p][87F0C48B]",
+            "guid": "e4829fd52fe04cf02340db3b00d17cae",
+            "size_bytes": 1121134000,
+            "pub_date": "Fri, 22 Dec 2023 22:35:44 +0000",
+            "anime_eps": "360-362",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 16,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][363-365].Water.Seven.16.[1080p][AF5B5194]",
+            "guid": "392ce604d293a588f730cb4730e8fc86",
+            "size_bytes": 1092278000,
+            "pub_date": "Sun, 04 Feb 2024 03:05:27 +0000",
+            "anime_eps": "363-365",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 17,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][366-367].Water.Seven.17.[1080p][AB231A9E]",
+            "guid": "841d44b2427f01cd82414da9541db06f",
+            "size_bytes": 1235003000,
+            "pub_date": "Sat, 17 Feb 2024 01:39:14 +0000",
+            "anime_eps": "366-367",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 18,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][368-369].Water.Seven.18.[1080p][47D68652]",
+            "guid": "ab37a2486b3547f881e7e010af5a70be",
+            "size_bytes": 773534000,
+            "pub_date": "Fri, 23 Feb 2024 23:53:39 +0000",
+            "anime_eps": "368-369",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 19,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][370-371].Water.Seven.19.[1080p][1206A42A]",
+            "guid": "a87c08322471b6bb4067fbfdead16194",
+            "size_bytes": 1022611000,
+            "pub_date": "Sat, 02 Mar 2024 02:31:40 +0000",
+            "anime_eps": "370-371",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 20,
+        "qualities": [
+          {
+            "quality": "1080p",
+            "title": "[One.Pace][372-374].Water.Seven.20.[1080p][F0FBC907]",
+            "guid": "e360d72494945dd7dfc246abdbb7e9a5",
+            "size_bytes": 1360776000,
+            "pub_date": "Sat, 16 Mar 2024 16:32:24 +0000",
+            "anime_eps": "372-374",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [],
+    "title": "Water Seven"
+  },
+  {
+    "episodes": [],
+    "packs": [
+      {
+        "quality": "480p",
+        "title": "[One Pace][106-114] Whiskey Peak [480p]",
+        "guid": "ca2fb9772fdcc4a46e8565612ef492da",
+        "size_bytes": 313336000,
+        "pub_date": "Sun, 20 Aug 2017 05:38:50 +0000",
+        "anime_eps": "106-114",
+        "extended": false
+      }
+    ],
+    "title": "Whisky Peak"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][823-824].Whole.Cake.Island.01.[720p][3F24A1D8]",
+            "guid": "3b8822f57560a7ec94ad9b3330d7d6b5",
+            "size_bytes": 250312000,
+            "pub_date": "Fri, 11 Dec 2020 05:02:06 +0000",
+            "anime_eps": "823-824",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][825-826].Whole.Cake.Island.02.[720p][837E2CA1]",
+            "guid": "404b318a748f0a491cd3d35d70b65263",
+            "size_bytes": 237499000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "825-826",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][827-828].Whole.Cake.Island.03.[720p][B8A08E6D]",
+            "guid": "616e5cb948107b2326a5f87f07ea4524",
+            "size_bytes": 223074000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "827-828",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][829-830].Whole.Cake.Island.04.[720p][A0EEC801]",
+            "guid": "80dbc94821d05709be8f2be4677e7d8e",
+            "size_bytes": 244652000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "829-830",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][831-832].Whole.Cake.Island.05.[720p][DF6B6FEC]",
+            "guid": "99a64557f9b9ac940f25ab9ab1418b0e",
+            "size_bytes": 270669000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "831-832",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][833-834].Whole.Cake.Island.06.[720p][7FC1F643]",
+            "guid": "776146f58411f1f3405dd1e4350a1b59",
+            "size_bytes": 234576000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "833-834",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][835-836].Whole.Cake.Island.07.[720p][37E1B3D1]",
+            "guid": "5fb94fcb192b3cac8282ed1d09345e46",
+            "size_bytes": 272398000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "835-836",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][837-838].Whole.Cake.Island.08.[720p][31018FCB]",
+            "guid": "961ecc70d70118c0a0300567e5c24c82",
+            "size_bytes": 253072000,
+            "pub_date": "Fri, 11 Dec 2020 05:43:59 +0000",
+            "anime_eps": "837-838",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][839-840].Whole.Cake.Island.09.[720p][0CE63D1F]",
+            "guid": "f8c6a6cef16dd0652ef08b60a62fe41b",
+            "size_bytes": 207404000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:10 +0000",
+            "anime_eps": "839-840",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][841-842].Whole.Cake.Island.10.[720p][E123D314]",
+            "guid": "c3a60ef441ccec9447990c5418b0e942",
+            "size_bytes": 309228000,
+            "pub_date": "Fri, 11 Dec 2020 05:28:37 +0000",
+            "anime_eps": "841-842",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 11,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][843-844].Whole.Cake.Island.11.[720p][4A6DFB78]",
+            "guid": "1a533a893f7aaff771a9b8cfa5c29494",
+            "size_bytes": 239074000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "843-844",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 12,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][845-846].Whole.Cake.Island.12.[720p][86CA1E99]",
+            "guid": "01df19d3ce3ee3cb14ac93632e6f1fd3",
+            "size_bytes": 258767000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "845-846",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 13,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][847-848].Whole.Cake.Island.13.[720p][34772777]",
+            "guid": "b7c529bcf1ddd3310b8bbae44f532bcb",
+            "size_bytes": 238601000,
+            "pub_date": "Thu, 11 Apr 2019 17:00:38 +0000",
+            "anime_eps": "847-848",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 14,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][849-850].Whole.Cake.Island.14.[720p][0AF54CB5]",
+            "guid": "910807d4eb62f618d7dfcf681937b035",
+            "size_bytes": 263486000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:10 +0000",
+            "anime_eps": "849-850",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 15,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][851-852].Whole.Cake.Island.15.[720p][0E2022E4]",
+            "guid": "e76d51dd872c84d6602167e426ea6c72",
+            "size_bytes": 247547000,
+            "pub_date": "Fri, 11 Dec 2020 05:43:59 +0000",
+            "anime_eps": "851-852",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 16,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][853-854].Whole.Cake.Island.16.[720p][A8E42FE1]",
+            "guid": "24db450ed03bb0341b56737538616dea",
+            "size_bytes": 216114000,
+            "pub_date": "Fri, 11 Dec 2020 05:28:37 +0000",
+            "anime_eps": "853-854",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 17,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][855-856].Whole.Cake.Island.17.[720p][0CF96D5A]",
+            "guid": "bb343b98c6b27764f1799391db32cb92",
+            "size_bytes": 258005000,
+            "pub_date": "Fri, 11 Dec 2020 05:28:38 +0000",
+            "anime_eps": "855-856",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 18,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][857-858] Whole Cake Island 18 [720p][A94AF722]",
+            "guid": "371e6c25fade978383c92d8c18925be8",
+            "size_bytes": 265638000,
+            "pub_date": "Tue, 31 Jul 2018 18:19:57 +0000",
+            "anime_eps": "857-858",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 19,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][859-860].Whole.Cake.Island.19.[720p][2F8600E4]",
+            "guid": "7e14cd7c7a4bd5436ca0734fc5ec5bbb",
+            "size_bytes": 266655000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "859-860",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 20,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][861-862] Whole Cake Island 20 [720p][FB8F3643]",
+            "guid": "54a1b6a02affeb99590c21c44a9d6617",
+            "size_bytes": 227850000,
+            "pub_date": "Wed, 17 Oct 2018 18:34:28 +0000",
+            "anime_eps": "861-862",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 21,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][863-864] Whole Cake Island 21 [720p][CEC099DE]",
+            "guid": "50f420eea64d527ea6e80ae449e32bec",
+            "size_bytes": 282374000,
+            "pub_date": "Tue, 20 Nov 2018 21:29:23 +0000",
+            "anime_eps": "863-864",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 22,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][865-866].Whole.Cake.Island.22.[720p][72B13A22]",
+            "guid": "f3f81c1e119f73e5c2c5ddc950d5d00e",
+            "size_bytes": 271049000,
+            "pub_date": "Tue, 27 Nov 2018 11:29:31 +0000",
+            "anime_eps": "865-866",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 23,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][867-868] Whole Cake Island 23 [720p][0A99AFB4]",
+            "guid": "f984b475e9b87325f292134aef035656",
+            "size_bytes": 304682000,
+            "pub_date": "Thu, 13 Dec 2018 05:19:22 +0000",
+            "anime_eps": "867-868",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 24,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][869-870].Whole.Cake.Island.24.[720p][4378CF27]",
+            "guid": "0ce6a4af08f38959adb74a68f83bf123",
+            "size_bytes": 301439000,
+            "pub_date": "Mon, 31 Dec 2018 07:25:34 +0000",
+            "anime_eps": "869-870",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 25,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][870-872].Whole.Cake.Island.25.[720p][D9C8EECA]",
+            "guid": "3aaedf159add72c67439755918415b4c",
+            "size_bytes": 320914000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "870-872",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 26,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][873-874].Whole.Cake.Island.26.[720p][3715392E]",
+            "guid": "0bde000667604f64d1b25ccbff70749a",
+            "size_bytes": 295153000,
+            "pub_date": "Tue, 05 Feb 2019 12:18:07 +0000",
+            "anime_eps": "873-874",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 27,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][875-876].Whole.Cake.Island.27.[720p][622C0683]",
+            "guid": "a40b6d32000e222aa8d0a833b40cf98a",
+            "size_bytes": 350167000,
+            "pub_date": "Sat, 09 Feb 2019 11:54:20 +0000",
+            "anime_eps": "875-876",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 28,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][877-878].Whole.Cake.Island.28.[720p][ACB7B61D]",
+            "guid": "a4491475b5f49cf6bcb3898fa9db1988",
+            "size_bytes": 266511000,
+            "pub_date": "Fri, 15 Feb 2019 11:23:59 +0000",
+            "anime_eps": "877-878",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 29,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][879-880].Whole.Cake.Island.29.[720p][BBB1DBD9]",
+            "guid": "937bbef31dcb363e8bbb1d5e771abc60",
+            "size_bytes": 257275000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:08 +0000",
+            "anime_eps": "879-880",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 30,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][881-883].Whole.Cake.Island.30.[720p][71FF0B55]",
+            "guid": "c0d6ed0cb8d78adac441a001fb43ad57",
+            "size_bytes": 277147000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "881-883",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 31,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][883-884].Whole.Cake.Island.31.[720p][0CAEBD5B]",
+            "guid": "88cbe64d19d21b97995dacd6e5c57aba",
+            "size_bytes": 297026000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "883-884",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 32,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][885-886].Whole.Cake.Island.32.[720p][EEA7A87F]",
+            "guid": "ce0bf049008347e223a1488859bc10e0",
+            "size_bytes": 294016000,
+            "pub_date": "Wed, 27 Feb 2019 10:01:02 +0000",
+            "anime_eps": "885-886",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 33,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][887-888].Whole.Cake.Island.33.[720p][7CE5E547]",
+            "guid": "4afe9137b7ff744bcef94afb249b3c23",
+            "size_bytes": 248193000,
+            "pub_date": "Wed, 27 Feb 2019 10:01:02 +0000",
+            "anime_eps": "887-888",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 34,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][889-891].Whole.Cake.Island.34.[720p][A3939979]",
+            "guid": "3e3b3804c5af09925d84cd5f24974447",
+            "size_bytes": 332710000,
+            "pub_date": "Fri, 11 Dec 2020 05:32:31 +0000",
+            "anime_eps": "889-891",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 35,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][891-893].Whole.Cake.Island.35.[720p][CDEBF3F8]",
+            "guid": "6e2ec17a1e15a1244a1867057e0b9b04",
+            "size_bytes": 298535000,
+            "pub_date": "Thu, 11 Apr 2019 05:12:09 +0000",
+            "anime_eps": "891-893",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 36,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][892-895] Whole Cake Island 36 [720p][B9B84ED5]",
+            "guid": "b8df42620945975719a6b77f9ffe51f0",
+            "size_bytes": 348191000,
+            "pub_date": "Sun, 03 Mar 2019 22:32:26 +0000",
+            "anime_eps": "892-895",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 37,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][896-897] Whole Cake Island 37 [720p][CF4FCE05]",
+            "guid": "4b71248b219b0c83e91aa192630e9188",
+            "size_bytes": 221364000,
+            "pub_date": "Wed, 06 Mar 2019 00:30:50 +0000",
+            "anime_eps": "896-897",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 38,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][898-900].Whole.Cake.Island.38.[720p][914E7EA6]",
+            "guid": "b1a8922d5553e93af8a8608ec99a124c",
+            "size_bytes": 393405000,
+            "pub_date": "Sun, 05 May 2019 02:54:57 +0000",
+            "anime_eps": "898-900",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 39,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][901-902].Whole.Cake.Island.39.[720p][ADF1B361]",
+            "guid": "17b59c5a747e95cdfa962fe65b154130",
+            "size_bytes": 296526000,
+            "pub_date": "Thu, 11 Apr 2019 05:06:40 +0000",
+            "anime_eps": "901-902",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One.Pace][823-824].Whole.Cake.Island.01v2.[720p][2CA0B607]",
+        "guid": "b0a67a00ca0b6665de990330dfeda26f",
+        "size_bytes": 241217000,
+        "pub_date": "Tue, 05 Feb 2019 12:18:07 +0000",
+        "anime_eps": "823-824",
+        "extended": false
+      }
+    ],
+    "title": "Whole Cake Island"
+  },
+  {
+    "episodes": [
+      {
+        "ep": 1,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][802-803] Zou 01 [720p][AE19A3A0]",
+            "guid": "0fb73637c4744dde86d12ab2e0b9630d",
+            "size_bytes": 172091000,
+            "pub_date": "Fri, 26 Aug 2016 01:39:47 +0000",
+            "anime_eps": "802-803",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 2,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][804-805] Zou 02 [720p][32150FF4]",
+            "guid": "e00cbc7ed2b61251b809c3c23378c89d",
+            "size_bytes": 226578000,
+            "pub_date": "Fri, 09 Sep 2016 21:50:55 +0000",
+            "anime_eps": "804-805",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 3,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][806-807].Zou.03.[720p][E4B077F8]",
+            "guid": "79a3e0c257c7dddb4b5013d2819c3377",
+            "size_bytes": 352659000,
+            "pub_date": "Fri, 30 Sep 2016 23:36:44 +0000",
+            "anime_eps": "806-807",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 4,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][808-809] Zou 04 [720p][A4F76B13]",
+            "guid": "93414348c9e204a76611e49dd1659515",
+            "size_bytes": 210517000,
+            "pub_date": "Sun, 23 Oct 2016 00:02:47 +0000",
+            "anime_eps": "808-809",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 5,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][810-811].Zou.05.[720p][7149D13F]",
+            "guid": "a28851179c35108c34c24569784ed6c4",
+            "size_bytes": 219735000,
+            "pub_date": "Wed, 16 Nov 2016 03:26:46 +0000",
+            "anime_eps": "810-811",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 6,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One Pace][812-813] Zou 06 [720p][7F73DB45]",
+            "guid": "dc8dbefa1b62e295f41a8276760c1fc5",
+            "size_bytes": 213835000,
+            "pub_date": "Thu, 24 Nov 2016 03:22:30 +0000",
+            "anime_eps": "812-813",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 7,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][814-815].Zou.07.[720p][55837445]",
+            "guid": "906a1a04dcc5656835a0ae1fc9b3126a",
+            "size_bytes": 237044000,
+            "pub_date": "Mon, 30 Apr 2018 19:12:08 +0000",
+            "anime_eps": "814-815",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 8,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][816-817].Zou.08.[720p][5B2AAFBF]",
+            "guid": "3c7f9d7855b6f78f6510f7a13be14a8d",
+            "size_bytes": 223280000,
+            "pub_date": "Sun, 25 Dec 2016 08:53:07 +0000",
+            "anime_eps": "816-817",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 9,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][818-819].Zou.09.[720p][0880B38F]",
+            "guid": "eee3237e1bd4e6052c8571d6794616f5",
+            "size_bytes": 210752000,
+            "pub_date": "Sat, 28 Jan 2017 00:31:34 +0000",
+            "anime_eps": "818-819",
+            "extended": false
+          }
+        ]
+      },
+      {
+        "ep": 10,
+        "qualities": [
+          {
+            "quality": "720p",
+            "title": "[One.Pace][820-822].Zou.10.[720p][4A52B138]",
+            "guid": "14ff09d3643b8904daadb7d778b2ae86",
+            "size_bytes": 349114000,
+            "pub_date": "Sat, 04 Mar 2017 01:13:28 +0000",
+            "anime_eps": "820-822",
+            "extended": false
+          }
+        ]
+      }
+    ],
+    "packs": [
+      {
+        "quality": "720p",
+        "title": "[One Pace][801-822] Zou [720p]",
+        "guid": "cb8a47e8ff46d9e408d377d7c976f4df",
+        "size_bytes": 2477670000,
+        "pub_date": "Mon, 30 Apr 2018 15:13:58 +0000",
+        "anime_eps": "801-822",
+        "extended": false
+      }
+    ],
+    "title": "Zou"
+  }
+]

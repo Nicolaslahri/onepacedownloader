@@ -1,0 +1,92 @@
+name: Refresh episode index
+
+# Rebuilds the episode catalog once a week and publishes it to the `data`
+# branch, which every install of the Windows and Docker apps downloads.
+#
+# Usenet is not refreshed here because that needs a private API key; the
+# usenet_arcs.json committed in catalog/ is merged in as-is.
+#
+# A manual run from any branch other than main builds the catalog but does
+# not publish it.
+
+on:
+  schedule:
+    # Sundays at 03:00 UTC — quiet hours globally.
+    - cron: '0 3 * * 0'
+  # Manual trigger from the Actions tab for ad-hoc refreshes.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install -r catalog/requirements.txt
+
+      - name: Refresh catalogs + rebuild episode index
+        run: python catalog/refresh.py
+
+      - name: Stash freshly built data
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/out"
+          cp catalog/episode_index.json "$RUNNER_TEMP/out/"
+          cp catalog/arcs.json          "$RUNNER_TEMP/out/"
+          cp catalog/nyaa_arcs.json     "$RUNNER_TEMP/out/"
+          cp catalog/usenet_arcs.json   "$RUNNER_TEMP/out/" || true
+
+      - name: Publish to the data branch
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          # Publish from a throwaway clone in a temp dir so the build
+          # checkout above is never disturbed by branch switching.
+          cd "$RUNNER_TEMP"
+          git clone --quiet \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            pub
+          cd pub
+          git config user.name  "onepace-bot"
+          git config user.email "onepace-bot@users.noreply.github.com"
+
+          # Switch to (or create) the data branch.
+          if git ls-remote --exit-code --heads origin data >/dev/null 2>&1; then
+            git fetch --quiet origin data
+            git checkout --quiet data
+          else
+            git checkout --quiet --orphan data
+            git rm -rqf . 2>/dev/null || true
+            echo "# Auto-managed data branch" > README.md
+            echo "" >> README.md
+            echo "Rebuilt weekly by .github/workflows/refresh-index.yml on \`main\`. Do not edit by hand." >> README.md
+          fi
+
+          # Drop the freshly built files in place.
+          cp "$RUNNER_TEMP/out/episode_index.json" .
+          cp "$RUNNER_TEMP/out/arcs.json"          .
+          cp "$RUNNER_TEMP/out/nyaa_arcs.json"     .
+          cp "$RUNNER_TEMP/out/usenet_arcs.json"   . 2>/dev/null || true
+
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No content changes — nothing to publish."
+            exit 0
+          fi
+          git commit --quiet -m "Auto-refresh index: $(date -u +%Y-%m-%d)"
+          git push --quiet origin data
+          echo "Published refreshed index to the data branch."

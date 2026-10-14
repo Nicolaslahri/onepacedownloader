@@ -1,0 +1,286 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:local="clr-namespace:OnePace.App">
+
+    <!-- Chip colours that WPF-UI has no token for. ThemeBrushes swaps them
+         when the theme or accent changes. -->
+    <SolidColorBrush x:Key="ChipSubBackground" Color="#2A4D6E" />
+    <SolidColorBrush x:Key="ChipSubForeground" Color="#99EBFF" />
+    <SolidColorBrush x:Key="ChipDubBackground" Color="#3D2F57" />
+    <SolidColorBrush x:Key="ChipDubForeground" Color="#D7B8FF" />
+    <SolidColorBrush x:Key="SelectionPillBrush" Color="#60CDFF" />
+
+    <local:BoolToVisibility x:Key="Visible" />
+    <local:BoolToVisibility x:Key="Collapsed" Invert="True" />
+    <local:InverseBool x:Key="Not" />
+    <local:SelectedTag x:Key="SelectedTag" />
+    <local:AtMostTwo x:Key="AtMostTwo" />
+    <local:NullToVisibility x:Key="VisibleIfSet" />
+    <local:NullToVisibility x:Key="CollapsedIfSet" Invert="True" />
+
+    <!-- Type ramp (Windows 11) -->
+    <Style x:Key="TitleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+    <Style x:Key="SubtitleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="BodyStrongText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+    <Style x:Key="BodyText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+    <Style x:Key="SecondaryText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="CaptionText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    </Style>
+    <Style x:Key="TertiaryCaption" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+    </Style>
+    <Style x:Key="EyebrowText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <!-- Card surface used across the details pane and settings. -->
+    <Style x:Key="CardBorder" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <!-- Small tag: Sub / Dub / quality / Official / Saved. -->
+    <Style TargetType="local:Chip">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:Chip">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="6,1,6,2">
+                        <TextBlock Text="{TemplateBinding Text}" Foreground="{TemplateBinding Foreground}"
+                                   FontSize="{TemplateBinding FontSize}" FontWeight="SemiBold" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Kind" Value="Sub">
+                <Setter Property="Background" Value="{DynamicResource ChipSubBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource ChipSubForeground}" />
+            </Trigger>
+            <Trigger Property="Kind" Value="Dub">
+                <Setter Property="Background" Value="{DynamicResource ChipDubBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource ChipDubForeground}" />
+            </Trigger>
+            <Trigger Property="Kind" Value="Ok">
+                <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+            </Trigger>
+            <Trigger Property="Kind" Value="None">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- List rows that look like a NavigationView item: subtle hover, a
+         filled selection and the accent pill on the left. -->
+    <Style x:Key="NavListItem" TargetType="ListBoxItem">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Margin" Value="4,1" />
+        <Setter Property="Padding" Value="12,0,12,0" />
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid>
+                        <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="4" />
+                        <Border x:Name="Focus" CornerRadius="4" BorderThickness="2" Visibility="Collapsed"
+                                BorderBrush="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <Border x:Name="Pill" Width="3" Height="16" CornerRadius="1.5" HorizontalAlignment="Left"
+                                VerticalAlignment="Center" Background="{DynamicResource SelectionPillBrush}"
+                                Visibility="Collapsed" />
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+                            <Setter TargetName="Pill" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Focus" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsKeyboardFocused" Value="True" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Focus" Property="Visibility" Value="Collapsed" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NavList" TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource NavListItem}" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+        <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling" />
+        <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBox">
+                    <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}" CanContentScroll="True">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Footer items in the navigation pane (DNS, Refresh, Settings…). -->
+    <Style x:Key="NavButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Margin" Value="4,1" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="4" />
+                        <Border x:Name="Focus" CornerRadius="4" BorderThickness="2" Visibility="Collapsed"
+                                BorderBrush="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <Border x:Name="Pill" Width="3" Height="16" CornerRadius="1.5" HorizontalAlignment="Left"
+                                Background="{DynamicResource SelectionPillBrush}" Visibility="Collapsed" />
+                        <ContentPresenter Margin="{TemplateBinding Padding}" VerticalAlignment="Center"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
+                        </Trigger>
+                        <Trigger Property="Tag" Value="Selected">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+                            <Setter TargetName="Pill" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Focus" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Plain text button (status bar "Open", explainer links). -->
+    <Style x:Key="LinkButton" TargetType="Button">
+        <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Opacity" Value="0.8" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Discord / Reddit / GitHub in their brand colours. -->
+    <Style x:Key="BrandButton" TargetType="Button">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="Margin" Value="0,0,6,0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Opacity" Value="0.88" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Opacity" Value="0.75" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- A stat tile: big number over a small label. -->
+    <Style x:Key="StatValue" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+</ResourceDictionary>

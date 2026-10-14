@@ -1,0 +1,29 @@
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: Catalog and Docker app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: pip install pyflakes pytest -r catalog/requirements.txt
+
+      - name: Lint (pyflakes)
+        run: pyflakes catalog docker/app tests
+
+      - name: Unit tests
+        run: pytest -q tests
+
+      - name: Web UI syntax
+        run: node --check docker/app/static/app.js

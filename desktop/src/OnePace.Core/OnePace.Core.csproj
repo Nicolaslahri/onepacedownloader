@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>OnePace.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Hashing" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\isrg-roots.pem" LogicalName="isrg-roots.pem" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="OnePace.Core.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,78 @@
+"""Settings endpoints — download defaults + external-app integrations."""
+
+from __future__ import annotations
+
+from fastapi import APIRouter
+
+from ..config import (
+    APP_VERSION,
+    DEFAULT_QUALITY,
+    DEFAULT_VERSION,
+    GIT_SHA,
+    MEDIA_DIR,
+    QUALITIES,
+    VERSIONS,
+    get_setting,
+    load_config,
+    save_config,
+)
+from ..core.models import SettingsPayload
+
+router = APIRouter(prefix="/api/settings", tags=["settings"])
+
+# Integration keys persisted in config.json (resolved via get_setting()).
+_INTEGRATION_KEYS = (
+    "sabnzbd_url", "sabnzbd_api_key", "sabnzbd_category",
+    "qbittorrent_url", "qbittorrent_user", "qbittorrent_pass",
+    "qbittorrent_category",
+    "nzbgeek_url", "nzbgeek_api_key",
+)
+# Never sent back to the browser: anyone who can open the page could read
+# them. GET reports only whether each is set, and an empty value on PUT
+# leaves the saved one alone.
+_SECRET_KEYS = ("sabnzbd_api_key", "qbittorrent_pass", "nzbgeek_api_key")
+
+
+@router.get("")
+def get_settings():
+    """Return current settings — download defaults + integration config +
+    a small block of "About" info (app version, build, last index refresh)
+    so the Settings panel can surface it."""
+    cfg = load_config()
+    out = {
+        "version": cfg.get("default_version", DEFAULT_VERSION),
+        "quality": cfg.get("default_quality", DEFAULT_QUALITY),
+        "organize": cfg.get("organize", True),
+        "media_dir": str(MEDIA_DIR),
+        "available_versions": VERSIONS,
+        "available_qualities": QUALITIES,
+        "app_version": APP_VERSION,
+        "build_sha": (GIT_SHA[:7] if GIT_SHA and GIT_SHA != "dev" else "dev"),
+        "last_refresh": (cfg.get("refresh_cache") or {}).get("last_refresh", ""),
+    }
+    for key in _INTEGRATION_KEYS:
+        if key in _SECRET_KEYS:
+            out[key] = ""
+            out[f"{key}_set"] = bool(get_setting(cfg, key))
+        else:
+            out[key] = get_setting(cfg, key)
+    return out
+
+
+@router.put("")
+def update_settings(payload: SettingsPayload):
+    """Persist any provided settings into config.json."""
+    cfg = load_config()
+    if payload.version is not None:
+        cfg["default_version"] = payload.version
+    if payload.quality is not None:
+        cfg["default_quality"] = payload.quality
+    if payload.organize is not None:
+        cfg["organize"] = payload.organize
+    for key in _INTEGRATION_KEYS:
+        val = getattr(payload, key, None)
+        if val is None or (key in _SECRET_KEYS and val == ""):
+            continue
+        cfg[key] = val
+    save_config(cfg)
+    return {"saved": True}

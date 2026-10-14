@@ -1,0 +1,6 @@
+# Runtime / local-test artifacts — not part of the source
+config/
+test_media/
+test_config/
+__pycache__/
+*.pyc

@@ -1,0 +1,29 @@
+name: Download check
+
+# Makes sure every One Pace and Muhn Pace episode in the published catalog can
+# still be downloaded, using the app's own downloader code: every Pixeldrain
+# album is listed and every file matched, both hosts are sampled, and a few
+# episodes are downloaded in full with their CRC32 checked.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  pull_request:
+    paths:
+      - "desktop/src/OnePace.Core/**"
+      - "desktop/tools/OnePace.Verify/**"
+      - ".github/workflows/download-check.yml"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Check every episode
+        run: dotnet run -c Release --project desktop/tools/OnePace.Verify -- --full 3 --summary "$GITHUB_STEP_SUMMARY"

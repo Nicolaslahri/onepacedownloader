@@ -1,0 +1,66 @@
+name: Release
+
+# Builds OnePaceDownloader.exe on Windows and publishes it as a GitHub
+# release. Run it from the Actions tab with the version to release; the tag
+# is created from the commit the run is on.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, e.g. 3.0.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Check version matches the app
+        shell: pwsh
+        run: |
+          $v = "${{ inputs.version }}"
+          if (-not (Select-String -Path desktop/Directory.Build.props -Pattern "<Version>$v</Version>" -Quiet)) {
+            throw "<Version> in desktop/Directory.Build.props is not $v"
+          }
+
+      - name: Bundle the latest episode index
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/${{ github.repository }}/data/episode_index.json" -OutFile catalog/episode_index.new.json
+          $d = Get-Content catalog/episode_index.new.json -Raw | ConvertFrom-Json
+          if ($d.arcs.Count -gt 0) { Move-Item -Force catalog/episode_index.new.json catalog/episode_index.json }
+
+      - name: Test
+        run: dotnet test desktop/tests/OnePace.Core.Tests -c Release
+
+      - name: Build
+        run: >
+          dotnet publish desktop/src/OnePace.App -c Release -r win-x64 --self-contained
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true -p:DebugType=none -o dist
+
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $v = "${{ inputs.version }}"
+          $exe = "dist/OnePaceDownloader.exe"
+          $sha = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLower()
+          $notes = "release-notes/v$v.md"
+          if (-not (Test-Path $notes)) { $notes = $null }
+          $body = if ($notes) { Get-Content $notes -Raw } else { "" }
+          $body += "`n`n---`n`n**SHA256:** ``$sha``"
+          Set-Content -Path release-body.md -Value $body -Encoding utf8
+          gh release create "v$v" $exe --target "${{ github.sha }}" --title "v$v" --notes-file release-body.md
+          Write-Host "SHA256: $sha"
+          "### v$v published`n`nSHA256: ``$sha``" >> $env:GITHUB_STEP_SUMMARY

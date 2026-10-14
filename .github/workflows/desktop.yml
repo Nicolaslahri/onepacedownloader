@@ -1,0 +1,110 @@
+name: Windows app
+
+# Builds and tests the native Windows app, takes screenshots of it on a real
+# Windows machine (pushed to the ui-previews branch) and uploads the .exe.
+on:
+  pull_request:
+    paths:
+      - "desktop/**"
+      - "catalog/episode_index.json"
+      - ".github/workflows/desktop.yml"
+  push:
+    branches: [main]
+    paths:
+      - "desktop/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Test the core
+        run: dotnet test desktop/tests/OnePace.Core.Tests -c Release --logger "console;verbosity=normal"
+
+      - name: Publish OnePaceDownloader.exe
+        run: >
+          dotnet publish desktop/src/OnePace.App -c Release -r win-x64 --self-contained
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true -p:DebugType=none -o publish
+
+      - name: Bigger screen
+        shell: pwsh
+        continue-on-error: true
+        run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
+
+      - name: Screenshots
+        shell: pwsh
+        run: |
+          $shots = @(
+            "main-dark --theme Dark --arc Alabasta --ep 3 --ticks 1,2,3 --extra saved",
+            "main-light --theme Light --arc Alabasta --ep 3 --ticks 1,2,3 --extra saved",
+            "welcome-dark --theme Dark",
+            "welcome-light --theme Light",
+            "arc-dark --theme Dark --arc Wano --extra saved",
+            "muhn-light --theme Light --source muhn --arc `"Enies Lobby`" --ep 13 --ticks 11,12",
+            "nyaa-dark --theme Dark --source nyaa --arc Alabasta --ep 1",
+            "packs-light --theme Light --source nyaa --arc Wano --extra packs",
+            "usenet-dark --theme Dark --source usenet --arc `"Water Seven`" --ep 2 --ticks 1,2 --extra usenet",
+            "downloading-dark --theme Dark --arc Alabasta --ep 3 --ticks 1,2,3 --extra dl",
+            "batch-light --theme Light --arc Alabasta --ticks 1,2,3,4 --extra batch,saved",
+            "batch-dark --theme Dark --arc Wano --ticks 1,2,3 --extra batch",
+            "settings-dark --theme Dark --extra settings",
+            "settings-light --theme Light --extra settings",
+            "dns-dark --theme Dark --extra dns",
+            "update-light --theme Light --extra update,toast",
+            "log-dark --theme Dark --arc `"Romance Dawn`" --ep 1 --extra log",
+            "narrow-dark --theme Dark --arc Alabasta --ep 3 --ticks 1 --size 1000x700",
+            "refresh-dark --theme Dark --extra refresh",
+            "wide-light --theme Light --arc `"Romance Dawn`" --ep 2 --size 1880x1000"
+          )
+          New-Item -ItemType Directory -Force previews | Out-Null
+          $failed = @()
+          foreach ($s in $shots) {
+            $name = $s.Split(" ")[0]
+            $rest = $s.Substring($name.Length).Trim()
+            $argLine = "--preview $name --out previews $rest"
+            $p = Start-Process -FilePath publish/OnePaceDownloader.exe -ArgumentList $argLine -PassThru
+            if (-not $p.WaitForExit(60000)) { $p.Kill(); $failed += "$name (timed out)"; continue }
+            if (Test-Path "previews/$name.error.txt") { $failed += $name; Get-Content "previews/$name.error.txt" | Write-Host }
+            elseif (-not (Test-Path "previews/$name.png")) { $failed += "$name (no screenshot, exit $($p.ExitCode))" }
+            else { Write-Host "ok  $name" }
+            if (Test-Path "previews/$name.log.txt") {
+              $log = Get-Content -Raw "previews/$name.log.txt"
+              Write-Host $log
+              if ($log -match "Refresh failed|Couldn't load") { $failed += "$name (catalog refresh failed)" }
+            }
+          }
+          if ($failed) { throw "Screenshots failed: $($failed -join ', ')" }
+
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: ui-previews
+          path: previews
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: OnePaceDownloader
+          path: publish/OnePaceDownloader.exe
+
+      - name: Publish screenshots to the ui-previews branch
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        shell: bash
+        run: |
+          [ -d previews ] || exit 0
+          cd previews
+          git init -q -b ui-previews
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "UI previews for ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ui-previews
