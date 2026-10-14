@@ -100,6 +100,7 @@ public sealed class PreviewSpec
         if (Extra.Contains("refresh"))
         {
             await vm.RefreshCommand.ExecuteAsync(null);
+            await vm.RefreshCommand.ExecuteAsync(null);
             Directory.CreateDirectory(Out);
             File.WriteAllText(Path.Combine(Out, Name + ".log.txt"), vm.LogText + "\nSTATUS: " + vm.Status);
         }

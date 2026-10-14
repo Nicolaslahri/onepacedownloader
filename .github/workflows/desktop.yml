@@ -64,6 +64,8 @@ jobs:
             "log-dark --theme Dark --arc `"Romance Dawn`" --ep 1 --extra log",
             "narrow-dark --theme Dark --arc Alabasta --ep 3 --ticks 1 --size 1000x700",
             "refresh-dark --theme Dark --extra refresh",
+            "refresh2-dark --theme Dark --arc Alabasta --ep 3 --ticks 1,2 --extra refresh,saved",
+            "refresh3-light --theme Light --source nyaa --arc Wano --extra refresh,packs",
             "wide-light --theme Light --arc `"Romance Dawn`" --ep 2 --size 1880x1000"
           )
           New-Item -ItemType Directory -Force previews | Out-Null
