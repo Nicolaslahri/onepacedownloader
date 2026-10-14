@@ -1,0 +1,2 @@
+# Mozilla's CA bundle, trusted before the OS store (see tls_trust.py).
+certifi>=2026.7.22
