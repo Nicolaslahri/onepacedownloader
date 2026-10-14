@@ -895,9 +895,25 @@ public sealed partial class MainViewModel : ObservableObject
         IndexUpdateAvailable = false;
         Status = "Checking for new episodes…";
         Log("Fetching the latest catalog from GitHub…");
+        var dispatcher = Application.Current.Dispatcher;
+        IndexStore.RefreshResult r;
         try
         {
-            var r = await IndexStore.RefreshAsync(Settings.RemoteEtag);
+            r = await IndexStore.RefreshAsync(Settings.RemoteEtag, log: m => dispatcher.InvokeAsync(() => Log("  " + m)));
+        }
+        catch (Exception e)
+        {
+            var why = Http.Describe(e);
+            Log($"Refresh failed: {why}");
+            Log($"  {e.GetType().Name}: {e.Message}" + (e.InnerException != null ? $" ({e.InnerException.Message})" : ""));
+            Status = $"Couldn't refresh the catalog: {why}.";
+            _ui.Toast("Couldn't refresh", Capitalize(why) + ".", ToastKind.Danger);
+            Refreshing = false;
+            return;
+        }
+        try
+        {
+            if (r.Host != new Uri(IndexStore.RemoteIndexUrl).Host) Log($"Got the catalog from {r.Host} instead.");
             if (!string.IsNullOrEmpty(r.Etag)) Settings.RemoteEtag = r.Etag;
             Settings.LastRefresh = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             TrySave();
@@ -921,15 +937,17 @@ public sealed partial class MainViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            Log($"Refresh failed: {e}");
-            Status = "Couldn't reach GitHub. Check your connection and try again.";
-            _ui.Toast("Couldn't refresh", "GitHub didn't answer. Check your connection.", ToastKind.Danger);
+            Log($"Couldn't load the new catalog: {e}");
+            Status = "Couldn't load the new catalog. Restart the app to use it.";
+            _ui.Toast("Couldn't refresh", "The new catalog was saved but couldn't be shown. Restart the app.", ToastKind.Danger);
         }
         finally
         {
             Refreshing = false;
         }
     }
+
+    static string Capitalize(string s) => s.Length == 0 ? s : char.ToUpperInvariant(s[0]) + s[1..];
 
     void ApplyIndex(EpisodeIndex index)
     {
